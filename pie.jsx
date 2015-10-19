@@ -17,6 +17,15 @@ import _ from 'gettext';
  */
 export default class Pie extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      chartData: [], // Formatted data, has only label and value indexes
+      chart: null,   // The ChartJS Pie object
+      data: [],      // The raw data used on the Pie
+    };
+  }
+
   /* Parse input data to generate a chart friendly structured data
    *
    * It will also instantiate a ChartJS Pie
@@ -69,7 +78,7 @@ export default class Pie extends React.Component {
       animation: false,
       responsive: true,
       maintainAspectRatio: false,
-      tooltipTemplate: this._formatTooltip,
+      tooltipTemplate: this._formatTooltip.bind(this),
     });
 
     this.setState({chartData, chart, data});
@@ -110,7 +119,7 @@ export default class Pie extends React.Component {
   _getLegend(object, index) {
     var style = {backgroundColor: object.color};
     return <div key={index} onMouseOver={this._showTooltip.bind(this, index)}
-                onMouseOut={this._hideTooltip}>
+                onMouseOut={this._hideTooltip.bind(this)}>
              <span className="color" style={style}></span>
              { object.label }
            </div>;
@@ -128,14 +137,6 @@ export default class Pie extends React.Component {
     this.state.chart && this.state.chart.destroy();
   }
 
-  getInitialState() {
-    return {
-      chartData: [], // Formatted data, has only label and value indexes
-      chart: null,   // The ChartJS Pie object
-      data: [],      // The raw data used on the Pie
-    };
-  }
-
   render() {
     return <Box padding={true} title={this.props.title} icon={this.props.icon} loading={this.props.loading}>
         <Row lg={[7, 5]}>
@@ -143,7 +144,7 @@ export default class Pie extends React.Component {
             <canvas ref="canvas" width="300" height="300"></canvas>
           </div>
           <div className="legend">
-            { this.state.chartData.map(this._getLegend) }
+            { this.state.chartData.map(this._getLegend, this) }
           </div>
         </Row>
     </Box>;
