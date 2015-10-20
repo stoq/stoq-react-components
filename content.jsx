@@ -34,7 +34,7 @@ module.exports.Header = class Header extends React.Component {
   render() {
     let title = $('title').html().split('-')[0];
     $('title').text(`${title} - ${this.props.title} ${this.props.subtitle || ''}`);
-    return <section className="content-header">
+    return <section className="content-header" data-step={this.props.dataStep} data-intro={this.props.dataIntro}>
       <h1 className="page-title">
         { this.props.title } <small>{ this.props.subtitle }</small>
         { this.props.children }

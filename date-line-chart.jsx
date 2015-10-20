@@ -127,9 +127,7 @@ let DateLineChart = React.createClass({
   },
 
   render: function() {
-    return <div className="chart">
-             <canvas className="chart" ref="canvas"></canvas>
-           </div>;
+    return <canvas className="chart" ref="canvas"></canvas>;
   },
 });
 

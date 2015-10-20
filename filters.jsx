@@ -2,6 +2,41 @@ import React from 'react';
 import moment from 'moment';
 import _ from 'gettext';
 
+/* <select><options/></select> in ReactJS */
+module.exports.Select = React.createClass({
+  _getOptions: function() {
+    return this.props.options.map(function(option, index) {
+      return <option key={index} value={option[this.props.valueAttr]}>
+        {option[this.props.labelAttr]}
+      </option>;
+    }, this);
+  },
+
+  onChange: function() {
+    var onChange = this.props.onChange;
+    onChange && onChange(this.refs.select.value);
+  },
+
+  getDefaultProps: function() {
+    return {
+      options: [],
+      valueAttr: 2,
+      labelAttr: 1,
+    };
+  },
+
+  render: function() {
+    if (!this.props.options.length) {
+      return <select className="btn btn-default"><option>{ this.props.defaultLabel }</option></select>;
+    }
+
+    return <select className="btn btn-default" ref="select" onChange={this.onChange}
+                   defaultValue={this.props.default} style={this.props.style}>
+      {this._getOptions()}
+    </select>;
+  },
+});
+
 /* Daterange query with start, end and grouping options */
 module.exports.DaterangeFilter = React.createClass({
   macro_period: {
