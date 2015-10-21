@@ -411,11 +411,14 @@ export default Table = React.createClass({
 
   componentWillReceiveProps: function(props) {
     this.props.tree && this._setupTree(props.data);
-    this.setState({data: props.data});
+    this.setState({data: props.data || this.state.data || []});
   },
 
   componentDidMount: function() {
-    this.setState({headers: this._getHeaderSettings(this.props)});
+    this.setState({
+      headers: this._getHeaderSettings(this.props),
+      data: this.props.data || [],
+    });
   },
 
   componentDidUpdate: function() {
