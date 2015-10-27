@@ -122,6 +122,10 @@ let DateLineChart = React.createClass({
     this._setupChart(props);
   },
 
+  componentDidMount: function() {
+    this.props.data && this._setupChart(this.props);
+  },
+
   componentWillUnmount: function() {
     this.chart && this.chart.destroy();
   },

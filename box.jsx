@@ -9,7 +9,7 @@ import $ from 'jquery';
  * collapsible {Boolean=false} Allow the box to be collapsed
  * loading {Boolean=true} Displays box loading animation
  */
-let Box = React.createClass ({
+let Box = React.createClass({
   propTypes: {
     padding: React.PropTypes.bool,
     collapsible: React.PropTypes.bool,

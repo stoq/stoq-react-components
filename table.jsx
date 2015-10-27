@@ -37,7 +37,6 @@ let SORT_OPOSITE = {
   '':  '+',
 };
 
-
 /* HTSQL Queried Bootstrap Striped Tabled
  *
  * Props:
@@ -298,7 +297,6 @@ export default Table = React.createClass({
     // Invert the old direction
     var direction = SORT_OPOSITE[column.direction];
     this.forceOrderBy(column, direction);
-
 
     // If onSearch is provided, it means the sorting should be done remotely
     if (this.props.onSearch) {

@@ -171,43 +171,43 @@ module.exports.DaterangeFilter = React.createClass({
 });
 
 module.exports.BranchFilter = React.createClass({
-   _get_branch_options: function() {
-     var options = [];
-     if (this.props.allBranches) {
-         options.push(<option key={0} value=''>{_("All branches")}</option>);
-     }
-     $.map(this.props.branches || {}, function(branch) {
-         options.push(<option key={branch.id} value={branch.id}>{branch.fancy_name}</option>);
-     });
-     return options;
-   },
+  _get_branch_options: function() {
+    var options = [];
+    if (this.props.allBranches) {
+      options.push(<option key={0} value=''>{_("All branches")}</option>);
+    }
+    $.map(this.props.branches || {}, function(branch) {
+      options.push(<option key={branch.id} value={branch.id}>{branch.fancy_name}</option>);
+    });
+    return options;
+  },
 
-   getBranchName: function() {
-     var node = this.refs.branch;
-     return $(node).find(':selected').text();
-   },
+  getBranchName: function() {
+    var node = this.refs.branch;
+    return $(node).find(':selected').text();
+  },
 
-   getQuery: function() {
-     return {'branch': this.refs.branch.value};
-   },
+  getQuery: function() {
+    return {'branch': this.refs.branch.value};
+  },
 
-   getDefaultProps: function() {
-     return {allBranches: true};
-   },
+  getDefaultProps: function() {
+    return {allBranches: true};
+  },
 
-   getInitialState: function() {
-     return {branch: this.props.query ? this.props.query.branch : ''};
-   },
+  getInitialState: function() {
+    return {branch: this.props.query ? this.props.query.branch : ''};
+  },
 
-   getHTQuery: function() {
-     var value = this.refs.branch.value;
-     return value && `${this.props.attr} == '${value}'`;
-   },
+  getHTQuery: function() {
+    var value = this.refs.branch.value;
+    return value && `${this.props.attr} == '${value}'`;
+  },
 
-   render: function() {
-     return <select className="btn btn-default" filter-name="branch" ref='branch'
-         defaultValue={this.state.branch} style={this.props.style} >
-             {this._get_branch_options()}
-         </select>;
-   }
+  render: function() {
+    return <select className="btn btn-default" filter-name="branch" ref='branch'
+        defaultValue={this.state.branch} style={this.props.style} >
+            {this._get_branch_options()}
+        </select>;
+  },
 });

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Utils from 'utils';
 
-
 /* A paginated Table pager
  *
  * Props:
@@ -35,7 +34,6 @@ let Pager = React.createClass({
   getDefaultProps: function() {
     return {onPageChange: undefined};
   },
-
 
   /*
    *  Private
@@ -130,7 +128,7 @@ let Pager = React.createClass({
     this.setState({
       headWidth,
       pageWidth: pageWidth || this.state.pageWidth,
-    },callback);
+    }, callback);
   },
 
   componentWillUnmount: function() {

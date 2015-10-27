@@ -18,7 +18,7 @@ import _ from 'gettext';
 export default class Pie extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       chartData: [], // Formatted data, has only label and value indexes
       chart: null,   // The ChartJS Pie object

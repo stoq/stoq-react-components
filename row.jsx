@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 /* Handles Bootstrap's <div class="row"></div> in a easier way
  *
  * // React
