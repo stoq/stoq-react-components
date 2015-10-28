@@ -1,4 +1,7 @@
 import React from 'react';
+
+import isIn from './utils/in';
+
 import {Filter} from 'htsql';
 import Utils from 'utils';
 import _ from 'gettext';
@@ -51,6 +54,8 @@ let SORT_OPOSITE = {
  * onSearch {Function} Change the `sortable` behavior to call the server for
  *                     a remote sorting. This is usually done when we have
  *                     paginated tables
+ * blinkable {Boolean=false} This flag indicates if will have a blink animation
+ *                         in that place
  * defaultOrderBy {String} Which order will this table be ordered by when no
  *                         explicit order_by attribute is required. This
  *                         attribute requires a '+' for ascending and a '-'
@@ -248,9 +253,10 @@ export default Table = React.createClass({
     if (!depth) {
       depth = 0;
     }
-
+    // isNew sets if its a new modification AND will receive an animation
+    var isNew = object._isNew && this.props.blinkable;
     var hidden_columns = this.props.hiddenColumns;
-    var rows = [<tr key={`${row_index}-${depth}`}>
+    var rows = [<tr key={`${row_index}-${depth}`} className={isNew ? 'new' : ''}>
         {this.props.children.map(function(column, col_index) {
           if (hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) {
             return null;
@@ -407,9 +413,37 @@ export default Table = React.createClass({
     };
   },
 
+  /* What happens when new modifications comes for the table
+   *
+   * The variable 'data' receive a valid data from the table: 'props.data' for
+   * new modifications, 'this.state.data' for old state (no modifications),
+   * '[]' for no data avaliable.
+   * The function 'map' will turn the 'item' into an object using 'extend'
+   * If the item is not in the previous state, its set like a new item (_isNew)
+   *
+   * If the property of item is blinkable an animation will appears with a
+   * 800ms delay (using setTimeout function).
+   */
   componentWillReceiveProps: function(props) {
     this.props.tree && this._setupTree(props.data);
-    this.setState({data: props.data || this.state.data || []});
+
+    let data = props.data || this.state.data || [];
+    data = data.map(function(item) {
+      item = $.extend({}, item);
+      return $.extend({
+        _isNew: !isIn(this.state.data || [], item),
+      }, item);
+    }, this);
+
+    this.setState({data}, () => {
+      this.props.blinkable && setTimeout(() => {
+        let data = this.state.data.map(function(item) {
+          item._isNew = false;
+          return item;
+        });
+        this.setState({data});
+      }, 800);
+    });
   },
 
   componentDidMount: function() {
