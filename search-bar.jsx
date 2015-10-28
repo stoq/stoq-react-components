@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import $ from 'jquery';
+import datepicker from 'bootstrap-datepicker';
 
 import Utils from 'utils';
 
@@ -73,7 +74,7 @@ module.exports = SearchBar = React.createClass({
     // Build the filter list based on table this search bar is related to
     this.setState({
       filters: this._get_filters(table),
-      search: Utils.get_params().q,
+      search: Utils.getParams().q,
     }, callback);
   },
 
@@ -82,7 +83,7 @@ module.exports = SearchBar = React.createClass({
    * Hides or show filters according to their appearance in the URL
    */
   updateFilters: function() {
-    var query = Utils.get_params();
+    var query = Utils.getParams();
     var filters = this.state.filters.map(function(filter) {
       filter.visible = query.hasOwnProperty(filter.attr);
       return filter;
@@ -128,7 +129,7 @@ module.exports = SearchBar = React.createClass({
    */
 
   _get_filters: function(table) {
-    var query = Utils.get_params();
+    var query = Utils.getParams();
     var filters = [];
     React.Children.map(table.props.children, function(column) {
       // If the column does not require any filter, skip it.
@@ -230,7 +231,7 @@ module.exports = SearchBar = React.createClass({
 
   setDaterange: function(index, daterange) {
     var filters = this.state.filters;
-    filters[index].value = Utils.get_daterange_query(daterange.start,
+    filters[index].value = Utils.getDaterangeQuery(daterange.start,
                                                      daterange.end);
     this.setState({filters: filters});
   },
@@ -281,7 +282,7 @@ module.exports = SearchBar = React.createClass({
   get_alpha__filter: getInputFilter('text'),
 
   get_date__filter: function(settings, index) {
-    var daterange = Utils.parse_daterange(settings.value);
+    var daterange = Utils.parseDaterange(settings.value);
     return <SearchBar.DateFilter label={settings.label} onChangeDate={this.setDaterange.bind(this, index)}
                                  defaultDaterange={daterange} onRemoveClicked={this.setVisible.bind(this, index, false)}/>;
   },

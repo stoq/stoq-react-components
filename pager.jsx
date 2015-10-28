@@ -42,7 +42,7 @@ let Pager = React.createClass({
    */
 
   _addPage: function(label, index, alternate_label) {
-    var query = $.param($.extend({}, Utils.get_params(), {page:index}));
+    var query = $.param($.extend({}, Utils.getParams(), {page:index}));
     var page;
     alternate_label = alternate_label || label;
     if (index !== null) {

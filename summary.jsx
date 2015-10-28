@@ -60,6 +60,9 @@ module.exports = Summary = React.createClass({
   },
 
   getSummary: function(item) {
+    if (item.type !== Summary.Item)
+      return item;
+
     var subItem = null;
     if (item.props.subValue || item.props.sublabel) {
       subItem = this.getItem(item, 'sub');

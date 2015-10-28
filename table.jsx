@@ -109,9 +109,9 @@ export default Table = React.createClass({
     }, this);
   },
 
-  _getCurrentOrder: function(props) {
-    if (props.sortable && props.onSearch && Utils.get_params().order_by) {
-      return Utils.get_params().order_by;
+  _getCurrentOrder: function(props=this.props) {
+    if (props.sortable && props.onSearch && Utils.getParams().order_by) {
+      return Utils.getParams().order_by;
     }
     return props.defaultOrderBy || '';
   },
