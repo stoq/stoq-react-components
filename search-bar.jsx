@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import $ from 'jquery';
+import _ from 'gettext';
 require('bootstrap-datepicker');
 
 import Utils from 'utils';
@@ -319,7 +320,7 @@ module.exports = SearchBar = React.createClass({
                         onKeyUp={this.searchKeyUp}/>
                  <span className="input-group-btn">
                    <button className="btn btn-primary" onClick={this.searchClicked}>
-                     Search
+                     {_('Search')}
                    </button>
                  </span>
                { this._getExportButton() }

@@ -98,7 +98,7 @@ module.exports.DaterangeFilter = React.createClass({
     };
   },
 
-  getHTQuery: function(dateAttr) {
+  getHTQuery: function(dateAttr=this.props.attr) {
     var start = this.state.period[0].format('YYYY-MM-DD');
     var end = this.state.period[1].format('YYYY-MM-DD');
     return {
@@ -144,7 +144,7 @@ module.exports.DaterangeFilter = React.createClass({
 
   render: function() {
     return <div ref="datepicker" className="input-group input-daterange custom-datepicker"
-                style={{display: "inline-table"}}>
+                style={{display: "inline-table", ...this.props.style}}>
       <span className="input-group-btn">
         <button onClick={this.period_change.bind(this, -1)} className="btn btn-default">
           <i className="fa fa-chevron-left"></i>

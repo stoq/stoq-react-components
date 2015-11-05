@@ -373,7 +373,8 @@ export default Table = React.createClass({
 
   /* Returns the HTSQL query containing only the table and the filter fields */
   getBaseHTSQL: function(filter) {
-    return `${this.props.htsql}${Filter(filter)}`;
+    let htsql = (typeof this.props.htsql) == 'function' ? this.props.htsql() : this.props.htsql;
+    return `${htsql}${Filter(filter)}`;
   },
 
   /* Returns the table generated HTSQL
