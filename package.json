@@ -1,5 +1,5 @@
 {
-  "name": "stoq-react-components",
+  "name": "components",
   "version": "0.0.0",
   "scripts": {
     "test": "eslint . --ext .jsx --ext .js"
