@@ -177,7 +177,7 @@ let Pager = React.createClass({
     this._addPage('Next', (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
     this._addPage('Last', meta.page_count, '>>');
 
-    return <div className="list_pager box-footer clearfix">
+    return <div className="list_pager clearfix">
       <ul className="pagination no-margin">{ this._pages }</ul>
     </div>;
   },
