@@ -1,5 +1,4 @@
 import React from 'react';
-import accounting from 'accounting';
 import moment from 'moment';
 
 let Utils = {
@@ -19,7 +18,7 @@ let Utils = {
       return parseFloat(rounded).toLocaleString('pt-br');
     },
 
-    currency: accounting.formatMoney,
+    currency: value => `R$ ${Utils.formatters.numeric(value)}`,
 
     datetime: function(value) {
       if (!value) {
