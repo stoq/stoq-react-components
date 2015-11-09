@@ -167,14 +167,14 @@ export default Table = React.createClass({
    * formatter provided by the column or a default formatter if none was
    * provided.
    */
-  _format_value: function(column, value, object) {
+  _format_value: function(column, value, object, row_index) {
     var default_formatter = Utils.formatters[column.props['data-type']];
     var formatter = default_formatter;
     if (column.props.formatter !== undefined) {
       formatter = column.props.formatter;
     }
 
-    return formatter(value, object, default_formatter);
+    return formatter(value, object, default_formatter, row_index);
   },
 
   _getColumnSettings: function(column, props) {
@@ -266,7 +266,7 @@ export default Table = React.createClass({
                      key={`${row_index}-${col_index}-${depth}`}
                      data-value={raw_value}>
                       {this._get_padding(depth, col_index, object)}
-                      {this._format_value(column, raw_value, object)}
+                      {this._format_value(column, raw_value, object, row_index)}
                  </td>;
         }.bind(this))}
        </tr>];
