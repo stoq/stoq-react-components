@@ -50,7 +50,7 @@ let Tabs = React.createClass({
   },
 });
 
-module.exports.Tab = React.createClass({
+Tabs.Tab = React.createClass({
   render: function() {},
 });
 
