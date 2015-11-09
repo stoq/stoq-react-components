@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'gettext';
+require('bootstrap-datepicker');
 
 /* <select><options/></select> in ReactJS */
 module.exports.Select = React.createClass({

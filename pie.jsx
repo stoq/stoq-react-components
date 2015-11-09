@@ -60,8 +60,8 @@ export default class Pie extends React.Component {
           label: object[labelAttr],
           value: object[valueAttr],
           percentValue: object[valueAttr] / total * 100,
-          color: Utils.get_color(index),
-          highlight: Utils.get_color(index, true),
+          color: Utils.getColor(index),
+          highlight: Utils.getColor(index, true),
         });
         return;
       }
