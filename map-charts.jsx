@@ -34,6 +34,8 @@ class Scale extends React.Component {
 }
 
 Maps.Brazil = React.createClass({
+  attr: 'last_seen',
+
   mixins: [Mixins.EventsMixin],
 
   getInitialState: function() {
