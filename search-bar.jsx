@@ -5,6 +5,18 @@ import _ from 'gettext';
 require('bootstrap-datepicker');
 
 import Utils from 'utils';
+import {Select} from './filters';
+
+/* Query operations for numeric data type */
+var NUMERIC_QUERY_OPERATIONS = {
+  '>': (attr, value) => `${attr} > ${value}`,
+  '<': (attr, value) => `${attr} < ${value}`,
+  '=': (attr, value) => `${attr} == ${value}`,
+  '~': (attr, value) => {
+    var values = value.split('and');
+    return `between(${attr}, ${values[0]}, ${values[1]})`;
+  },
+};
 
 /* Which operand should be used for each data-type */
 var QUERY_OPERATION = {
@@ -14,6 +26,10 @@ var QUERY_OPERATION = {
   date: (attr, value) => {
     var dates = value.split('to');
     return `between(date(${attr}), '${dates[0]}', '${dates[1]}')`;
+  },
+  numeric: (attr, value) => {
+    let operation = value[0];
+    return NUMERIC_QUERY_OPERATIONS[operation](attr, value.substring(1));
   },
 };
 
@@ -98,7 +114,6 @@ module.exports = SearchBar = React.createClass({
     // Add the default search parameter if the user provided it.
     var search = Utils.escape(this.state.search);
     search && queries.push(this.props.defaultHTSQLFilter(search));
-
     this.state.filters.forEach(filter => {
       // Don't search filters that are not visible
       if (!filter.visible || !filter.value) {
@@ -223,11 +238,10 @@ module.exports = SearchBar = React.createClass({
     !visible && this.searchClicked();
   },
 
-  setValue: function(index, event) {
+  setValue: function(index, event, value) {
     var filters = this.state.filters;
-    filters[index].value = event.target.value;
+    filters[index].value = value || event.target.value;
     this.setState({filters: filters});
-    (event.type == 'change') && this.searchClicked();
   },
 
   setDaterange: function(index, daterange) {
@@ -290,6 +304,11 @@ module.exports = SearchBar = React.createClass({
 
   get_datetime__filter: function() {
     return this.get_date__filter.apply(this, arguments);
+  },
+
+  get_numeric__filter: function(settings, index) {
+    return <SearchBar.NumericFilter ref="numeric" label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)}
+                                    filterIndex={index} filter={this.state.filters[index]} setValue={this.setValue}/>;
   },
 
   /*
@@ -389,5 +408,65 @@ SearchBar.DateFilter = React.createClass({
                </button>
              </span>
            </div>;
+  },
+});
+
+SearchBar.NumericFilter = React.createClass({
+
+  componentDidMount: function() {
+    let value = this.props.filter.value;
+    if (!value)
+      return;
+    var operation = value[0];
+    if (operation == '~') {
+      let values = value.substring(1).split('and');
+      this.refs.first.value = values[0];
+      this.refs.second.value = values[1];
+    }
+    else
+      this.refs.first.value = value.substring(1);
+  },
+
+  getInitialState: function() {
+    let operation = this.props.filter.value ? this.props.filter.value[0] : '=';
+    return {operation};
+  },
+
+  _setOperation: function(operation) {
+    this.setState({operation}, this._setValue);
+  },
+
+  _setValue: function() {
+    this.props.setValue(
+      this.props.filterIndex, null,
+      this.state.operation + this.refs.first.value + (this.state.operation == '~' ? `and${this.refs.second.value}` : ''));
+  },
+
+  render: function() {
+    let options = [
+      {label: _('Equals to'), value: '='},
+      {label: _('Greater than'), value: '>'},
+      {label: _('Lower Than'), value: '<'},
+      {label: _('Between'), value: '~'},
+    ];
+    return <div ref="numeric-filter" className="input-daterange input-group">
+      <label className="input-group-addon">
+        { this.props.label }
+      </label>
+      <span className='input-group-btn'>
+        <Select className='btn btn-sm' options={options} valueAttr='value' labelAttr='label'
+                onChange={this._setOperation} default={this.state.operation}/>
+      </span>
+      <input ref="first" type="number" defaultValue={0} className="input-sm form-control" name="first" onChange={this._setValue}/>
+      {this.state.operation == '~' && [
+        <span key={0} className="input-group-addon">{_('And')}</span>,
+        <input key={1} ref="second" type="number" defaultValue={0} className="input-sm form-control" name="second" onChange={this._setValue}/>,
+      ]}
+      <span className="input-group-btn">
+        <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
+          <i className="fa fa-remove"></i>
+        </button>
+      </span>
+    </div>;
   },
 });

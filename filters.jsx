@@ -31,7 +31,7 @@ module.exports.Select = React.createClass({
       return <select className="btn btn-default"><option>{ this.props.defaultLabel }</option></select>;
     }
 
-    return <select className="btn btn-default" ref="select" onChange={this.onChange}
+    return <select className={this.props.className || "btn btn-default"} ref="select" onChange={this.onChange}
                    defaultValue={this.props.default} style={this.props.style}>
       {this._getOptions()}
     </select>;
