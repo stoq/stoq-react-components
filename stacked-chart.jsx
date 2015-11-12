@@ -12,8 +12,12 @@ let StackedChart = React.createClass({
 
   componentWillReceiveProps: function(props) {
     // Only draw this chart once
-    if (!props.data || this.svg) {
+    if (!props.data) {
       return;
+    }
+
+    if (this.svg) {
+      this.off(window, 'resize');
     }
 
     var data = [];

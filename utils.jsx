@@ -191,6 +191,8 @@ let Utils = {
   },
 
   generateDateSeries: function(start, end, increment, grouping) {
+    if (start.isAfter(end))
+      return [];
     var series = [start];
     while (!series[series.length - 1].isSame(end, grouping)) {
       var last = moment(series[series.length - 1]);
