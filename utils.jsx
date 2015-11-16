@@ -18,7 +18,10 @@ let Utils = {
       return parseFloat(rounded).toLocaleString('pt-br');
     },
 
-    currency: value => `R$ ${Utils.formatters.numeric(value)}`,
+    currency: function(value) {
+      value = parseFloat(value) || 0.0;
+      return 'R$ ' + value.toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    },
 
     datetime: function(value) {
       if (!value) {
@@ -97,6 +100,15 @@ let Utils = {
     },
 
     invoice: number => number,
+  },
+
+  get: function(dictionary, keys) {
+    keys = keys.split('.');
+    var retval = dictionary;
+    for (var i = 0; i < keys.length; i++) {
+      retval = retval[keys[i]];
+    }
+    return retval;
   },
 
   colors: [
