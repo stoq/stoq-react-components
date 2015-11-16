@@ -49,7 +49,7 @@ let StackedChart = React.createClass({
     });
 
     // Keeps the highest key on the top
-    data = data.sort((a, b) => {
+    data = data.sort(this.props.sortFunc || props.sortFunc || function(a, b) {
       return parseFloat(a.key) - parseFloat(b.key);
     });
 
