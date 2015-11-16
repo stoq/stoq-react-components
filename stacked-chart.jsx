@@ -3,6 +3,7 @@ import d3 from 'd3';
 import nv from 'nvd3';
 import moment from 'moment';
 
+import equals from './utils/equals';
 import Utils from 'utils';
 
 import Mixins from './mixins';
@@ -11,12 +12,13 @@ let StackedChart = React.createClass({
   mixins: [Mixins.EventsMixin],
 
   componentWillReceiveProps: function(props) {
-    // Only draw this chart once
-    if (!props.data) {
+    // Avoid drawing anythin if there's no data
+    if (!props.data || !Object.keys(props.data).length) {
       return;
     }
 
     if (this.svg) {
+      this.svg.selectAll("*").remove();
       this.off(window, 'resize');
     }
 
@@ -52,6 +54,12 @@ let StackedChart = React.createClass({
     data = data.sort(this.props.sortFunc || props.sortFunc || function(a, b) {
       return parseFloat(a.key) - parseFloat(b.key);
     });
+
+    // Only really draw the chart if the given data is different
+    if (equals(data, this.data)) {
+      return;
+    }
+    this.data = data;
 
     nv.addGraph(() => {
       var chart =  nv.models.stackedAreaChart()
