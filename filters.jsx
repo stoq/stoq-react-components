@@ -200,9 +200,9 @@ module.exports.BranchFilter = React.createClass({
     return {branch: this.props.query ? this.props.query.branch : ''};
   },
 
-  getHTQuery: function() {
+  getHTQuery: function(branchAttr=this.props.attr) {
     var value = this.refs.branch.value;
-    return value && `${this.props.attr} == '${value}'`;
+    return value && `${branchAttr} == '${value}'`;
   },
 
   render: function() {
