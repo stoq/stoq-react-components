@@ -1,10 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'gettext';
+import Utils from 'utils';
 require('bootstrap-datepicker');
 
 /* <select><options/></select> in ReactJS */
-module.exports.Select = React.createClass({
+var Select = React.createClass({
   _getOptions: function() {
     return this.props.options.map(function(option, index) {
       return <option key={index} value={option[this.props.valueAttr]}>
@@ -28,7 +29,7 @@ module.exports.Select = React.createClass({
 
   render: function() {
     if (!this.props.options.length) {
-      return <select className="btn btn-default"><option>{ this.props.defaultLabel }</option></select>;
+      return <select ref='select' className="btn btn-default"><option>{ this.props.defaultLabel }</option></select>;
     }
 
     return <select className={this.props.className || "btn btn-default"} ref="select" onChange={this.onChange}
@@ -37,6 +38,8 @@ module.exports.Select = React.createClass({
     </select>;
   },
 });
+
+module.exports.Select = Select;
 
 /* Daterange query with start, end and grouping options */
 module.exports.DaterangeFilter = React.createClass({
@@ -111,9 +114,11 @@ module.exports.DaterangeFilter = React.createClass({
   },
 
   getInitialState: function() {
-    var group = 'day';
+    var queryParams = Utils.getParams();
+    var group = queryParams.group || 'day';
     var macro_group = this.macro_period[group];
-    var period = this.props.defaultDate || [moment().startOf(macro_group), moment().endOf(macro_group)];
+    var period = (queryParams.start ? [moment(queryParams.start), moment(queryParams.end)] :
+                  this.props.defaultDate || [moment().startOf(macro_group), moment().endOf(macro_group)]);
     return {
       period: period,
       group: group,
@@ -172,24 +177,22 @@ module.exports.DaterangeFilter = React.createClass({
 });
 
 module.exports.BranchFilter = React.createClass({
-  _get_branch_options: function() {
+  _getBranchOptions: function() {
     var options = [];
-    if (this.props.allBranches) {
-      options.push(<option key={0} value=''>{_("All branches")}</option>);
-    }
+    this.props.allBranches && options.push({label: _("All branches"), value: ''});
     $.map(this.props.branches || {}, function(branch) {
-      options.push(<option key={branch.id} value={branch.id}>{branch.fancy_name}</option>);
+      options.push({label: branch.fancy_name, value: branch.id});
     });
     return options;
   },
 
   getBranchName: function() {
-    var node = this.refs.branch;
+    var node = this.refs.branch.refs.select;
     return $(node).find(':selected').text();
   },
 
   getQuery: function() {
-    return {'branch': this.refs.branch.value};
+    return {'branch': this.refs.branch.refs.select.value};
   },
 
   getDefaultProps: function() {
@@ -197,18 +200,17 @@ module.exports.BranchFilter = React.createClass({
   },
 
   getInitialState: function() {
-    return {branch: this.props.query ? this.props.query.branch : ''};
+    var queryParams = Utils.getParams();
+    return {branch: queryParams.branch || ''};
   },
 
   getHTQuery: function(branchAttr=this.props.attr) {
-    var value = this.refs.branch.value;
+    var value = this.refs.branch.refs.select.value;
     return value && `${branchAttr} == '${value}'`;
   },
 
   render: function() {
-    return <select className="btn btn-default" filter-name="branch" ref='branch'
-        defaultValue={this.state.branch} style={this.props.style} >
-            {this._get_branch_options()}
-        </select>;
+    return <Select options={this._getBranchOptions()} valueAttr='value' labelAttr='label'
+                   default={this.state.branch} ref='branch'/>;
   },
 });
