@@ -306,9 +306,9 @@ export default Table = React.createClass({
 
     // If onSearch is provided, it means the sorting should be done remotely
     if (this.props.onSearch) {
-      var query = {order_by: direction + column.sortAttr};
+      this.query = {order_by: direction + column.sortAttr};
       // Execute remote query
-      this.props.onSearch(event, key, query,
+      this.props.onSearch(event, key, this.query,
                           this.state.headers.indexOf(column));
       return;
     }
@@ -337,6 +337,14 @@ export default Table = React.createClass({
     });
     column.direction = direction;
     this.setState({headers: this.state.headers}, callback);
+  },
+
+  getQuery: function() {
+    if (!this.query) {
+      return {};
+    }
+
+    return this.query;
   },
 
   /* Return the HTSQL attributes, joined by a ','
