@@ -14,6 +14,7 @@ let Box = React.createClass({
     padding: React.PropTypes.bool,
     collapsible: React.PropTypes.bool,
     loading: React.PropTypes.bool,
+    onUpdate: React.PropTypes.func,
   },
 
   /*
@@ -62,14 +63,27 @@ let Box = React.createClass({
     </div>;
   },
 
+  _getOnUpdate: function() {
+    if (!this.props.onUpdate) {
+      return;
+    }
+    return <div className="box-up pull-right">
+        <button className="btn btn-default btn-sm"
+                onClick={this.props.onUpdate}>
+        <i className="fa fa-refresh"></i>
+      </button>
+    </div>;
+  },
+
   _getHeader: function() {
-    if (!this.props.title && !this.props.icon && !this.props.collapsible) {
+    if (!this.props.title && !this.props.icon && !this.props.collapsible && !this.props.onUpdate) {
       return null;
     }
     return <div className="box-header">
              {this._getIcon()}
              {this._getTitle()}
              {this._getCollapseButton()}
+             {this._getOnUpdate()}
            </div>;
   },
 
