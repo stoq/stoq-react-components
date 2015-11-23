@@ -34,6 +34,7 @@ var QUERY_OPERATION = {
 };
 
 QUERY_OPERATION.datetime = QUERY_OPERATION.date;
+QUERY_OPERATION.currency = QUERY_OPERATION.numeric;
 
 /* Returns a getter for the input filter of a given type */
 var getInputFilter = function(type) {
@@ -309,6 +310,10 @@ module.exports = SearchBar = React.createClass({
   get_numeric__filter: function(settings, index) {
     return <SearchBar.NumericFilter ref="numeric" label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)}
                                     filterIndex={index} filter={this.state.filters[index]} setValue={this.setValue}/>;
+  },
+
+  get_currency__filter: function() {
+    return this.get_numeric__filter.apply(this, arguments);
   },
 
   /*
