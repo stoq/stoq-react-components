@@ -95,10 +95,6 @@ let Pager = React.createClass({
   },
 
   componentWillReceiveProps: function(props) {
-    let currentPage = this.props.meta && this.props.meta.page;
-    if (currentPage !== (props.meta && props.meta.page)) {
-      this.sizeAdjusted = false;
-    }
     let table = props.table || this.props.table;
     this.setState({
       width: (table && $(ReactDOM.findDOMNode(table)).outerWidth()) || 0,
@@ -111,10 +107,18 @@ let Pager = React.createClass({
 
   updateDimensions: function(callback) {
     let hasPages = this._pages && this._pages.length;
-    if (!hasPages || this.sizeAdjusted) {
+    if (!hasPages) {
       return;
     }
-    this.sizeAdjusted = true;
+
+    // Calculate the width of the largest page on the line
+    let page = this.refs[this._pages.length - 3];
+    let pageWidth = $(page).outerWidth();
+
+    // Dont update if the actual pageWidth is equal to this.state.pageWidth
+    if (pageWidth === this.state.pageWidth) {
+      return;
+    }
 
     // Calculate the pagination 'headers' width
     let headWidth = 0;
@@ -122,9 +126,6 @@ let Pager = React.createClass({
       headWidth += $(this.refs[index]).outerWidth();
     });
 
-    // Calculate the width of the largest page on the line
-    let page = this.refs[this._pages.length - 3];
-    let pageWidth = $(page).outerWidth();
     this.setState({
       headWidth,
       pageWidth: pageWidth || this.state.pageWidth,
@@ -148,6 +149,10 @@ let Pager = React.createClass({
         _before = Math.floor(pagination_size / 2),
         _after = _before,
         _to_show = _before + _after;
+
+  // Tha var 'page' is updated by -1, this certifies that the URL was passed
+  // with the correct number page AND the offset will be started in 0 for
+  // page 1, 10 for page 2, etc (when 'page' multplies 'getPageSize')
 
     if (meta.page - _before <= 0) {
       _before = meta.page - 1;
