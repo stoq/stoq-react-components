@@ -35,7 +35,12 @@
     "process": false,
     "gapi": false,
     "FB": false,
-    "PagarMe", false
+    "PagarMe", false,
+    "jest", false,
+    "describe", false,
+    "it", false,
+    "beforeEach", false,
+    "expect", false
   },
   "plugins": [
     "react"
