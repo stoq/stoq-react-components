@@ -57,7 +57,7 @@ let Box = React.createClass({
       return;
     }
     return <div className="box-tools pull-right">
-      <button className="btn btn-default btn-sm" onClick={this.onCollapseClick}>
+      <button ref="collapseButton" className="btn btn-default btn-sm" onClick={this.onCollapseClick}>
         <i className={"fa fa-" + (this.state.collapsed ? 'plus' : 'minus')}></i>
       </button>
     </div>;
@@ -68,7 +68,7 @@ let Box = React.createClass({
       return;
     }
     return <div className="box-up pull-right">
-        <button className="btn btn-default btn-sm"
+        <button ref="updateButton" className="btn btn-default btn-sm"
                 onClick={this.props.onUpdate}>
         <i className="fa fa-refresh"></i>
       </button>
