@@ -93,4 +93,4 @@ let StackedChart = React.createClass({
   },
 });
 
-export default StackedChart;
+module.exports = StackedChart;

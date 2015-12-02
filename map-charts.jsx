@@ -150,4 +150,4 @@ Maps.Brazil = React.createClass({
   },
 });
 
-export default Maps;
+module.exports = Maps;

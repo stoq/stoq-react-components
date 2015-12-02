@@ -1,3 +1,3 @@
-export default jest.genMockFunction().mockImplementation(function(text) {
+module.exports = jest.genMockFunction().mockImplementation(function(text) {
   return text;
 });

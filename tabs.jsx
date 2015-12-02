@@ -54,4 +54,4 @@ Tabs.Tab = React.createClass({
   render: function() {},
 });
 
-export default Tabs;
+module.exports = Tabs;

@@ -15,7 +15,7 @@ import _ from 'gettext';
  * data {Array} The array containing the values and labels, organized like:
  *              [{labelAttr: moment(...), valueAttr: 9318}, ...]
  */
-export default class Pie extends React.Component {
+module.exports = class Pie extends React.Component {
 
   constructor(props) {
     super(props);
@@ -149,4 +149,4 @@ export default class Pie extends React.Component {
         </Row>
     </Box>;
   }
-}
+};

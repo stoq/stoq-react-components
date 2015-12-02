@@ -8,4 +8,4 @@ var LoadingButton = React.createClass({
   },
 });
 
-export default LoadingButton;
+module.exports = LoadingButton;

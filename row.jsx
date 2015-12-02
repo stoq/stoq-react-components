@@ -26,7 +26,7 @@ import React from 'react';
  * md {Number[]} What are the respective md attributes for the children
  * lg {Number[]} What are the respective lg attributes for the children
  */
-export default class Row extends React.Component {
+module.exports = class Row extends React.Component {
   /*
    *  Private API
    */
@@ -56,4 +56,4 @@ export default class Row extends React.Component {
       }.bind(this))}
     </div>;
   }
-}
+};

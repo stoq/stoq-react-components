@@ -97,7 +97,7 @@ let SORT_OPOSITE = {
  *                       of the 'data-type' ones suit the column.
  */
 let Table;
-export default Table = React.createClass({
+module.exports = Table = React.createClass({
 
   /*
    *      Private API

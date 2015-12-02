@@ -16,7 +16,7 @@ import Utils from 'utils';
  * attr = {String=Utils.encode(props.htsql)} Which attribute name should the
  *                                           htsql return for this element
  */
-export default class HTSQLItem extends React.Component {
+module.exports = class HTSQLItem extends React.Component {
   static propTypes: {
     data: React.PropTypes.any,
     htsql: React.PropTypes.string,
@@ -68,4 +68,4 @@ export default class HTSQLItem extends React.Component {
     value = this.props.formatter ? this.props.formatter(value) : value;
     return <span style={{display: 'inherit'}}>{value}</span>;
   }
-}
+};

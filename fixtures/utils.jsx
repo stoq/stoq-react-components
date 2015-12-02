@@ -211,4 +211,4 @@ Object.keys(Utils.formatters).forEach(function(key) {
   }
 });
 
-export default {...ComponentUtils, ...Utils};
+module.exports = {...ComponentUtils, ...Utils};

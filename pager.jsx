@@ -188,4 +188,4 @@ let Pager = React.createClass({
   },
 });
 
-export default Pager;
+module.exports = Pager;

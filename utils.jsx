@@ -249,4 +249,4 @@ Object.keys(Utils.formatters).forEach(function(key) {
   }
 });
 
-export default Utils;
+module.exports = Utils;

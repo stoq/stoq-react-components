@@ -14,4 +14,4 @@ Mixins.EventsMixin = {
   },
 };
 
-export default Mixins;
+module.exports = Mixins;
