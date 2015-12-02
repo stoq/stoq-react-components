@@ -116,7 +116,9 @@ let Pager = React.createClass({
     let pageWidth = $(page).outerWidth();
 
     // Dont update if the actual pageWidth is equal to this.state.pageWidth
-    if (pageWidth === this.state.pageWidth) {
+    // because pagers within tabs that are not visible don't actually have
+    // width, causing infinite loops or stack overflows
+    if (pageWidth === this.state.pageWidth || pageWidth === 0) {
       return;
     }
 
