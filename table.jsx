@@ -476,12 +476,12 @@ module.exports = Table = React.createClass({
     return <div className="table-responsive">
        <table className="table table-striped table-hover">
          <thead>
-           <tr>
+           <tr ref='tableHeader'>
             {this.state.headers.map(function(settings, index) {
               if (this.props.hiddenColumns && this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) {
                 return null;
               }
-              return <th key={index} {...settings} data-direction={settings.direction}
+              return <th ref={`${settings.label}Column`} key={index} {...settings} data-direction={settings.direction}
                          onClick={this._header_clicked.bind(this, settings)} >
                 {settings.label}
               </th>;
@@ -492,7 +492,7 @@ module.exports = Table = React.createClass({
              {this.state.data.map(this._get_rows)}
          </tbody>
        </table>
-      {(hasContent && ' ') || <div className="text-center"><b>{ _('No Data')}</b></div>}
+      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('No Data')}</b></div>}
     </div>;
   },
 });
