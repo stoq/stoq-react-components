@@ -267,6 +267,12 @@ module.exports = SearchBar = React.createClass({
     this.props.onSearch(event, key, this.getQuery());
   },
 
+  searchBtnStyle: function () {
+    if (!this.props.onExport)
+      return {borderRadius: '0px 3px 3px 0px'};
+    return {borderRadius: '0px 0px 0px 0px'};
+  },
+
   /*
    *  Filter Defining functions
    */
@@ -343,7 +349,7 @@ module.exports = SearchBar = React.createClass({
                         value={this.state.search} onChange={this.searchChanged}
                         onKeyUp={this.searchKeyUp}/>
                  <span className="input-group-btn">
-                   <button className="btn btn-primary" onClick={this.searchClicked}>
+                   <button className="btn btn-primary" onClick={this.searchClicked} style={this.searchBtnStyle()}>
                      {_('Search')}
                    </button>
                  </span>
