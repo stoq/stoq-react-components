@@ -47,7 +47,7 @@ var getInputFilter = function(type) {
                onChange={this.setValue.bind(this, index)} value={settings.value}
                onKeyUp={this.searchKeyUp}/>
            <span className="input-group-btn">
-             <button className="btn btn-sm remove-filter"
+             <button className="btn btn-sm remove-filter" ref={`${settings.getAttr()}FilterRemoveButton`}
                      onClick={this.setVisible.bind(this, index, false)}>
                <i className="fa fa-remove"></i>
              </button>
@@ -220,7 +220,7 @@ module.exports = SearchBar = React.createClass({
                  else
                    iconClass = 'fa fa-fw fa-square-o';
                  return <li key={index}>
-                          <a onClick={this._changeColumnVisibility.bind(this, column)}>
+                          <a ref={`${column.props.getAttr()}ColumnToggle`} onClick={this._changeColumnVisibility.bind(this, column)}>
                               <i className={iconClass}/>{column.props.label}</a>
                         </li>;
                }.bind(this))}
@@ -291,7 +291,7 @@ module.exports = SearchBar = React.createClass({
                </select>
              </span>
              <span className="input-group-btn">
-               <button className="btn btn-sm remove-filter"
+               <button className="btn btn-sm remove-filter" ref={`${settings.getAttr()}FilterRemoveButton`}
                        onClick={this.setVisible.bind(this, index, false)}>
                  <i className="fa fa-remove"></i>
                </button>
@@ -314,7 +314,7 @@ module.exports = SearchBar = React.createClass({
   },
 
   get_numeric__filter: function(settings, index) {
-    return <SearchBar.NumericFilter ref="numeric" label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)}
+    return <SearchBar.NumericFilter label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)}
                                     filterIndex={index} filter={this.state.filters[index]} setValue={this.setValue}/>;
   },
 
@@ -338,7 +338,7 @@ module.exports = SearchBar = React.createClass({
                    <ul className="dropdown-menu">
                      {this.state.filters.map(function(filter, index) {
                        return <li key={index}>
-                                 <a onClick={this.setVisible.bind(this, index, true)}>
+                                 <a onClick={this.setVisible.bind(this, index, true)} ref={`${filter.getAttr()}FilterToggleButton`}>
                                    {filter.label}
                                  </a>
                                </li>;
@@ -349,7 +349,7 @@ module.exports = SearchBar = React.createClass({
                         value={this.state.search} onChange={this.searchChanged}
                         onKeyUp={this.searchKeyUp}/>
                  <span className="input-group-btn">
-                   <button className="btn btn-primary" onClick={this.searchClicked} style={this.searchBtnStyle()}>
+                   <button className="btn btn-primary" ref='searchButton' onClick={this.searchClicked} style={this.searchBtnStyle()}>
                      {_('Search')}
                    </button>
                  </span>
@@ -358,7 +358,7 @@ module.exports = SearchBar = React.createClass({
              {this.state.filters.map(function(filter, index) {
                // Render the filter based on the specified type
                var component_func = this['get_' + filter.type + '__filter'];
-               return <div className={"filter-item " + (filter.visible ? '' : 'hidden')} key={index}>
+               return <div className={"filter-item " + (filter.visible ? '' : 'hidden')} key={index} ref={`${filter.getAttr()}Filter`}>
                           { component_func.call(this, filter, index) }
                       </div>;
              }.bind(this))}

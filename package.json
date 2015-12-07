@@ -21,6 +21,7 @@
     "babel-preset-react": "^6.1.18",
     "babel-preset-stage-0": "^6.1.18",
     "bootstrap": "^3.3.6",
+    "bootstrap-datepicker": "^1.5.0",
     "eslint": "^1.6.0",
     "eslint-plugin-no-console-log": "^1.0.0",
     "eslint-plugin-react": "^3.6.3",

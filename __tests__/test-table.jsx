@@ -3,9 +3,10 @@ jest.dontMock('../table.jsx');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import Table from '../table.jsx';
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');
+
+var Table = require('../table.jsx');
 React;
 
 const dataArray = [
