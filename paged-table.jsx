@@ -8,6 +8,7 @@ import Pager from 'components/pager';
  *
  * Props:
  *
+ * hasSearchBar {Boolean=true} Does this PagedTable component displays a searchBar?
  * loading {Boolean=false} Is this PagedTabled in loading state?
  * table {Table} The Table component related to this PagedTable container
  * onPageChange {Function} Callback fired when a page change is requested
@@ -17,9 +18,15 @@ let PagedTable = React.createClass({
     return this.refs.filter.value;
   },
 
+  getDefaultProps: function() {
+    return {
+      hasSearchBar: true,
+    };
+  },
+
   render() {
     return <div className="position-relative">
-  <form onSubmit={this.props.onSearch}>
+  { this.props.hasSearchBar && <form onSubmit={this.props.onSearch}>
     <div className="input-group">
       <input ref="filter" className="input-sm form-control"/>
       <span className="input-group-btn">
@@ -28,7 +35,7 @@ let PagedTable = React.createClass({
         </button>
       </span>
     </div>
-  </form>
+  </form>}
   {this.props.children}
   <Pager meta={this.props.meta} table={this.props.table} onPageChange={this.props.onPageChange}/>
   {this.props.loading && <div className="overlay">
