@@ -20,7 +20,10 @@ let Utils = {
 
     currency: function(value) {
       value = parseFloat(value) || 0.0;
-      return 'R$ ' + value.toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      let formatter = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits:2 });
+      if (value < 0)
+        return '-R$ ' + formatter;
+      return 'R$ ' + formatter;
     },
 
     datetime: function(value) {
