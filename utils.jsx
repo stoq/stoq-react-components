@@ -5,7 +5,7 @@ let Utils = {
 
   formatters: {
     alpha: function(value){
-      if(!value)  return "N/A";
+      if(!value) return "N/A";
       return value;
     },
 
@@ -70,7 +70,7 @@ let Utils = {
         if (["0300", "0500", "0800", "0900"].indexOf(value.substring(0, 4)) != -1){
           return `${value.substring(0, 4)} ${value.substring(4, 7)}-${value.substring(7)}`;
         }
-        if (value.substring(0, 1) === '0') {
+        else if (value.substring(0, 1) === '0') {
           return `(${value.substring(1, 3)}) ${value.substring(3, 7)}-${value.substring(7, 11)}`;
         }
         else {
