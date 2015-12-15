@@ -26,9 +26,12 @@ MultiRTC.prototype.add = function(id, signal) {
   }
 };
 
-MultiRTC.prototype.send = function(data) {
+MultiRTC.prototype.send = function(data, id) {
+  // Use a single id, if it is provided
+  var ids = id ? [id] : Object.keys(this.peers);
   data = JSON.stringify(data);
-  Object.keys(this.peers).forEach(function(key) {
+
+  ids.forEach(function(key) {
     var channel = this.peers[key].channel;
     if (channel && channel.readyState === 'open') {
       channel.send(data);
