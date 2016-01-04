@@ -36,7 +36,7 @@ MultiRTC.prototype.send = function(data, id) {
 
   ids.forEach(function(key) {
     // If the peer channel is open and available, send the message right away
-    var channel = this.peers[key].channel;
+    var channel = this.peers[key] && this.peers[key].channel;
     if (channel && channel.readyState === 'open') {
       return channel.send(data);
     }
