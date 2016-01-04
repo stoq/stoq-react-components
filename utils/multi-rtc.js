@@ -3,7 +3,9 @@ var RTC = require('./rtc');
 function MultiRTC(options) {
   this.events = {};
   this.peers = {};
+  this.pending = {};
   this.signaller = options.signaller;
+  this.metadata = options.metadata;
   this.wrtc = options.wrtc;
 }
 
@@ -12,9 +14,10 @@ function MultiRTC(options) {
  * @param {String} id A unique identifier to a given peer
  * @param {Object=undefined} signal The signal object
  */
-MultiRTC.prototype.add = function(id, signal) {
+MultiRTC.prototype.add = function(id, signal, metadata) {
   if (!this.peers[id]) {
     this.peers[id] = new RTC({dataChannel: true, offerer: !signal, wrtc: this.wrtc});
+    this.peers[id].metadata = metadata;
     this.peers[id].on('signal', this.onSignal.bind(this, id));
     this.peers[id].on('channel-open', this.onOpen.bind(this, id));
     this.peers[id].on('channel-message', this.onMessage.bind(this, id));
@@ -32,10 +35,16 @@ MultiRTC.prototype.send = function(data, id) {
   data = JSON.stringify(data);
 
   ids.forEach(function(key) {
+    // If the peer channel is open and available, send the message right away
     var channel = this.peers[key].channel;
     if (channel && channel.readyState === 'open') {
-      channel.send(data);
+      return channel.send(data);
     }
+
+    // If the peer channel is not yet available, add it to the pending queue
+    // and send it as soon as the given peer is connected.
+    this.pending[key] = this.pending[key] || [];
+    this.pending[key].push(data);
   }, this);
 };
 
@@ -52,6 +61,7 @@ MultiRTC.prototype.onSignal = function(id, signal) {
   this.signaller.emit('signal', {
     dest: id,
     signal: signal,
+    metadata: this.metadata,
   });
 };
 
@@ -60,6 +70,14 @@ MultiRTC.prototype.onSignal = function(id, signal) {
  * @param {String} id The peer whose connection was established
  */
 MultiRTC.prototype.onOpen = function(id) {
+  // Flush any pending messages to the given peer
+  var pending = this.pending[id];
+  pending && pending.forEach(function(data) {
+    this.peers[id].channel.send(data);
+  }, this);
+  delete this.pending[id];
+
+  // The alert the application that the a peer has been connected
   this.trigger('connect', [id]);
 };
 
