@@ -7,6 +7,7 @@ import $ from 'jquery';
  *
  * padding {Boolean=false} Applies a padding between the box and its content
  * collapsible {Boolean=false} Allow the box to be collapsed
+ * collapsed {Boolean=false} Should the box be initially collapsed?
  * loading {Boolean=true} Displays box loading animation
  */
 let Box = React.createClass({
@@ -105,6 +106,10 @@ let Box = React.createClass({
       collapsible: false,
       loading: true,
     };
+  },
+
+  componentDidMount: function() {
+    this.props.collapsed && this.onCollapseClick();
   },
 
   render() {
