@@ -42,10 +42,12 @@ let DateLineChart = React.createClass({
     }
 
     // The chart boundaries
+    // Default value for group is 'month', to avoid next-to infinite loops
+    // errors when no default group is provided.
     let {start, end, group} = {
       start: props.start.startOf('day'),
       end: props.end.endOf('day'),
-      group: props.group,
+      group: props.group || 'month',
     };
 
     // ChartJS API formatted data
