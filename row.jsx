@@ -47,7 +47,7 @@ module.exports = class Row extends React.Component {
    * React
    */
 
-  static defaultProps: {className: ''}
+  static defaultProps: {className: ''};
 
   render() {
     return <div className={"row " + this.props.className}>

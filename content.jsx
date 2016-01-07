@@ -10,7 +10,7 @@ import $ from 'jquery';
 module.exports = class Content extends React.Component {
   static propTypes: {
     children: React.PropTypes.any.isRequired,
-  }
+  };
 
   render() {
     return <section className='content'>{this.props.children}</section>;
@@ -29,7 +29,7 @@ module.exports.Header = class Header extends React.Component {
   static propTypes: {
     title: React.PropTypes.string,
     subtitle: React.PropTypes.string,
-  }
+  };
 
   render() {
     let title = $('title').html().split('-')[0];

@@ -209,7 +209,7 @@ let Utils = {
     if (start.isAfter(end))
       return [];
     var series = [start];
-    while (!series[series.length - 1].isSame(end, grouping)) {
+    while (!series[series.length - 1].isSameOrAfter(end, grouping)) {
       var last = moment(series[series.length - 1]);
       series.push(last.add(increment, grouping));
     }

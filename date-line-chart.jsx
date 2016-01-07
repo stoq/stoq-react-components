@@ -48,10 +48,6 @@ let DateLineChart = React.createClass({
       group: props.group,
     };
 
-    if (start.isAfter(end) || start.isSame(end, 'day')) {
-      return;
-    }
-
     // ChartJS API formatted data
     let data = {
       labels: [],
