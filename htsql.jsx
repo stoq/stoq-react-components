@@ -21,7 +21,7 @@ module.exports = class HTSQLItem extends React.Component {
     data: React.PropTypes.any,
     htsql: React.PropTypes.string,
     attr: React.PropTypes.string,
-  }
+  };
 
   resolveItem(item) {
     if (typeof item === 'object') {
