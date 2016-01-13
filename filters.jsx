@@ -41,6 +41,127 @@ var Select = React.createClass({
 
 module.exports.Select = Select;
 
+/* Single Date Filter
+ *
+ * Accepted Props:
+ *   date: A date to initialize the filter
+ *   group: Which grouping (day, month or year) should the calendar display
+ */
+module.exports.DateFilter = React.createClass({
+  viewModes: {
+    day: 0,
+    month: 1,
+    year: 2,
+  },
+
+  formats: {
+    day: 'DD MMMM YYYY',
+    month: 'MMMM YYYY',
+    year: 'YYYY',
+  },
+
+  /* Called when the user has manually changed the datepicker date
+   *
+   * @param {Event} event The boostrap-datepicker date changed event.
+   */
+  onDateChange: function(event) {
+    this.changeDate(moment(event.dates[0]));
+  },
+
+  /* Reset the datepicker, setting new values for `group` and `date`
+   *
+   * @param {String=this.props.group} group Which group should the datepicker
+   *                                        display (day, month or year).
+   * @param {Date=now} date Which should be the default date displayed on
+   *                        the datepicker
+   */
+  reset: function(group=this.props.group, date=new Date()) {
+    // Detach previously added event handlers and remove the previous datepicker
+    this.button.datepicker().off('changeDate', this.onDateChange);
+    this.button.datepicker('remove');
+
+    // Initialize a new datepicker
+    this.button.datepicker({
+      language: navigator.language,
+      autoclose: true,
+      minViewMode: this.viewModes[group],
+    });
+
+    // Set the default date
+    this.button.datepicker('setDate', date);
+
+    // Change the button appearance to show selected date text
+    this.changeDate(this.button.datepicker('getDate'), group, false);
+
+    // Setup onChange callback
+    this.button.datepicker().on('changeDate', this.onDateChange);
+  },
+
+  /* Change the displayed date on the <button>
+   *
+   * This method updates the text displayed on this component `render` method
+   *
+   * @param {Date} date Which date should be displayed?
+   * @param {String=this.props.group} group Which group is the date displayed
+   *                                        on? Could be `day` (11 February 2016),
+   *                                        `month` (February 2016) or year
+   *                                        (2016)
+   * @param {Boolean} trigger Should this date change be triggered on upper
+   *                          level components?
+   */
+  changeDate: function(date, group=this.props.group, trigger=true) {
+    date = moment(date);
+
+    let format = this.formats[group];
+    this.setState({text: date.format(format)}, () => {
+      trigger && this.props.onChange && this.props.onChange(date);
+    });
+  },
+
+  /*
+   * React
+   */
+
+  componentDidMount: function() {
+    // Grab the button element
+    this.button = $(this.refs.datepicker);
+    // and initialize it
+    this.reset();
+  },
+
+  componentWillReceiveProps: function(next) {
+    // If the current group has changed, datepicker text should be changed,
+    // along with bootstrap-datepicker `minViewMode`, so we need to reset the
+    // component.
+    if (this.props.group !== next.group) {
+      return this.reset(next.group, next.date && next.date.toDate());
+    }
+
+    // Also make sure to update the current date if it differs from the one
+    // provided via props
+    let currentDate = this.button.datepicker('getDate');
+    if (next.date && !next.date.isSame(currentDate, next.group)) {
+      this.changeDate(next.date, next.group, false);
+    }
+  },
+
+  getInitialState: function() {
+    return {};
+  },
+
+  getDefaultProps: function() {
+    return {
+      group: 'day',
+    };
+  },
+
+  render: function() {
+    return <button ref="datepicker" className="btn btn-primary">
+      { this.state.text }
+    </button>;
+  },
+});
+
 /* Daterange query with start, end and grouping options */
 module.exports.DaterangeFilter = React.createClass({
   macro_period: {
