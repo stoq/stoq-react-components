@@ -46,8 +46,12 @@ module.exports.Select = Select;
  * Accepted Props:
  *   date: A date to initialize the filter
  *   group: Which grouping (day, month or year) should the calendar display
+ *   onChange: Date being changed callback
+ *   getFormat: Change the default formatter to the filter's text
  */
 module.exports.DateFilter = React.createClass({
+  trigger: true,
+
   viewModes: {
     day: 0,
     month: 1,
@@ -65,7 +69,7 @@ module.exports.DateFilter = React.createClass({
    * @param {Event} event The boostrap-datepicker date changed event.
    */
   onDateChange: function(event) {
-    this.changeDate(moment(event.dates[0]));
+    this.trigger && this.setDateText(moment(event.dates[0]));
   },
 
   /* Reset the datepicker, setting new values for `group` and `date`
@@ -88,13 +92,18 @@ module.exports.DateFilter = React.createClass({
     });
 
     // Set the default date
-    this.button.datepicker('setDate', date);
-
-    // Change the button appearance to show selected date text
-    this.changeDate(this.button.datepicker('getDate'), group, false);
+    this.setDate(date, group);
 
     // Setup onChange callback
     this.button.datepicker().on('changeDate', this.onDateChange);
+  },
+
+  /* Default label formatter to the text exhibited on the button
+   *
+   * @param {Date} date The date that will be formatted
+   */
+  format: function(date, group) {
+    return date.format(this.formats[group]);
   },
 
   /* Change the displayed date on the <button>
@@ -109,13 +118,37 @@ module.exports.DateFilter = React.createClass({
    * @param {Boolean} trigger Should this date change be triggered on upper
    *                          level components?
    */
-  changeDate: function(date, group=this.props.group, trigger=true) {
+  setDateText: function(date, group=this.props.group, trigger=true) {
     date = moment(date);
 
-    let format = this.formats[group];
-    this.setState({text: date.format(format)}, () => {
+    let format = this.props.getFormat || this.format;
+    this.setState({text: format(date, group)}, () => {
       trigger && this.props.onChange && this.props.onChange(date);
     });
+  },
+
+  /* Change the datepicker date
+   *
+   * @param {Date} date - The date to be set
+   * @param {String} group - The group (day, month, year) in which the
+   *                         displayed text should be formatted.
+   */
+  setDate: function(date, group=this.props.group) {
+    // During this date change, prevent any kind of `onChange` trigger
+    this.trigger = false;
+    this.button.datepicker('setDate', date);
+    this.trigger = true;
+
+    // Change the button appearance to show selected date text
+    this.setDateText(this.getDate(), group, false);
+  },
+
+  /* Returns the currently selected date
+   *
+   * @returns Current selected date
+   */
+  getDate: function() {
+    return moment(this.button.datepicker('getDate'));
   },
 
   /*
@@ -126,7 +159,7 @@ module.exports.DateFilter = React.createClass({
     // Grab the button element
     this.button = $(this.refs.datepicker);
     // and initialize it
-    this.reset();
+    this.reset(this.props.group, this.props.defaultDate);
   },
 
   componentWillReceiveProps: function(next) {
@@ -141,7 +174,7 @@ module.exports.DateFilter = React.createClass({
     // provided via props
     let currentDate = this.button.datepicker('getDate');
     if (next.date && !next.date.isSame(currentDate, next.group)) {
-      this.changeDate(next.date, next.group, false);
+      this.setDateText(next.date, next.group, false);
     }
   },
 
