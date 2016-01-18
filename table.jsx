@@ -37,7 +37,7 @@ SORT_FUNC.phone = SORT_FUNC.numeric;
 let SORT_OPOSITE = {
   '+': '-',
   '-': '+',
-  '':  '+',
+  '': '+',
 };
 
 /* HTSQL Queried Bootstrap Striped Tabled

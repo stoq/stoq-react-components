@@ -11,6 +11,7 @@
     "comma-dangle": [2, "always-multiline"],
     "comma-style": [2, "last"],
     "comma-spacing": [2, {"before": false, "after": true}],
+    "key-spacing": [2, {"beforeColon": false, "afterColon": true}],
     "no-console-log/no-console-log": 2,
     "no-console": [0],
     "no-multiple-empty-lines": [2, {"max": 1}],

@@ -20,10 +20,10 @@ let Utils = {
 
     currency: function(value) {
       value = parseFloat(value) || 0.0;
-      let formatter = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits:2 });
+      let formattedValue = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       if (value < 0)
-        return '-R$ ' + formatter;
-      return 'R$ ' + formatter;
+        return '-R$ ' + formattedValue;
+      return 'R$ ' + formattedValue;
     },
 
     datetime: function(value) {
@@ -89,10 +89,10 @@ let Utils = {
 
     percentage: function(value) {
       value = parseFloat(value) || 0.0;
-      if (value % 1 === 0) {
-        return value.toLocaleString('pt-br') + ' %';
-      }
-      return value.toFixed(1).toLocaleString('pt-br') + ' %';
+      let formattedValue = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      if (value < 0)
+        return '-' + formattedValue + ' %';
+      return formattedValue + ' %';
     },
 
     bool: function(value) {

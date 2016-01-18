@@ -365,6 +365,6 @@ module.exports.BranchFilter = React.createClass({
 
   render: function() {
     return <Select options={this._getBranchOptions()} valueAttr='value' labelAttr='label'
-                   default={this.state.branch} ref='branch'/>;
+                   default={this.state.branch} ref='branch' style={this.props.style}/>;
   },
 });
