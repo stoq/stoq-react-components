@@ -1,7 +1,30 @@
 import React from 'react';
 import moment from 'moment';
+import _ from 'gettext';
 
 let Utils = {
+
+  backupStatuses: {
+    ok: {text: _('OK'), color: '#27ae60'},
+    late: {text: _('Late'), color: '#f1c40f'},
+    uploading: {text: _('uploading'), color: '#8e44ad'},
+    failed: {text: _('failed'), color: '#c0392b'},
+  },
+
+  getBackupStatus: function(backup) {
+    if (backup.end_time && moment().diff(backup.end_time, 'hours') <= 24) {
+      // The backup has been received on the last 24 hours
+      return 'ok';
+    } else if (backup.end_time && moment().diff(backup.end_time, 'hours') > 24) {
+      // Late backups are the ones that haven't been received in the last 24
+      // hours (considering they are the instance's last one)
+      return 'late';
+    } else if (!backup.end_time && moment().diff(backup.last_update, 'minutes') <= 15) {
+      // Backups without end time that had updates on the last 15 minutes
+      return 'uploading';
+    }
+    return 'failed';
+  },
 
   formatters: {
     alpha: function(value){
@@ -102,7 +125,42 @@ let Utils = {
       return <i className="fa fa-times low-opacity"/>;
     },
 
+    /* Transforms bytes into a human readable value */
+    byte: function(value) {
+      // Based on @hackedbellini's byte humanizer:
+      // https://github.com/nowsecure/datagrid-gtk3/blob/master/datagrid_gtk3/utils/transformations.py#L158
+      if (!value) {
+        return 'N/A';
+      }
+
+      var magnitudes = [
+        {label: 'PB', size: Math.pow(2, 50)},
+        {label: 'TB', size: Math.pow(2, 40)},
+        {label: 'GB', size: Math.pow(2, 30)},
+        {label: 'MB', size: Math.pow(2, 20)},
+        {label: 'KB', size: Math.pow(2, 10)},
+        {label: 'B', size: 0},
+      ];
+
+      magnitudes.some(function(magnitude) {
+        if (value >= magnitude.size) {
+          value = value / magnitude.size;
+          value = `${value.toFixed(2)} ${magnitude.label}`;
+          return true; // Break
+        }
+      });
+
+      return value;
+    },
+
     invoice: number => number,
+
+    backupStatus: function(anything, backup) {
+      let settings = Utils.backupStatuses[Utils.getBackupStatus(backup)];
+      return <span className="label" style={{backgroundColor: settings.color}}>
+        {settings.text}
+      </span>;
+    },
   },
 
   get: function(dictionary, keys) {

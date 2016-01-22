@@ -33,6 +33,7 @@ SORT_FUNC.currency = SORT_FUNC.numeric;
 SORT_FUNC.datetime = SORT_FUNC.alpha;
 SORT_FUNC.date = SORT_FUNC.alpha;
 SORT_FUNC.phone = SORT_FUNC.numeric;
+SORT_FUNC.byte = SORT_FUNC.numeric;
 
 let SORT_OPOSITE = {
   '+': '-',
