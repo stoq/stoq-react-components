@@ -129,7 +129,7 @@ let Utils = {
     byte: function(value) {
       // Based on @hackedbellini's byte humanizer:
       // https://github.com/nowsecure/datagrid-gtk3/blob/master/datagrid_gtk3/utils/transformations.py#L158
-      if (!value) {
+      if (!value && value !== 0) {
         return 'N/A';
       }
 
@@ -144,7 +144,7 @@ let Utils = {
 
       magnitudes.some(function(magnitude) {
         if (value >= magnitude.size) {
-          value = value / magnitude.size;
+          value = value / Math.max(magnitude.size, 1);
           value = `${value.toFixed(2)} ${magnitude.label}`;
           return true; // Break
         }
@@ -160,6 +160,14 @@ let Utils = {
       return <span className="label" style={{backgroundColor: settings.color}}>
         {settings.text}
       </span>;
+    },
+
+    fromNow: function(value) {
+      if (!value) {
+        return 'N/A';
+      }
+      let datetime = moment(value);
+      return `${datetime.format('DD/MM/YYYY HH:mm')} (${datetime.fromNow()})`;
     },
   },
 
