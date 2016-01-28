@@ -143,9 +143,12 @@ let Utils = {
       ];
 
       magnitudes.some(function(magnitude) {
-        if (value >= magnitude.size) {
+        if (Math.abs(value) >= magnitude.size) {
           value = value / Math.max(magnitude.size, 1);
-          value = `${value.toFixed(2)} ${magnitude.label}`;
+          if (magnitude.label !== 'B') {
+            value = value.toFixed(2);
+          }
+          value = `${value} ${magnitude.label}`;
           return true; // Break
         }
       });
