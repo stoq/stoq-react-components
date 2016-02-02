@@ -363,8 +363,22 @@ module.exports.BranchFilter = React.createClass({
     return value && `${branchAttr} == '${value}'`;
   },
 
+  /*
+   * Callbacks
+   */
+
+  onChange: function(event) {
+    let selected = this.refs.branch.refs.select.value;
+    this.props.onChange && this.props.onChange(event, selected);
+  },
+
+  /*
+   * React
+   */
+
   render: function() {
     return <Select options={this._getBranchOptions()} valueAttr='value' labelAttr='label'
-                   default={this.state.branch} ref='branch' style={this.props.style}/>;
+                   default={this.state.branch} ref='branch' style={this.props.style}
+                   onChange={this.onChange}/>;
   },
 });
