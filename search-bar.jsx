@@ -35,6 +35,7 @@ var QUERY_OPERATION = {
 
 QUERY_OPERATION.datetime = QUERY_OPERATION.date;
 QUERY_OPERATION.currency = QUERY_OPERATION.numeric;
+QUERY_OPERATION.link = QUERY_OPERATION.alpha;
 
 /* Returns a getter for the input filter of a given type */
 var getInputFilter = function(type) {
@@ -298,6 +299,8 @@ module.exports = SearchBar = React.createClass({
              </span>
            </div>;
   },
+
+  get_link__filter: getInputFilter('text'),
 
   get_invoice__filter: getInputFilter('text'),
 

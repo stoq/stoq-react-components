@@ -176,7 +176,7 @@ module.exports = Table = React.createClass({
       formatter = column.props.formatter;
     }
 
-    return formatter(value, object, default_formatter, row_index);
+    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
   },
 
   _getColumnSettings: function(column, props) {

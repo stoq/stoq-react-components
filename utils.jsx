@@ -172,6 +172,12 @@ let Utils = {
       let datetime = moment(value);
       return `${datetime.format('DD/MM/YYYY HH:mm')} (${datetime.fromNow()})`;
     },
+
+    link: function(displayValue=_('N/A'), object, unusedParam1, unusedParam2, config) {
+      if (config === undefined)
+        return displayValue;
+      return <a href={`#!/${config.prefix}${object[config.idAttr]}`}>{displayValue}</a>;
+    },
   },
 
   get: function(dictionary, keys) {
