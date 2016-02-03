@@ -41,6 +41,69 @@ var Select = React.createClass({
 
 module.exports.Select = Select;
 
+/* Single Day Filter
+ *
+ * Accepted Props:
+ *   attr: A string to be used as a key to the date value
+ *   style: custom style for the filter
+ */
+module.exports.DayFilter = React.createClass({
+  getQuery: function() {
+    var query = {};
+    query[this.props.attr] = this.state.date.format('YYYY-MM-DD');
+    return query;
+  },
+
+  updatePicker: function() {
+    var date = this.state.date;
+    this.datepicker.datepicker('update', date.toDate());
+  },
+
+  /*
+   *  Callbacks
+   */
+
+  onDateIncrement: function(increment) {
+    return () => {
+      var date = this.state.date.add(increment, 'days');
+      this.setState({date: moment(date)}, this.updatePicker);
+    };
+  },
+
+  onDateChange: function(event) {
+    this.setState({date: moment(event.date)}, this.updatePicker);
+  },
+
+  /*
+   *  React implementation
+   */
+
+  componentDidMount: function() {
+    this.datepicker = $(this.refs.datepicker);
+    this.datepicker.datepicker({autoclose: true});
+    this.datepicker.on('changeDate', this.onDateChange);
+    this.updatePicker();
+  },
+
+  getInitialState: function() {
+    return {date: moment()};
+  },
+
+  render: function() {
+    return <div className="btn-group" style={this.props.style}>
+      <button className="btn btn-default" onClick={this.onDateIncrement(-1)}>
+        <i className="fa fa-chevron-left"></i>
+      </button>
+      <button ref="datepicker" className="btn btn-default" style={{'minWidth': '15em'}}>
+        {this.state.date.format('LL')}
+      </button>
+      <button className="btn btn-default" onClick={this.onDateIncrement(1)}>
+        <i className="fa fa-chevron-right"></i>
+      </button>
+    </div>;
+  },
+});
+
 /* Single Date Filter
  *
  * Accepted Props:
