@@ -2,7 +2,13 @@ import React from 'react';
 import moment from 'moment';
 import _ from 'gettext';
 import Utils from 'utils';
+import $ from 'jquery';
+
+// Expose jQuery to the global scope so that bootstrap datepicker's locale
+// can find it
+window.jQuery = $;
 require('bootstrap-datepicker');
+require('bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR');
 
 /* <select><options/></select> in ReactJS */
 var Select = React.createClass({
@@ -80,7 +86,10 @@ module.exports.DayFilter = React.createClass({
 
   componentDidMount: function() {
     this.datepicker = $(this.refs.datepicker);
-    this.datepicker.datepicker({autoclose: true});
+    this.datepicker.datepicker({
+      autoclose: true,
+      language: 'pt-BR',
+    });
     this.datepicker.on('changeDate', this.onDateChange);
     this.updatePicker();
   },
@@ -144,7 +153,9 @@ module.exports.DateFilter = React.createClass({
    */
   reset: function(group=this.props.group, date=new Date()) {
     // Detach previously added event handlers and remove the previous datepicker
-    this.button.datepicker().off('changeDate', this.onDateChange);
+    this.button.datepicker({
+      language: 'pt-BR',
+    }).off('changeDate', this.onDateChange);
     this.button.datepicker('remove');
 
     // Initialize a new datepicker
@@ -347,7 +358,7 @@ module.exports.DaterangeFilter = React.createClass({
     node.datepicker({
       autoclose: true,
       format: moment().localeData().longDateFormat('L').toLowerCase(),
-      language: navigator.language,
+      language: 'pt-BR',
     });
 
     // Bootstrap datepicker uses jquery events.
