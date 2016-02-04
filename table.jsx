@@ -26,6 +26,8 @@ let  SORT_FUNC = {
     }
     return 0;
   },
+
+  ...Utils.sorters,
 };
 
 SORT_FUNC.id = SORT_FUNC.numeric;
@@ -143,9 +145,10 @@ module.exports = Table = React.createClass({
       var a_attr = a[column.getAttr()];
       var b_attr = b[column.getAttr()];
       if (direction === '+') {
-        return sort_func(a_attr, b_attr);
+        // Try the attributes first, but fall back to the object
+        return sort_func(a_attr || a, b_attr || b);
       }
-      return sort_func(b_attr, a_attr);
+      return sort_func(b_attr || b, a_attr || a);
     }.bind(this));
 
     // Then update the current state

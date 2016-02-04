@@ -27,6 +27,8 @@ let Utils = {
   },
 
   formatters: {
+    id: value => value,
+
     alpha: function(value){
       if(!value) return "N/A";
       return value;
