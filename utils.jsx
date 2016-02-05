@@ -39,7 +39,7 @@ let Utils = {
       if (value % 1 === 0) {
         return value.toLocaleString('pt-br');
       }
-      let rounded = parseFloat(value).toFixed(3);
+      let rounded = parseFloat(value).toFixed(2);
       return parseFloat(rounded).toLocaleString('pt-br');
     },
 
