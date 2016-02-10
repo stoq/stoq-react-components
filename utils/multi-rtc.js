@@ -95,6 +95,7 @@ MultiRTC.prototype.onMessage = function(id, event) {
  * @param {String} id The peer whose connection was closed
  */
 MultiRTC.prototype.onClose = function(id) {
+  delete this.peers[id];
   this.trigger('disconnect', [id]);
 };
 
