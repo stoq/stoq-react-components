@@ -87,6 +87,7 @@ module.exports.DayFilter = React.createClass({
   componentDidMount: function() {
     this.datepicker = $(this.refs.datepicker);
     this.datepicker.datepicker({
+      orientation: 'bottom',
       autoclose: true,
       language: 'pt-BR',
     });
@@ -154,12 +155,14 @@ module.exports.DateFilter = React.createClass({
   reset: function(group=this.props.group, date=new Date()) {
     // Detach previously added event handlers and remove the previous datepicker
     this.button.datepicker({
+      orientation: 'bottom',
       language: 'pt-BR',
     }).off('changeDate', this.onDateChange);
     this.button.datepicker('remove');
 
     // Initialize a new datepicker
     this.button.datepicker({
+      orientation: 'bottom',
       language: navigator.language,
       autoclose: true,
       minViewMode: this.viewModes[group],
@@ -360,6 +363,7 @@ module.exports.DaterangeFilter = React.createClass({
   componentDidMount: function() {
     var node = $(this.refs.datepicker);
     node.datepicker({
+      orientation: 'bottom',
       autoclose: true,
       format: moment().localeData().longDateFormat('L').toLowerCase(),
       language: 'pt-BR',
