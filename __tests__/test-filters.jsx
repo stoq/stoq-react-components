@@ -3,6 +3,7 @@ jest.dontMock('../filters.jsx');
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 window.$ = window.jQuery = require('jquery');
+window.localStorage = window.localStorage || {};
 React;
 
 var Filters = require('../filters.jsx');

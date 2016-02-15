@@ -333,6 +333,9 @@ module.exports.DaterangeFilter = React.createClass({
   getHTQuery: function(dateAttr=this.props.attr) {
     var start = this.state.period[0].format('YYYY-MM-DD');
     var end = this.state.period[1].format('YYYY-MM-DD');
+    localStorage.filterStart = start;
+    localStorage.filterEnd = end;
+    localStorage.filterGroup = this.state.group;
     return {
       start,
       end,
@@ -343,10 +346,11 @@ module.exports.DaterangeFilter = React.createClass({
 
   getInitialState: function() {
     var queryParams = Utils.getParams();
-    var group = queryParams.group || 'day';
+    var group = queryParams.group || localStorage.filterGroup || 'day';
     var macro_group = this.macro_period[group];
     var period = (queryParams.start ? [moment(queryParams.start), moment(queryParams.end)] :
-                  this.props.defaultDate || [moment().startOf(macro_group), moment().endOf(macro_group)]);
+                  [moment(localStorage.filterStart), moment(localStorage.filterEnd)] ||
+                  [moment().startOf(macro_group), moment().endOf(macro_group)]);
     return {
       period: period,
       group: group,
@@ -429,11 +433,13 @@ module.exports.BranchFilter = React.createClass({
 
   getInitialState: function() {
     var queryParams = Utils.getParams();
-    return {branch: queryParams.branch || ''};
+    return {branch: queryParams.branch || localStorage.filterBranch || ''};
   },
 
   getHTQuery: function(branchAttr=this.props.attr) {
     var value = this.refs.branch.refs.select.value;
+    if (localStorage.filterBranch)
+      value = localStorage.filterBranch;
     return value && `${branchAttr} == '${value}'`;
   },
 
@@ -443,6 +449,7 @@ module.exports.BranchFilter = React.createClass({
 
   onChange: function(event) {
     let selected = this.refs.branch.refs.select.value;
+    localStorage.filterBranch = selected;
     this.props.onChange && this.props.onChange(event, selected);
   },
 
