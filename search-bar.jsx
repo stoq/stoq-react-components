@@ -151,7 +151,7 @@ module.exports = SearchBar = React.createClass({
     var filters = [];
     React.Children.map(table.props.children, function(column) {
       // If the column does not require any filter, skip it.
-      if (!column.props.filter) {
+      if (!column.props.filter || table.props.hiddenColumns.indexOf(column.props.getAttr()) != -1) {
         return;
       }
       // If a filter is required, create it
@@ -187,6 +187,7 @@ module.exports = SearchBar = React.createClass({
 
   _changeColumnVisibility: function(column) {
     this.props.toggleColumn(column);
+    this.setupFilters(this.props.table);
   },
 
   _getExportButton: function() {

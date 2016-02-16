@@ -175,8 +175,9 @@ let Utils = {
       return `${datetime.format('DD/MM/YYYY HH:mm')} (${datetime.fromNow()})`;
     },
 
-    link: function(displayValue=_('N/A'), object, unusedParam1, unusedParam2, config) {
-      if (config === undefined)
+    link: function(displayValue, object, unusedParam1, unusedParam2, config) {
+      displayValue = displayValue || _('N/A');
+      if (config === undefined || !object[config.idAttr])
         return displayValue;
       return <a href={`#!/${config.prefix}${object[config.idAttr]}`}>{displayValue}</a>;
     },
