@@ -351,9 +351,23 @@ module.exports.DaterangeFilter = React.createClass({
     var queryParams = Utils.getParams();
     var group = queryParams.group || localStorage.filterGroup || 'day';
     var macro_group = this.macro_period[group];
-    var period = (queryParams.start ? [moment(queryParams.start), moment(queryParams.end)] :
-                  [moment(localStorage.filterStart), moment(localStorage.filterEnd)] ||
-                  [moment().startOf(macro_group), moment().endOf(macro_group)]);
+
+    var period = [];
+    if (queryParams.start)
+      period = [moment(queryParams.start), moment(queryParams.end)];
+    else if (localStorage.filterStart) {
+      period = [moment(localStorage.filterStart), moment(localStorage.filterEnd)];
+      period = period.map(function(date) {
+        if (!date.isValid()) {
+          // Returns today's day and clear the cache if the date is invalid
+          localStorage.filterStart = localStorage.filterEnd = "";
+          return moment();
+        }
+        return date;
+      });
+    } else
+      period = [moment().startOf(macro_group), moment().endOf(macro_group)];
+
     return {
       period: period,
       group: group,
