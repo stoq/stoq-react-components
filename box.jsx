@@ -43,14 +43,18 @@ let Box = React.createClass({
     if (!this.props.icon) {
       return;
     }
-    return <i className={this.props.icon}></i>;
+    return <i className={this.props.icon} style={{marginRight: '5px'}}></i>;
   },
 
   _getTitle: function() {
     if (!this.props.title) {
       return;
     }
-    return <h3 className="box-title">{ this.props.title }</h3>;
+    return <div>
+      {this._getIcon()}
+      <h3 className="box-title">{ this.props.title }</h3>
+      <div className="pull-right">{this.props.customTitle}</div>
+    </div>;
   },
 
   _getCollapseButton: function() {
@@ -81,7 +85,6 @@ let Box = React.createClass({
       return null;
     }
     return <div className="box-header">
-             {this._getIcon()}
              {this._getTitle()}
              {this._getCollapseButton()}
              {this._getOnUpdate()}
