@@ -449,7 +449,10 @@ module.exports = Table = React.createClass({
       }, item);
     }, this);
 
-    this.setState({data}, () => {
+    this.setState({
+      headers: this._getHeaderSettings(props),
+      data,
+    }, () => {
       this.props.blinkable && setTimeout(() => {
         let data = this.state.data.map(function(item) {
           item._isNew = false;
