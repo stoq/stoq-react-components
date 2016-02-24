@@ -16,6 +16,10 @@ var HTSQL = {
   },
 
   contains: function(attr, value) {
+    if (!value) {
+      return '';
+    }
+
     return attr.map(function(attr) {
       return `contains(${attr}, '${value}')`;
     }).join(' | ');
