@@ -21,7 +21,12 @@ var NUMERIC_QUERY_OPERATIONS = {
 /* Which operand should be used for each data-type */
 var QUERY_OPERATION = {
   alpha: (attr, value) => `${attr}~'${value}'`,
-  select: (attr, value) => `${attr}=='${value}'`,
+  select: (attr, value) => {
+    if (value === '__null__')
+      return `${attr}==null`;
+
+    return `${attr}=='${value}'`;
+  },
   invoice: (attr, value) => `str(${attr})~'${value}'`,
   date: (attr, value) => {
     var dates = value.split('to');
