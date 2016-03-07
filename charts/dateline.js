@@ -15,6 +15,12 @@ var DateLine = Chart.types.Line.extend({
     $.each(labels, function(index, label) {
       this.dates.push(label);
       labels[index] = label[this.options.formatLabel]();
+
+      // Fixes Date.getMonth's deviation from the actual month number
+      if (this.options.formatLabel === 'month') {
+        labels[index] += 1;
+      }
+
     }.bind(this));
 
     Chart.types.Line.prototype.buildScale.apply(this, arguments);

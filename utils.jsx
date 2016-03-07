@@ -321,6 +321,28 @@ let Utils = {
   escape: function(string) {
     return string && string.replace(/'/g, "''");
   },
+
+  /* Get the value represented by a HTSQLItem Component
+   *
+   * @param {*} component - A value to be displayed somewhere, may be a
+   *                        HTSQLItem component, a string, null, undefined and
+   *                        etc.
+   */
+  getValue: function(component) {
+    // Falsy values are converted into empty strings
+    if (!component) {
+      return '';
+    }
+
+    // Strings and Numbers are returned as is
+    if (typeof component === 'string' || typeof component === 'number') {
+      return component;
+    }
+
+    // Resolve HTSQLItem's value
+    let attr = component.props.attr || Utils.encode(component.props.htsql);
+    return component.props.data[attr] || '';
+  },
 };
 
 /* Bind the formatters with their parent for getting access to it's properties */

@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 
+import Utils from 'utils';
+
 /* AdminLTE Content to be displayed
  *
  * Props:
@@ -33,7 +35,9 @@ module.exports.Header = class Header extends React.Component {
 
   render() {
     let title = $('title').html().split('-')[0];
-    $('title').text(`${title} - ${this.props.title} ${this.props.subtitle || ''}`);
+    let pageTitle = Utils.getValue(this.props.title);
+    let pageSubtitle = Utils.getValue(this.props.subtitle);
+    $('title').text(`${title} - ${pageTitle} ${pageSubtitle}`);
     return <section className="content-header">
       <h1 className="page-title">
         <div style={{display: 'inline-block'}} data-step={this.props.dataStep} data-intro={this.props.dataIntro}>
