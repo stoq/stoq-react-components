@@ -33,6 +33,10 @@ module.exports.Header = class Header extends React.Component {
     subtitle: React.PropTypes.string,
   };
 
+  refresh() {
+    this.props.refresh();
+  }
+
   render() {
     let title = $('title').html().split('-')[0];
     let pageTitle = Utils.getValue(this.props.title);
@@ -44,6 +48,10 @@ module.exports.Header = class Header extends React.Component {
           { this.props.title } <small>{ this.props.subtitle }</small>
         </div>
         { this.props.children }
+        { this.props.refresh &&
+        <button className="btn btn-default pull-right hover-spin">
+            <i className="fa fa-refresh" onClick={this.refresh.bind(this)}/>
+        </button>}
       </h1>
     </section>;
   }
