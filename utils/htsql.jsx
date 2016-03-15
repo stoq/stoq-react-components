@@ -20,9 +20,9 @@ var HTSQL = {
       return '';
     }
 
-    return attr.map(function(attr) {
+    return `(${attr.map(function(attr) {
       return `contains(${attr}, '${value}')`;
-    }).join(' | ');
+    }).join(' | ')})`;
   },
 
 };
