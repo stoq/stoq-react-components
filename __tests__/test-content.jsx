@@ -25,7 +25,8 @@ describe('Content', () => {
 
   it('renders the title correctly', () => {
     let titleDiv = TestUtils.findRenderedDOMComponentWithTag(contentHeaderComponent, 'div');
-    expect(titleDiv.textContent).toBe('test subtest');
+    // FIXME: Using weird space character because &nbsp; gets converted into it
+    expect(titleDiv.textContent).toBe('test subtest');
   });
 
   it('set the page title with the content header titles', () => {

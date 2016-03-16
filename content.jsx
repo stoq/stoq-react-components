@@ -33,10 +33,6 @@ module.exports.Header = class Header extends React.Component {
     subtitle: React.PropTypes.string,
   };
 
-  refresh() {
-    this.props.refresh();
-  }
-
   render() {
     let title = $('title').html().split('-')[0];
     let pageTitle = Utils.getValue(this.props.title);
@@ -45,12 +41,15 @@ module.exports.Header = class Header extends React.Component {
     return <section className="content-header">
       <h1 className="page-title">
         <div style={{display: 'inline-block'}} data-step={this.props.dataStep} data-intro={this.props.dataIntro}>
-          { this.props.title } <small>{ this.props.subtitle }</small>
+          { this.props.title }&nbsp;
+          <small className="hidden-xs">
+            { this.props.subtitle }
+          </small>
         </div>
         { this.props.children }
         { this.props.refresh &&
-        <button className="btn btn-default pull-right hover-spin">
-            <i className="fa fa-refresh" onClick={this.refresh.bind(this)}/>
+        <button className="btn btn-default pull-right" onClick={this.props.refresh}>
+            <i className="fa fa-refresh"/>
         </button>}
       </h1>
     </section>;
