@@ -48,7 +48,7 @@ module.exports.Header = class Header extends React.Component {
         </div>
         { this.props.children }
         { this.props.refresh &&
-        <button className="btn btn-default pull-right" onClick={this.props.refresh}>
+        <button id="refresh-button" className="btn btn-default pull-right" onClick={this.props.refresh}>
             <i className="fa fa-refresh"/>
         </button>}
       </h1>
