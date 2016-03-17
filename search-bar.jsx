@@ -395,6 +395,7 @@ SearchBar.DateFilter = React.createClass({
       autoclose: true,
       format: moment().localeData().longDateFormat('L').toLowerCase(),
       language: navigator.language,
+      orientation: 'bottom',
     });
     // Setup event handling
     $(this.refs.start).on('changeDate', this.changeDate.bind(this, 'start'));
