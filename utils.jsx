@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import $ from 'jquery';
 import _ from 'gettext';
 
 let Utils = {
@@ -179,7 +180,8 @@ let Utils = {
       displayValue = displayValue || _('N/A');
       if (config === undefined || !object[config.idAttr])
         return displayValue;
-      return <a href={`#!/${config.prefix}${object[config.idAttr]}`}>{displayValue}</a>;
+      let params = this.getParams();
+      return <a href={`#!/${config.prefix}${object[config.idAttr]}?${$.param(params)}`}>{displayValue}</a>;
     },
   },
 
