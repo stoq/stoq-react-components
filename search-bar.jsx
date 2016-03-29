@@ -216,7 +216,7 @@ module.exports = SearchBar = React.createClass({
       return;
     }
     return <div className="input-group-btn">
-             <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Show/Hide columns">
+             <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Show/Hide columns")}>
                  <i className="fa fa-fw fa-columns"/>
              </button>
              <ul className="dropdown-menu">
@@ -338,22 +338,25 @@ module.exports = SearchBar = React.createClass({
   render: function() {
     return <div>
                <div className="input-group">
-               { this._getColumnsButton() }
-                 <span className="input-group-btn">
-                   <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Filters"
-                           style={{borderRadius: '0', borderRight: '0'}}>
-                     <i className="fa fa-fw fa-filter"></i>
-                   </button>
-                   <ul className="dropdown-menu">
-                     {this.state.filters.map(function(filter, index) {
-                       return <li key={index}>
-                                 <a onClick={this.setVisible.bind(this, index, true)} ref={`${filter.getAttr()}FilterToggleButton`}>
-                                   {filter.label}
-                                 </a>
-                               </li>;
-                     }.bind(this))}
-                   </ul>
-                 </span>
+                 { this._getColumnsButton() }
+                 { this.state.filters.length > 0 && (
+                   <span className="input-group-btn">
+                     <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
+                             style={{borderRadius: '0', borderRight: '0'}}>
+                       <i className="fa fa-fw fa-filter"></i>
+                     </button>
+                     <ul className="dropdown-menu">
+                       {this.state.filters.map(function(filter, index) {
+                         return <li key={index}>
+                                   <a onClick={this.setVisible.bind(this, index, true)} ref={`${filter.getAttr()}FilterToggleButton`}>
+                                     {filter.label}
+                                   </a>
+                                 </li>;
+                       }.bind(this))}
+                     </ul>
+                   </span>
+                   )
+                 }
                  <input type="search" className="form-control" placeholder="Search..."
                         value={this.state.search} onChange={this.searchChanged}
                         onKeyUp={this.searchKeyUp}/>
