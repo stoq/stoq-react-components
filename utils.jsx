@@ -181,6 +181,11 @@ let Utils = {
       if (config === undefined || !object[config.idAttr])
         return displayValue;
       let params = this.getParams();
+      // We don't want to store the current page count, so it will prevent
+      // the access of paged table with undesirable page count.
+      // FIXME: What it should do if the user explicity put a page count in the
+      // parameters?
+      delete params.page;
       return <a href={`#!/${config.prefix}${object[config.idAttr]}?${$.param(params)}`}>{displayValue}</a>;
     },
   },
