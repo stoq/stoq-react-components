@@ -1,4 +1,5 @@
 import React from 'react';
+import TooltipIcon from 'components/tooltip-icon';
 import $ from 'jquery';
 
 /* AdminLTE Box Widget https://almsaeedstudio.com/themes/AdminLTE/pages/widgets.html
@@ -80,6 +81,12 @@ let Box = React.createClass({
     </div>;
   },
 
+  _getTooltip: function() {
+    if (!this.props.tooltip)
+      return;
+    return <TooltipIcon tip={this.props.tooltip} className="box-tools pull-right"/>;
+  },
+
   _getHeader: function() {
     if (!this.props.title && !this.props.icon && !this.props.collapsible && !this.props.onUpdate) {
       return null;
@@ -88,6 +95,7 @@ let Box = React.createClass({
              {this._getTitle()}
              {this._getCollapseButton()}
              {this._getOnUpdate()}
+             {this._getTooltip()}
            </div>;
   },
 
