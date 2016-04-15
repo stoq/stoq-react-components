@@ -115,12 +115,14 @@ module.exports = SearchBar = React.createClass({
     this.setState({filters: filters});
   },
 
-  getHTQuery: function() {
-    var queries = [];
-
-    // Add the default search parameter if the user provided it.
+  getDefaultFilterHTQuery: function() {
     var search = Utils.escape(this.state.search);
-    search && queries.push(this.props.defaultHTSQLFilter(search));
+    if (search)
+      return this.props.defaultHTSQLFilter(search);
+  },
+
+  getAttributesFiltersHTQuery: function() {
+    var queries = [];
     this.state.filters.forEach(filter => {
       // Don't search filters that are not visible
       if (!filter.visible || !filter.value) {
@@ -131,6 +133,16 @@ module.exports = SearchBar = React.createClass({
       var operation = QUERY_OPERATION[filter.type];
       queries.push(`${operation(attr, Utils.escape(filter.value))}`);
     });
+    return queries;
+  },
+
+  getHTQuery: function() {
+    var queries = [];
+    // Add default search query if provided
+    var defaultFilter = this.getDefaultFilterHTQuery();
+    defaultFilter && queries.push(defaultFilter);
+    // Add attributes filters query
+    queries = queries.concat(this.getAttributesFiltersHTQuery());
 
     return queries.join('&');
   },

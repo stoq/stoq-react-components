@@ -2,7 +2,7 @@
   "name": "components",
   "version": "0.0.0",
   "scripts": {
-    "test": "NODE_PATH=$NODE_PATH:$PWD/fixtures jest && eslint . --ext .jsx --ext .js"
+    "test": "eslint . --ext .jsx --ext .js && NODE_PATH=$NODE_PATH:$PWD/fixtures jest"
   },
   "repository": {
     "type": "git",
