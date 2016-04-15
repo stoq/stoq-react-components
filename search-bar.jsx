@@ -40,6 +40,7 @@ var QUERY_OPERATION = {
 
 QUERY_OPERATION.datetime = QUERY_OPERATION.date;
 QUERY_OPERATION.currency = QUERY_OPERATION.numeric;
+QUERY_OPERATION.percentage = QUERY_OPERATION.numeric;
 QUERY_OPERATION.link = QUERY_OPERATION.alpha;
 
 /* Returns a getter for the input filter of a given type */
@@ -340,6 +341,10 @@ module.exports = SearchBar = React.createClass({
   },
 
   get_currency__filter: function() {
+    return this.get_numeric__filter.apply(this, arguments);
+  },
+
+  get_percentage__filter: function() {
     return this.get_numeric__filter.apply(this, arguments);
   },
 
