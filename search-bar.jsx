@@ -336,7 +336,7 @@ module.exports = SearchBar = React.createClass({
   },
 
   get_numeric__filter: function(settings, index) {
-    return <SearchBar.NumericFilter label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)}
+    return <SearchBar.NumericFilter label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)} onKeyUp={this.searchKeyUp}
                                     filterIndex={index} filter={this.state.filters[index]} setValue={this.setValue}/>;
   },
 
@@ -498,10 +498,12 @@ SearchBar.NumericFilter = React.createClass({
         <Select className='btn btn-sm' options={options} valueAttr='value' labelAttr='label'
                 onChange={this._setOperation} default={this.state.operation}/>
       </span>
-      <input ref="first" type="number" defaultValue={0} className="input-sm form-control" name="first" onChange={this._setValue}/>
+      <input ref="first" type="number" defaultValue={0} className="input-sm form-control" name="first" onChange={this._setValue}
+             onKeyUp={this.props.onKeyUp}/>
       {this.state.operation == '~' && [
         <span key={0} className="input-group-addon">{_('And')}</span>,
-        <input key={1} ref="second" type="number" defaultValue={0} className="input-sm form-control" name="second" onChange={this._setValue}/>,
+        <input key={1} ref="second" type="number" defaultValue={0} className="input-sm form-control" name="second" onChange={this._setValue}
+               onKeyUp={this.props.onKeyUp}/>,
       ]}
       <span className="input-group-btn">
         <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
