@@ -47,6 +47,7 @@ var EditableInput = React.createClass({
       userToggleable: true,
       max: false,
       autotoggle: true,
+      name: '',
     };
   },
 
@@ -62,7 +63,7 @@ var EditableInput = React.createClass({
       <input ref="input" className={"form-control" + this.addClass('uppercase') + this.addClass('lowercase')}
              defaultValue={this.props.value} disabled={this.state.disabled} onChange={this.onChange}
              type={this.props.type} maxLength={this.props.max} required={this.props.required}
-             autoComplete="off"/>
+             autoComplete="off" name={this.props.name}/>
       {!this.state.dirty && this.props.userToggleable && <i className="fa fa-pencil" onClick={this.toggle}/>}
     </div>;
   },
