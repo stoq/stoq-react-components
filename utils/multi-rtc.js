@@ -4,6 +4,8 @@ function MultiRTC(options) {
   this.events = {};
   this.peers = {};
   this.pending = {};
+  this.responses = {};
+
   this.signaller = options.signaller;
   this.metadata = options.metadata;
   this.wrtc = options.wrtc;
@@ -29,7 +31,14 @@ MultiRTC.prototype.add = function(id, signal, metadata) {
   }
 };
 
-MultiRTC.prototype.send = function(data, id) {
+MultiRTC.prototype.send = function(data, id, onResponse) {
+  // If a response is expected, register its id before sending it
+  if (onResponse) {
+    let randomString = Math.random().toString(32);
+    data.__response_id__ = randomString;
+    this.responses[randomString] = onResponse;
+  }
+
   // Use a single id, if it is provided
   var ids = id ? [id] : Object.keys(this.peers);
   data = JSON.stringify(data);
@@ -87,7 +96,17 @@ MultiRTC.prototype.onOpen = function(id) {
  * @param {Object} event The MessageEvent received from the peer
  */
 MultiRTC.prototype.onMessage = function(id, event) {
-  this.trigger('data', [id, JSON.parse(event.data)]);
+  let data = JSON.parse(event.data);
+
+  // When receiving a message that has a __response_id__ respond only to it,
+  // without ever triggering the `data` callback.
+  if (data.__response_id__) {
+    let onResponse = this.responses[data.__response_id__];
+    delete this.responses[data.__response_id__];
+    return onResponse(data);
+  }
+
+  this.trigger('data', [id, data]);
 };
 
 /* A WebRTC connection has been closed
