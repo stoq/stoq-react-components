@@ -96,12 +96,12 @@ MultiRTC.prototype.onOpen = function(id) {
  * @param {Object} event The MessageEvent received from the peer
  */
 MultiRTC.prototype.onMessage = function(id, event) {
-  let data = JSON.parse(event.data);
+  var data = JSON.parse(event.data);
 
   // When receiving a message that has a __response_id__ respond only to it,
   // without ever triggering the `data` callback.
   if (data.__response_id__) {
-    let onResponse = this.responses[data.__response_id__];
+    var onResponse = this.responses[data.__response_id__];
     delete this.responses[data.__response_id__];
     return onResponse(data);
   }
