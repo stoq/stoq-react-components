@@ -35,7 +35,7 @@ MultiRTC.prototype.send = function(data, id, onResponse) {
   // If a response is expected, register its id before sending it
   if (onResponse) {
     var randomString = Math.random().toString(32);
-    data.__response_id__ = randomString;
+    data.__request_id__ = randomString;
     this.responses[randomString] = onResponse;
   }
 
