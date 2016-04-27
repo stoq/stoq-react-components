@@ -1,4 +1,5 @@
-import React from 'react';
+var React = require('react'),
+    _ = require('gettext');
 
 var EditableInput = React.createClass({
   addClass: function(attr, klass, container, falsy) {
@@ -35,6 +36,14 @@ var EditableInput = React.createClass({
     });
   },
 
+  onSave: function() {
+    if (!this.refs.input.value && !this.props.allowEmpty)
+      this.refs.input.value = this.props.value;
+    else
+      this.props.onSave();
+    this.disable();
+  },
+
   componentDidMount: function() {
     if (this.props.autotoggle && this.props.userToggleable && !this.props.value) {
       this.setState({dirty: true}, this.toggle);
@@ -61,10 +70,12 @@ var EditableInput = React.createClass({
   render: function() {
     return <div className={"editable-input" + this.addClass('disabled', 'active', this.state, true)}>
       <input ref="input" className={"form-control" + this.addClass('uppercase') + this.addClass('lowercase')}
-             defaultValue={this.props.value} disabled={this.state.disabled} onChange={this.onChange}
-             type={this.props.type} maxLength={this.props.max} required={this.props.required}
-             autoComplete="off" name={this.props.name}/>
-      {!this.state.dirty && this.props.userToggleable && <i className="fa fa-pencil" onClick={this.toggle}/>}
+             defaultValue={this.props.value} disabled={this.state.disabled} onChange={this.onChange} type={this.props.type}
+             maxLength={this.props.max} required={this.props.required} name={this.props.name} autoComplete="off"/>
+      {(this.props.onSave && !this.state.disabled) ?
+        (<i className="fa fa-save" title={_("Save")} onClick={this.onSave}/>) :
+        (!this.state.dirty && this.props.userToggleable && <i className="fa fa-pencil" onClick={this.toggle}/>)
+      }
     </div>;
   },
 });
