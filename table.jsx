@@ -490,8 +490,8 @@ module.exports = Table = React.createClass({
                 return null;
               }
               return <th ref={`${settings.label}Column`} key={index} {...settings} data-direction={settings.direction}
-                         onClick={this._header_clicked.bind(this, settings)} >
-                {settings.label}
+                         onClick={this._header_clicked.bind(this, settings)}>
+                <span data-toggle='tooltip' title={settings.description} data-delay='{"show":"500", "hide":"100"}'>{settings.label}</span>
               </th>;
             }.bind(this))}
            </tr>
