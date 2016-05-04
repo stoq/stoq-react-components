@@ -186,7 +186,8 @@ let Utils = {
       // FIXME: What it should do if the user explicity put a page count in the
       // parameters?
       delete params.page;
-      return <a href={`#!/${config.prefix}${object[config.idAttr]}?${$.param(params)}`}>{displayValue}</a>;
+      var prefixHasParam = config.prefix.indexOf('?') !== -1;
+      return <a href={`#!/${config.prefix}${object[config.idAttr]}${prefixHasParam ? '&' : '?'}${$.param(params)}`}>{displayValue}</a>;
     },
   },
 
