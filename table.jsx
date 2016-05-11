@@ -146,9 +146,9 @@ module.exports = Table = React.createClass({
       var b_attr = b[column.getAttr()];
       if (direction === '+') {
         // Try the attributes first, but fall back to the object
-        return sort_func(a_attr || a, b_attr || b);
+        return sort_func(a_attr, b_attr);
       }
-      return sort_func(b_attr || b, a_attr || a);
+      return sort_func(b_attr, a_attr);
     }.bind(this));
 
     // Then update the current state
