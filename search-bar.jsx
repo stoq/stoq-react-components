@@ -36,6 +36,7 @@ var QUERY_OPERATION = {
     let operation = value[0];
     return NUMERIC_QUERY_OPERATIONS[operation](attr, value.substring(1));
   },
+  uuid: (attr, value) => `${attr}='${value}'`,
 };
 
 QUERY_OPERATION.datetime = QUERY_OPERATION.date;
@@ -169,7 +170,7 @@ module.exports = SearchBar = React.createClass({
     var filters = [];
     React.Children.map(table.props.children, function(column) {
       // If the column does not require any filter, skip it.
-      if (!column.props.filter || table.props.hiddenColumns.indexOf(column.props.getAttr()) != -1) {
+      if (!column.props.filter) {
         return;
       }
       // If a filter is required, create it
@@ -205,7 +206,6 @@ module.exports = SearchBar = React.createClass({
 
   _changeColumnVisibility: function(column) {
     this.props.toggleColumn(column);
-    this.setupFilters(this.props.table);
   },
 
   _getExportButton: function() {
@@ -324,6 +324,8 @@ module.exports = SearchBar = React.createClass({
   get_invoice__filter: getInputFilter('text'),
 
   get_alpha__filter: getInputFilter('text'),
+
+  get_uuid__filter: getInputFilter('text'),
 
   get_date__filter: function(settings, index) {
     var daterange = Utils.parseDaterange(settings.value);

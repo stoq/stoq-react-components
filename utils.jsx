@@ -189,6 +189,8 @@ let Utils = {
       var prefixHasParam = config.prefix.indexOf('?') !== -1;
       return <a href={`#!/${config.prefix}${object[config.idAttr]}${prefixHasParam ? '&' : '?'}${$.param(params)}`}>{displayValue}</a>;
     },
+
+    uuid: value => value,
   },
 
   get: function(dictionary, keys) {
