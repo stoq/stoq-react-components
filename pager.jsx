@@ -182,7 +182,7 @@ let Pager = React.createClass({
         this._addPage(meta.page + i, meta.page + i);
 
     this._addPage('Next', (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
-    this._addPage('Last', meta.page_count, '>>');
+    this._addPage('Last', meta.page_count ? meta.page_count : 1, '>>');
 
     return <div className="list_pager clearfix">
       <ul className="pagination no-margin">{ this._pages }</ul>
