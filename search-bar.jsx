@@ -213,7 +213,7 @@ module.exports = SearchBar = React.createClass({
       return null;
     }
     return <div className="input-group-btn">
-             <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Export to file">
+             <button name="export-file" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Export to file">
                  <i className="fa fa-file-excel-o"/>
              </button>
              <ul className="dropdown-menu pull-right">
@@ -229,7 +229,7 @@ module.exports = SearchBar = React.createClass({
       return;
     }
     return <div className="input-group-btn">
-             <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Show/Hide columns")}>
+             <button name="toggle-columns" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Show/Hide columns")}>
                  <i className="fa fa-fw fa-columns"/>
              </button>
              <ul className="dropdown-menu">
@@ -240,7 +240,7 @@ module.exports = SearchBar = React.createClass({
                  else
                    iconClass = 'fa fa-fw fa-square-o';
                  return <li key={index}>
-                          <a ref={`${column.props.getAttr()}ColumnToggle`} onClick={this._changeColumnVisibility.bind(this, column)}>
+                          <a data-column-type={column.props.label} ref={`${column.props.getAttr()}ColumnToggle`} onClick={this._changeColumnVisibility.bind(this, column)}>
                               <i className={iconClass}/>{column.props.label}</a>
                         </li>;
                }.bind(this))}
@@ -364,7 +364,7 @@ module.exports = SearchBar = React.createClass({
                  { this._getColumnsButton() }
                  { this.state.filters.length > 0 && (
                    <span className="input-group-btn">
-                     <button className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
+                     <button name="filters" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
                              style={{borderRadius: '0', borderRight: '0'}}>
                        <i className="fa fa-fw fa-filter"></i>
                      </button>
@@ -394,7 +394,8 @@ module.exports = SearchBar = React.createClass({
              {this.state.filters.map(function(filter, index) {
                // Render the filter based on the specified type
                var component_func = this['get_' + filter.type + '__filter'];
-               return <div className={"filter-item " + (filter.visible ? '' : 'hidden')} key={index} ref={`${filter.getAttr()}Filter`}>
+               return <div className={"filter-item " + (filter.visible ? '' : 'hidden')} key={index}
+                           ref={`${filter.getAttr()}Filter`} data-attr={filter.getAttr()}>
                           { component_func.call(this, filter, index) }
                       </div>;
              }.bind(this))}
@@ -406,7 +407,7 @@ SearchBar.DateFilter = React.createClass({
 
   changeDate: function(key, event) {
     var stateChange = {};
-    stateChange[key] = moment(event.date);
+    stateChange[key] = moment(event.date || event.originalEvent.date);
     this.setState(stateChange, function() {
       this.props.onChangeDate(this.state);
     }.bind(this));
