@@ -350,6 +350,10 @@ module.exports = SearchBar = React.createClass({
     return this.get_numeric__filter.apply(this, arguments);
   },
 
+  get_filter_type: function(key) {
+    return typeof(key.filter) == 'string' ? key.filter : key['data-type'];
+  },
+
   /*
    *  React implementation
    */
@@ -367,7 +371,8 @@ module.exports = SearchBar = React.createClass({
                      <ul className="dropdown-menu">
                        {this.state.filters.map(function(filter, index) {
                          return <li key={index}>
-                                   <a onClick={this.setVisible.bind(this, index, true)} ref={`${filter.getAttr()}FilterToggleButton`}>
+                                   <a data-type={this.get_filter_type(filter)} onClick={this.setVisible.bind(this, index, true)}
+                                      ref={`${filter.getAttr()}FilterToggleButton`}>
                                      {filter.label}
                                    </a>
                                  </li>;
