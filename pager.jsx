@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import Utils from 'utils';
+import _ from 'gettext';
 
 /* A paginated Table pager
  *
@@ -181,8 +183,8 @@ let Pager = React.createClass({
       if (meta.page + i <= meta.page_count)
         this._addPage(meta.page + i, meta.page + i);
 
-    this._addPage('Next', (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
-    this._addPage('Last', meta.page_count ? meta.page_count : 1, '>>');
+    this._addPage(_('Next'), (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
+    this._addPage(_('Last'), meta.page_count ? meta.page_count : 1, '>>');
 
     return <div className="list_pager clearfix">
       <ul className="pagination no-margin">{ this._pages }</ul>
