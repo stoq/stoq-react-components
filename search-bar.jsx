@@ -350,10 +350,6 @@ module.exports = SearchBar = React.createClass({
     return this.get_numeric__filter.apply(this, arguments);
   },
 
-  get_filter_type: function(key) {
-    return typeof(key.filter) == 'string' ? key.filter : key['data-type'];
-  },
-
   /*
    *  React implementation
    */
@@ -364,14 +360,14 @@ module.exports = SearchBar = React.createClass({
                  { this._getColumnsButton() }
                  { this.state.filters.length > 0 && (
                    <span className="input-group-btn">
-                     <button name="filters" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
+                     <button name="filters" className="btn btn-default btn-search-filters dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
                              style={{borderRadius: '0', borderRight: '0'}}>
                        <i className="fa fa-fw fa-filter"></i>
                      </button>
                      <ul className="dropdown-menu">
                        {this.state.filters.map(function(filter, index) {
                          return <li key={index}>
-                                   <a data-type={this.get_filter_type(filter)} onClick={this.setVisible.bind(this, index, true)}
+                                   <a data-filter-type={filter.type} onClick={this.setVisible.bind(this, index, true)}
                                       ref={`${filter.getAttr()}FilterToggleButton`}>
                                      {filter.label}
                                    </a>
