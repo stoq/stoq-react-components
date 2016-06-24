@@ -14,4 +14,20 @@ Mixins.EventsMixin = {
   },
 };
 
+Mixins.Blinkable = {
+  // The id of the 'setTimeout' used to make the rows blink
+  _blinkTimeoutId: null,
+
+  blinkTimeout: function(func, millis) {
+    // Clear last blink Timeout and set another one
+    clearTimeout(this._blinkTimeoutId);
+    this._blinkTimeoutId = setTimeout(func, millis);
+  },
+
+  componentWillUnmount: function() {
+    // Do not allow the registered blinkTimeout to be executed
+    clearTimeout(this._blinkTimeoutId);
+  },
+};
+
 module.exports = Mixins;

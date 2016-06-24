@@ -4,6 +4,7 @@ import isIn from './utils/in';
 
 import {Filter} from 'htsql';
 import Utils from 'utils';
+import Mixins from './mixins';
 import _ from 'gettext';
 
 let  SORT_FUNC = {
@@ -103,6 +104,7 @@ let SORT_OPOSITE = {
  */
 let Table;
 module.exports = Table = React.createClass({
+  mixins: [Mixins.Blinkable],
 
   /*
    *      Private API
@@ -451,7 +453,7 @@ module.exports = Table = React.createClass({
     }, this);
 
     this.setState({data}, () => {
-      this.props.blinkable && setTimeout(() => {
+      this.props.blinkable && this.blinkTimeout(() => {
         let data = this.state.data.map(function(item) {
           item._isNew = false;
           return item;

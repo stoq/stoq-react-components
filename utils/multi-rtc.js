@@ -37,8 +37,9 @@ MultiRTC.prototype.add = function(id, signal, metadata) {
 
 MultiRTC.prototype.send = function(data, id, onResponse) {
   // If a response is expected, register its id before sending it
+  var randomString = null;
   if (onResponse) {
-    var randomString = Math.random().toString(32);
+    randomString = Math.random().toString(32);
     data.__request_id__ = randomString;
     this.responses[randomString] = onResponse;
   }
@@ -71,6 +72,12 @@ MultiRTC.prototype.send = function(data, id, onResponse) {
     this.pending[key] = this.pending[key] || [];
     this.pending[key].push(data);
   }, this);
+
+  return randomString;
+};
+
+MultiRTC.prototype.cancel = function(responseId) {
+  delete this.responses[responseId];
 };
 
 /*
@@ -160,7 +167,7 @@ MultiRTC.prototype.onMessage = function(id, event) {
   if (data.__response_id__) {
     var onResponse = this.responses[data.__response_id__];
     delete this.responses[data.__response_id__];
-    return onResponse(data);
+    return onResponse && onResponse(data);
   }
 
   this.trigger('data', [id, data]);
