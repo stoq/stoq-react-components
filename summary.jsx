@@ -48,7 +48,13 @@ module.exports = Summary = React.createClass({
     // Then try to get it from the indirect attr property
     value = value || this.props.data[item.props.getAttr(prefix)];
     // Finally, format the value if a formatter is provided
-    value = item.props[prefix + 'formatter'] ? item.props[prefix + 'formatter'](value) : value;
+    var formatter = item.props[prefix + 'formatter'] || function(value) {return value;};
+    if (typeof formatter === 'string') {
+      // If the provided formatter was a String, resolve it to the
+      // corresponding Utils.formatters function
+      formatter = Utils.formatters[formatter];
+    }
+    value = formatter(value);
 
     // Reduce the text size for subvalues
     var textStyle = prefix ? {fontSize: '10px'} : {};
