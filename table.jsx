@@ -39,6 +39,7 @@ SORT_FUNC.phone = SORT_FUNC.numeric;
 SORT_FUNC.byte = SORT_FUNC.numeric;
 SORT_FUNC.fromNow = SORT_FUNC.alpha;
 SORT_FUNC.uuid = SORT_FUNC.alpha;
+SORT_FUNC.link = SORT_FUNC.alpha;
 
 let SORT_OPOSITE = {
   '+': '-',
