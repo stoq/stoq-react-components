@@ -307,19 +307,19 @@ let Utils = {
   /* Encodes strings
    *
    * This is primarily used to build HTSQL attribute names by parsing their
-   * raw query code. This will behave naively replacing invalid identifier
-   * characters for two underscores when on DEBUG mode and performing a
-   * base64 conversion on production
+   * raw query code. This will behave naively considering just the 16 first
+   * characters of the base64 conversion of the query
    *
    * @sa decode
    */
-  encode: function(string) {
-    return btoa(string).replace(/=/g, '');
+  encode: function(string='') {
+    return btoa(string.replace(/\s+/g, ' ')).replace(/=/g, '').substr(0, 16);
   },
 
   /* Decodes strings
    *
-   * Used to recover a previously encoded string with a StoqUtils.encode.
+   * As Utils.encode does crop the base64 encoded string, it is not guaranteed
+   * that the decoding will be an exact reprensetation of the original string.
    *
    * @sa encode
    */
