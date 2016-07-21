@@ -144,7 +144,7 @@ module.exports = Table = React.createClass({
 
   _sortLocally: function(direction, column) {
     var data = this.state.data;
-    var sort_func = SORT_FUNC[column['data-type']];
+    var sort_func = SORT_FUNC[column['data-type']] || SORT_FUNC.alpha;
     data = this._sort(data, function(a, b) {
       var a_attr = a[column.getAttr()];
       var b_attr = b[column.getAttr()];
