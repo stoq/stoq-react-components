@@ -116,6 +116,7 @@ let Box = React.createClass({
       padding: false,
       collapsible: false,
       loading: true,
+      className: '',
     };
   },
 
@@ -124,7 +125,7 @@ let Box = React.createClass({
   },
 
   render() {
-    return <div className={"box " + this._getClass('solid') + this._getClass('primary')}
+    return <div className={"box " + this._getClass('solid') + this._getClass('primary') + this.props.className}
                 data-step={this.props.dataStep} data-intro={this.props.dataIntro}>
       { this._getHeader() }
       <div ref="body" className={ "box-body " + (this.props.padding ? '' : 'no-padding') }>
