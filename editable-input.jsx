@@ -13,8 +13,7 @@ var EditableInput = React.createClass({
     return this.refs.input;
   },
 
-  toggle: function(focus) {
-    focus = focus === undefined ? true : focus;
+  toggle: function(focus=false) {
     this.setState({disabled: !this.state.disabled}, () => {
       if (!this.state.disabled && focus) {
         this.refs.input.focus();
