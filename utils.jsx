@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import md5 from 'md5';
 import $ from 'jquery';
 import _ from 'gettext';
 
@@ -308,23 +309,10 @@ let Utils = {
    *
    * This is primarily used to build HTSQL attribute names by parsing their
    * raw query code. This will behave naively considering just the 16 first
-   * characters of the base64 conversion of the query
-   *
-   * @sa decode
+   * characters of the md5 hash of the query
    */
   encode: function(string='') {
-    return btoa(string.replace(/\s+/g, ' ')).replace(/=/g, '').substr(0, 16);
-  },
-
-  /* Decodes strings
-   *
-   * As Utils.encode does crop the base64 encoded string, it is not guaranteed
-   * that the decoding will be an exact reprensetation of the original string.
-   *
-   * @sa encode
-   */
-  decode: function(string) {
-    return atob(string);
+    return '_' + md5(string.replace(/\s+/g, ' '));
   },
 
   /* Escape HTSQL single quotes so that it does not crash HTSQL evaluation */

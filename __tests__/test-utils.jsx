@@ -95,11 +95,7 @@ describe('Utils Methods', () => {
   });
 
   it('Encodes strings properly', () => {
-    expect(Utils.encode('test.name')).toBe('dGVzdC5uYW1l');
-  });
-
-  it('Decodes strings properly', () => {
-    expect(Utils.decode('dGVzdC5uYW1l')).toBe('test.name');
+    expect(Utils.encode('test.name')).toBe('_90ae965a7ff2dc8d1fa3bbf03572199c');
   });
 
   it('Get colors and highlights correctly', () => {

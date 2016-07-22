@@ -45,5 +45,8 @@
       "json",
       "jsx"
     ]
+  },
+  "dependencies": {
+    "md5": "^2.1.0"
   }
 }
