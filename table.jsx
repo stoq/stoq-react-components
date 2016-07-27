@@ -40,6 +40,7 @@ SORT_FUNC.byte = SORT_FUNC.numeric;
 SORT_FUNC.fromNow = SORT_FUNC.alpha;
 SORT_FUNC.uuid = SORT_FUNC.alpha;
 SORT_FUNC.link = SORT_FUNC.alpha;
+SORT_FUNC.percentage = SORT_FUNC.numeric;
 
 let SORT_OPOSITE = {
   '+': '-',
