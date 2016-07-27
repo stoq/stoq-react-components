@@ -1,10 +1,41 @@
 import React from 'react';
 import Utils from 'utils';
+import equals from 'components/utils/equals';
 import moment from 'moment';
 import Chart from 'chart.js';
 
-// Inject DateLine ChartJS component on ChartJS object
-require('./charts/dateline');
+Chart.controllers.DateLine = Chart.controllers.line.extend({
+
+  name: 'DateLine',
+
+  draw: function() {
+    Chart.controllers.line.prototype.draw.apply(this, arguments);
+    // XXX Workaround to avoid sundays being highlighted when grouping
+    // is not done by day.
+    if (this.chart.options.formatLabel != 'date') {
+      return;
+    }
+
+    var chart = this.chart;
+    var ctx = chart.chart.ctx;
+
+    var xAxis = chart.scales['x-axis-0'];
+    var yAxis = chart.scales['y-axis-0'];
+
+    xAxis.tickMoments.forEach((tick, index) => {
+      // The week day of Sunday is 0 (zero)
+      if (!tick.day()) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(xAxis.getPixelForValue(tick, index), yAxis.top);
+        ctx.strokeStyle = 'rgba(77,83,96,0.3)';
+        ctx.lineTo(xAxis.getPixelForValue(tick, index), yAxis.bottom);
+        ctx.stroke();
+        ctx.restore();
+      }
+    });
+  },
+});
 
 /* ChartJS's DateLine Chart
  *
@@ -54,12 +85,14 @@ let DateLineChart = React.createClass({
     let data = {
       labels: [],
       datasets: [{
-        fillColor: "rgba(77,83,96,0.1)",
+        borderColor: "rgba(77,83,96,0.8)",
+        borderWidth: 2,
+        backgroundColor: "rgba(77,83,96,0.1)",
         strokeColor: "rgba(77,83,96,0.8)",
-        pointColor: "rgba(77,83,96,1)",
-        pointStrokeColor: "#fff",
-        pointHighlightStroke: "#fff",
-        pointHighlightFill: "rgba(77,83,96,1)",
+        pointBorderColor: "white",
+        pointBackgroundColor: "rgba(77,83,96,0.8)",
+        pointRadius: 4,
+        pointHoverRadius: 5,
         data: [],
       }],
     };
@@ -78,7 +111,6 @@ let DateLineChart = React.createClass({
         value = object[props.valueAttr];
         rawData.splice(0, 1);
       }
-
       data.labels.push(date);
       if (date.isAfter(moment())) {
         return;
@@ -86,23 +118,53 @@ let DateLineChart = React.createClass({
       data.datasets[0].data.push(value);
     });
 
-    // Format the Y coordinate according to the received datatype
-    let formatter = function(object) {
-      let formatter = Utils.formatters[props.dataType];
-      return formatter ? formatter(object.value) : object.value;
-    };
-
     // Finally, build the chart
     let ctx = this.refs.canvas.getContext('2d');
-    this.chart = new Chart(ctx).DateLine(data, {
-      animation: false,
-      responsive: true,
-      formatLabel: this._labelFormats[group],
-      scaleLabel: formatter,
-      tooltipTemplate: formatter,
-      bezierCurveTension: 0.2,
-      maintainAspectRatio: false,
-      pointHitDetectionRadius: 3,
+    this.chart = new Chart(ctx, {
+      type: 'DateLine',
+      data: data,
+      options: {
+        formatLabel: this._labelFormats[group],
+        legend: false,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            type: 'time',
+            position: 'bottom',
+            time: {
+              unit: group,
+              displayFormats: {
+                day: 'D',
+                month: 'M',
+                hour: 'H',
+              },
+            },
+          }],
+          yAxes: [{
+            position: 'left',
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 10,
+            },
+          }],
+        },
+        tooltips: {
+          callbacks: {
+            // Use the formatter given from props
+            label: function(tooltipItems) {
+              var formatter = typeof props.yFormatter === 'function' ?
+                              props.yFormatter : Utils.formatters[props.yFormatter || 'numeric'];
+              return formatter(tooltipItems.yLabel);
+            },
+            // The xlabel will be hidden, showing only it's value
+            title: function() {
+              return '';
+            },
+          },
+          mode: 'x-axis',
+          bodyFontSize: 15,
+        },
+      },
     });
   },
 
@@ -120,8 +182,10 @@ let DateLineChart = React.createClass({
    * React
    */
 
-  componentWillReceiveProps: function(props) {
-    this._setupChart(props);
+  componentWillReceiveProps: function(next) {
+    if (!equals(this.props, next)) {
+      this._setupChart(next);
+    }
   },
 
   componentDidMount: function() {

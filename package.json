@@ -47,6 +47,7 @@
     ]
   },
   "dependencies": {
+    "chart.js": "^2.2.0-rc.2",
     "md5": "^2.1.0"
   }
 }
