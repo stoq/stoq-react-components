@@ -76,8 +76,10 @@ let DateLineChart = React.createClass({
     // Default value for group is 'month', to avoid next-to infinite loops
     // errors when no default group is provided.
     let {start, end, group} = {
-      start: props.start.startOf('day'),
-      end: props.end.endOf('day'),
+      // The time scale positions the values according to it's unix timestamp,
+      // we want to show these data right above the labels.
+      start: props.group === 'month' ? props.start.startOf('month') : props.start.startOf('day'),
+      end: props.group === 'month' ? props.end.endOf('month') : props.end.endOf('day'),
       group: props.group || 'month',
     };
 
