@@ -475,8 +475,9 @@ module.exports = Table = React.createClass({
   componentDidUpdate: function() {
     // Enable popver on table component
     $('[data-toggle=popover]').popover({
+      html: true,
       content: function() {
-        return $(this).find('.popover-data').text().trim();
+        return $(this).find('.popover-data').html().trim();
       },
     });
   },
@@ -500,6 +501,15 @@ module.exports = Table = React.createClass({
          </thead>
          <tbody>
              {this.state.data.map(this._get_rows)}
+             {this.props.summaryData && <tr>
+               {this.props.children.map(function(column) {
+                 let columnIndex = this.state.data.length;
+                 var columnValue = this.props.summaryData[column.props.getAttr()];
+                 return <td className={this._get_column_class(column)}>
+                            <b>{this._format_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
+                         </td>;
+               }.bind(this))}
+             </tr>}
          </tbody>
        </table>
       {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('No Data')}</b></div>}
