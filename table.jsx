@@ -444,7 +444,8 @@ module.exports = Table = React.createClass({
    * 800ms delay (using setTimeout function).
    */
   componentWillReceiveProps: function(props) {
-    this.props.tree && this._setupTree(props.data);
+    this.setState({headers: this._getHeaderSettings(props)});
+    props.tree && this._setupTree(props.data);
 
     let data = props.data || this.state.data || [];
     data = data.map(function(item) {
