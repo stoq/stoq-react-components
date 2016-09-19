@@ -123,8 +123,9 @@ module.exports = Table = React.createClass({
   },
 
   _getCurrentOrder: function(props=this.props) {
-    if (props.sortable && props.onSearch && Utils.getParams().order_by) {
-      return Utils.getParams().order_by;
+    if (props.sortable && props.onSearch &&
+            (props.orderBy || Utils.getParams().order_by)) {
+      return props.orderBy || Utils.getParams().order_by;
     }
     return props.defaultOrderBy || '';
   },
