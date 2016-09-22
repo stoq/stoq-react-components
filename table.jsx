@@ -514,7 +514,7 @@ module.exports = Table = React.createClass({
              </tr>}
          </tbody>
        </table>
-      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('No Data')}</b></div>}
+      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('Sem Dados')}</b></div>}
     </div>;
   },
 });
