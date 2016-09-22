@@ -193,9 +193,16 @@ module.exports = Table = React.createClass({
     var direction = props.sortable && '';
     var currentOrder = this._getCurrentOrder(props);
     var sortAttr = column.props.sortAttr || column.props.getAttr();
+
     if (currentOrder.indexOf(sortAttr) !== -1) {
       direction = currentOrder.substr(0, 1);
     }
+
+    // If the specific column does not allow sorting, disable it here
+    if (!column.props.sortable) {
+      direction = undefined;
+    }
+
     return $.extend({}, column.props, {
       className: this._get_column_class(column),
       direction: direction,
@@ -308,7 +315,7 @@ module.exports = Table = React.createClass({
    * 'onSearch' is provided.
    */
   _header_clicked: function(column, event, key) {
-    if (!this.props.sortable) {
+    if (!this.props.sortable || !column.sortable) {
       return;
     }
     // Invert the old direction
@@ -530,7 +537,7 @@ Table.Column = React.createClass({
 
       /* Optional classes to be added */
       className: '',
-      sortable: false,
+      sortable: true,
       /* To be used when sorting, instead of props.attr */
       sortAttr: undefined,
 
