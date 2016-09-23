@@ -45,7 +45,7 @@ SORT_FUNC.percentage = SORT_FUNC.numeric;
 let SORT_OPOSITE = {
   '+': '-',
   '-': '+',
-  '': '+',
+  '': '-',
 };
 
 /* HTSQL Queried Bootstrap Striped Tabled
