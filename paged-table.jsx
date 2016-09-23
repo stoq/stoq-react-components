@@ -1,5 +1,6 @@
 import React from 'react';
 import Pager from 'components/pager';
+import Utils from 'utils';
 
 /* Independent Paged Table Component
  *
@@ -15,7 +16,7 @@ import Pager from 'components/pager';
  */
 let PagedTable = React.createClass({
   getSearch() {
-    return (this.refs.filter ? this.refs.filter.value : '');
+    return (this.refs.filter ? Utils.escape(this.refs.filter.value) : '');
   },
 
   getDefaultProps: function() {
