@@ -125,7 +125,7 @@ module.exports = Table = React.createClass({
   _getCurrentOrder: function(props=this.props) {
     if (props.sortable && props.onSearch &&
             (props.orderBy || Utils.getParams().order_by)) {
-      return props.orderBy || Utils.getParams().order_by;
+      return props.orderBy || Utils.getParams().order_by || '';
     }
     return props.defaultOrderBy || '';
   },
@@ -194,7 +194,7 @@ module.exports = Table = React.createClass({
     var currentOrder = this._getCurrentOrder(props);
     var sortAttr = column.props.sortAttr || column.props.getAttr();
 
-    if (currentOrder.indexOf(sortAttr) !== -1) {
+    if (currentOrder.substr(1) === sortAttr) {
       direction = currentOrder.substr(0, 1);
     }
 
@@ -521,7 +521,7 @@ module.exports = Table = React.createClass({
              </tr>}
          </tbody>
        </table>
-      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('Sem Dados')}</b></div>}
+      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('No Data')}</b></div>}
     </div>;
   },
 });
