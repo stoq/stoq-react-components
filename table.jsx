@@ -182,7 +182,11 @@ module.exports = Table = React.createClass({
     var default_formatter = Utils.formatters[column.props['data-type']];
     var formatter = default_formatter;
     if (column.props.formatter !== undefined) {
-      formatter = column.props.formatter;
+      if (typeof column.props.formatter === 'string') {
+        formatter = Utils.formatters[column.props.formatter];
+      } else if (typeof column.props.formatter === 'function') {
+        formatter = column.props.formatter;
+      }
     }
 
     return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
