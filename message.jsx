@@ -4,7 +4,7 @@ const propTypes = {
   title: React.PropTypes.string.isRequired,
   type: React.PropTypes.string,
   dismissable: React.PropTypes.bool,
-  children: React.PropTypes.element.isRequired,
+  children: React.PropTypes.isRequired,
 };
 
 const defaultProps = {
