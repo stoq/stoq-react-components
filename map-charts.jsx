@@ -2,10 +2,11 @@ import React from 'react';
 import Box from 'components/box';
 import Brazil from './maps/brazil';
 import d3 from 'd3';
-import topojson from 'topojson';
 import $ from 'jquery';
 import _ from 'gettext';
 import Mixins from './mixins';
+
+let topojson = require('topojson');
 
 let Maps = {};
 
