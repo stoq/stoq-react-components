@@ -38,19 +38,32 @@ let Utils = {
 
     numeric: function(value) {
       value = parseFloat(value) || 0.0;
-      if (value % 1 === 0) {
-        return value.toLocaleString('pt-br');
+      let sign = value < 0 ? '-' : '';
+
+      value = Math.abs(value);
+      if (value % 1 !== 0) {
+        // If the number is not an Integer, put two decimal digits
+        value = value.toFixed(2);
+      } else {
+        value = value.toString();
       }
-      let rounded = parseFloat(value).toFixed(2);
-      return parseFloat(rounded).toLocaleString('pt-br');
+
+      let split = value.split('.');
+      let integer = split[0];
+      split[0] = [];
+      for (let i = integer.length; i > 0; i -= 3) {
+        split[0].unshift(integer.slice(Math.max(i - 3, 0), i));
+      }
+      split[0] = split[0].join('.');
+
+      return sign + split.join(',');
     },
 
     currency: function(value) {
       value = parseFloat(value) || 0.0;
-      let formattedValue = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      if (value < 0)
-        return '-R$ ' + formattedValue;
-      return 'R$ ' + formattedValue;
+      let sign = value < 0 ? '-' : '';
+      let currency = 'R$';
+      return `${sign}${currency} ${Utils.formatters.numeric(Math.abs(value))}`;
     },
 
     datetime: function(value) {
@@ -115,11 +128,7 @@ let Utils = {
     },
 
     percentage: function(value) {
-      value = parseFloat(value) || 0.0;
-      let formattedValue = Math.abs(value).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      if (value < 0)
-        return '-' + formattedValue + ' %';
-      return formattedValue + ' %';
+      return Utils.formatters.numeric(value) + ' %';
     },
 
     bool: function(value) {
