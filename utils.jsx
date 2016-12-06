@@ -304,7 +304,7 @@ let Utils = {
   },
 
   generateDateSeries: function(start, end, increment, grouping) {
-    if (start.isAfter(end))
+    if (start.isAfter(end) || !start.isValid() || !end.isValid())
       return [];
     var series = [start];
     while (!series[series.length - 1].isSameOrAfter(end, grouping)) {
