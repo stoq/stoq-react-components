@@ -146,7 +146,9 @@ module.exports = Table = React.createClass({
 
   _sortLocally: function(direction, column) {
     var data = this.state.data;
-    var sort_func = SORT_FUNC[column['data-type']] || SORT_FUNC.alpha;
+    var sort_func = SORT_FUNC[column.formatter] || SORT_FUNC[column['data-type']];
+    sort_func = sort_func || SORT_FUNC.alpha;
+
     data = this._sort(data, function(a, b) {
       var a_attr = a[column.getAttr()];
       var b_attr = b[column.getAttr()];
@@ -355,6 +357,9 @@ module.exports = Table = React.createClass({
 
     // Reset all other columns sort direction to unsorted
     this.state.headers.forEach(function(object) {
+      if (!object.sortable) {
+        return;
+      }
       object.direction = '';
     });
     column.direction = direction;
