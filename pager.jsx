@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Utils from 'utils';
-import _ from 'gettext';
+
+var _ = require('gettext');
 
 /* A paginated Table pager
  *
@@ -104,7 +105,15 @@ let Pager = React.createClass({
   },
 
   componentDidUpdate: function() {
-    this.updateDimensions();
+    if (!this.updating) {
+      this.updateDimensions();
+    }
+
+    // Wait a while before setting `updating` to `false`, this will prevent
+    // `updateDimensions` method to be called a LOT of times
+    setTimeout(() => {
+      this.updating = false;
+    }, 1000);
   },
 
   updateDimensions: function(callback) {
@@ -129,6 +138,12 @@ let Pager = React.createClass({
     [0, 1, this._pages.length - 1, this._pages.length - 2].forEach(index => {
       headWidth += $(this.refs[index]).outerWidth();
     });
+
+    // XXX: Not actually the best solution, but the easiest one for now.
+    //      This component should be refactored whenever possible.
+    // Set updating flag as true, this will prevent this method being called on
+    // an infinite recursion.
+    this.updating = true;
 
     this.setState({
       headWidth,
@@ -168,8 +183,8 @@ let Pager = React.createClass({
     }
 
     this._pages = [];
-    this._addPage('First', 1, '<<');
-    this._addPage('Previous', (meta.page > 1) ? meta.page - 1 : null, '<');
+    this._addPage(_('Primeira'), 1, '<<');
+    this._addPage(_('Anterior'), (meta.page > 1) ? meta.page - 1 : null, '<');
 
     for (let i = _before; i > 0; i--)
       if (meta.page - i > 0)
@@ -183,8 +198,8 @@ let Pager = React.createClass({
       if (meta.page + i <= meta.page_count)
         this._addPage(meta.page + i, meta.page + i);
 
-    this._addPage(_('Next'), (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
-    this._addPage(_('Last'), meta.page_count ? meta.page_count : 1, '>>');
+    this._addPage(_('Próxima'), (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
+    this._addPage(_('Última'), meta.page_count ? meta.page_count : 1, '>>');
 
     return <div className="list_pager clearfix">
       <ul className="pagination no-margin">{ this._pages }</ul>
