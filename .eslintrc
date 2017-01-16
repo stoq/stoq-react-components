@@ -18,16 +18,21 @@
     "no-nested-ternary": [2],
     "no-spaced-func": [2],
     "no-trailing-spaces": [2],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
   },
   "env": {
     "es6": true,
     "browser": true
   },
   "extends": "eslint:recommended",
-  "ecmaFeatures": {
-    "modules": true,
-    "jsx": true,
-    "experimentalObjectRestSpread": true
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true,
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    },
   },
   "globals": {
     "require": true,

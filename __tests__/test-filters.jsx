@@ -69,7 +69,9 @@ describe('Daterange Filter', () => {
   });
 
   it('builds HTQuery object correctly', () => {
-    expect(daterangeFilter.getHTQuery()).toEqual({start: '2001-01-01', end: '2001-12-31',
-                                                  htsql: "between(date(date), '2001-01-01', '2001-12-31')", group: 'month'});
+    expect(daterangeFilter.getHTQuery()).toEqual({
+      start: '2001-01-01', end: '2001-12-31',
+      htsql: "between(date(date), '2001-01-01', '2001-12-31')", group: 'month',
+    });
   });
 });
