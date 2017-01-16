@@ -1,6 +1,6 @@
 import React from 'react';
 import Utils from 'utils';
-import equals from 'components/utils/equals';
+import equals from './utils/equals';
 import moment from 'moment';
 import Chart from 'chart.js';
 

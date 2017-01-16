@@ -1,5 +1,5 @@
 import React from 'react';
-import Pager from 'components/pager';
+import Pager from './pager';
 import Utils from 'utils';
 
 /* Independent Paged Table Component

@@ -1,8 +1,8 @@
 import React from 'react';
 import Chart from 'chart.js';
-import equals from 'components/utils/equals';
-import Box from 'components/box';
-import Row from 'components/row';
+import equals from './utils/equals';
+import Box from './box';
+import Row from './row';
 import Utils from 'utils';
 import _ from 'gettext';
 

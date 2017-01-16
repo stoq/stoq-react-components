@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from 'components/box';
+import Box from './box';
 import Brazil from './maps/brazil';
 import d3 from 'd3';
 import $ from 'jquery';

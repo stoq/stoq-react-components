@@ -1,5 +1,5 @@
 import React from 'react';
-import TooltipIcon from 'components/tooltip-icon';
+import TooltipIcon from './tooltip-icon';
 import $ from 'jquery';
 
 /* AdminLTE Box Widget https://almsaeedstudio.com/themes/AdminLTE/pages/widgets.html

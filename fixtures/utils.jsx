@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-import ComponentUtils from 'components/utils';
+import ComponentUtils from '../utils';
 
 import _ from 'gettext';
 

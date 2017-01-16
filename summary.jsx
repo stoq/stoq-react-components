@@ -1,5 +1,5 @@
 import React from 'react';
-import Row from 'components/row';
+import Row from './row';
 import Utils from 'utils';
 
 let Summary;

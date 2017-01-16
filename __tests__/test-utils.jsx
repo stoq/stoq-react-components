@@ -54,7 +54,14 @@ describe('Utils Methods', () => {
   });
 
   it('Returns url params as object', () => {
-    location.href += "?param1=1&param2=test";
+    // We can't change location.href directly since jsdom@8:
+    //
+    // https://github.com/facebook/jest/issues/890
+    Object.defineProperty(window.location, 'href', {
+      writable: true,
+      value: "http://localhost:9999?param1=1&param2=test",
+    });
+
     expect(Utils.getParams()).toEqual({param1: '1', param2: 'test'});
   });
 
