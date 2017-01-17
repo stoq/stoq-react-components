@@ -216,7 +216,7 @@ module.exports = Table = React.createClass({
 
   _getHeaderSettings: function(props) {
     var headers = [];
-    props.children.map(function(column) {
+    React.Children.map(props.children, function(column) {
       headers.push(this._getColumnSettings(column, props));
     }.bind(this));
     return headers;
@@ -279,7 +279,7 @@ module.exports = Table = React.createClass({
     var isNew = object._isNew && this.props.blinkable;
     var hidden_columns = this.props.hiddenColumns;
     var rows = [<tr key={`${row_index}-${depth}`} className={isNew ? 'new' : ''}>
-        {this.props.children.map(function(column, col_index) {
+        {React.Children.map(this.props.children, function(column, col_index) {
           if (hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) {
             return null;
           }
@@ -293,9 +293,9 @@ module.exports = Table = React.createClass({
         }.bind(this))}
        </tr>];
     if (this.props.tree && object.expanded) {
-      object.children.forEach(function(child, index, children) {
+      React.Children.forEach(object.children, (child, index, children) => {
         rows.push(this._get_rows(child, index, children, depth + 1));
-      }, this);
+      });
     }
     return rows;
   },
@@ -387,7 +387,7 @@ module.exports = Table = React.createClass({
 
     // For each column, collect the attributes that should be feched
     // from the database.
-    this.props.children.forEach((column, index) => {
+    React.Children.forEach(this.props.children, (column, index) => {
       if (!column.props.query) {
         return;
       }
@@ -515,7 +515,7 @@ module.exports = Table = React.createClass({
          <tbody>
              {this.state.data.map(this._get_rows)}
              {this.props.summaryData && <tr>
-               {this.props.children.map(function(column) {
+               {React.Children.map(this.props.children, function(column) {
                  let columnIndex = this.state.data.length;
                  var columnValue = this.props.summaryData[column.props.getAttr()];
                  return <td className={this._get_column_class(column)}>
