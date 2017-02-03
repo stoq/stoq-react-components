@@ -295,7 +295,7 @@ module.exports = Table = React.createClass({
         }.bind(this))}
        </tr>];
     if (this.props.tree && object.expanded) {
-      React.Children.forEach(object.children, (child, index, children) => {
+      object.children.forEach((child, index, children) => {
         rows.push(this._get_rows(child, index, children, depth + 1));
       });
     }
