@@ -6,6 +6,16 @@ import _ from 'gettext';
 
 let Utils = {
 
+  only: function(object, props) {
+    object = Object.assign({}, object);
+    props.forEach((prop) => {
+      if (props.indexOf(prop) === -1) {
+        delete object[prop];
+      }
+    });
+    return object;
+  },
+
   backupStatuses: {
     ok: {text: _('OK'), color: '#27ae60'},
     late: {text: _('Late'), color: '#f1c40f'},

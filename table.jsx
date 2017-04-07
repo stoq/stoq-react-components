@@ -510,8 +510,12 @@ module.exports = Table = React.createClass({
               if (this.props.hiddenColumns && this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) {
                 return null;
               }
-              return <th ref={`${settings.label}Column`} key={index} {...settings} data-direction={settings.direction}
-                         onClick={this._header_clicked.bind(this, settings)}>
+              return <th
+                ref={`${settings.label}Column`}
+                key={index} {...Utils.only(settings, ['style', 'onClick'])}
+                data-direction={settings.direction}
+                onClick={this._header_clicked.bind(this, settings)}
+              >
                 <span data-toggle='tooltip' title={settings.description} data-delay='{"show":"500", "hide":"100"}'>{settings.label}</span>
               </th>;
             }.bind(this))}
