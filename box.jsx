@@ -126,13 +126,13 @@ let Box = React.createClass({
 
   render() {
     return <div className={"box " + this._getClass('solid') + this._getClass('primary') + this.props.className}
-                data-step={this.props.dataStep} data-intro={this.props.dataIntro}>
+                data-step={this.props.dataStep} data-intro={this.props.dataIntro} style={this.props.style}>
       { this._getHeader() }
       <div ref="body" className={ "box-body " + (this.props.padding ? '' : 'no-padding') }>
         { this.props.children }
       </div>
-      {this.props.loading && <div className="overlay">
-        <i className="fa fa-refresh fa-spin"/>
+      {this.props.loading && <div className="overlay" style={{backgroundColor: this.props.background}}>
+        <i className="fa fa-refresh fa-spin" style={{color: this.props.spinColor}}/>
       </div>}
     </div>;
   },
