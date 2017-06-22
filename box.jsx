@@ -128,7 +128,7 @@ let Box = React.createClass({
     return <div className={"box " + this._getClass('solid') + this._getClass('primary') + this.props.className}
                 data-step={this.props.dataStep} data-intro={this.props.dataIntro} style={this.props.style}>
       { this._getHeader() }
-      <div ref="body" className={ "box-body " + (this.props.padding ? '' : 'no-padding') }>
+      <div ref="body" className={ "box-body " + (this.props.padding ? '' : 'no-padding') } style={this.props.bodyStyle}>
         { this.props.children }
       </div>
       {this.props.loading && <div className="overlay" style={{backgroundColor: this.props.background}}>
