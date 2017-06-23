@@ -7,13 +7,13 @@ import _ from 'gettext';
 let Utils = {
 
   only: function(object, props) {
-    object = Object.assign({}, object);
-    props.forEach((prop) => {
+    let other = Object.assign({}, object);
+    Object.keys(object).forEach((prop) => {
       if (props.indexOf(prop) === -1) {
-        delete object[prop];
+        delete other[prop];
       }
     });
-    return object;
+    return other;
   },
 
   backupStatuses: {

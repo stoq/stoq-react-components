@@ -31,7 +31,9 @@
     "react-dom": "^0.14.3"
   },
   "jest": {
-    "transform": {".*": "<rootDir>/node_modules/babel-jest"},
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
     "unmockedModulePathPatterns": [
       "react",
       "react-dom",

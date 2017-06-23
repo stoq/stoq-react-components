@@ -104,6 +104,7 @@ let SORT_OPOSITE = {
  *  formatter {Function} Optional formatter for the column, just in case none
  *                       of the 'data-type' ones suit the column.
  */
+
 let Table;
 module.exports = Table = React.createClass({
   mixins: [Mixins.Blinkable],
@@ -512,7 +513,9 @@ module.exports = Table = React.createClass({
               }
               return <th
                 ref={`${settings.label}Column`}
-                key={index} {...Utils.only(settings, ['style', 'onClick'])}
+                key={index}
+                // FIXME: There are 2 onClicks here
+                {...Utils.only(settings, ['style', 'onClick'])}
                 data-direction={settings.direction}
                 onClick={this._header_clicked.bind(this, settings)}
               >
