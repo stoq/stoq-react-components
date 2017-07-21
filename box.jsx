@@ -1,6 +1,7 @@
 import React from 'react';
 import TooltipIcon from './tooltip-icon';
 import $ from 'jquery';
+import PropTypes from 'prop-types';
 
 /* AdminLTE Box Widget https://almsaeedstudio.com/themes/AdminLTE/pages/widgets.html
  *
@@ -13,10 +14,10 @@ import $ from 'jquery';
  */
 let Box = React.createClass({
   propTypes: {
-    padding: React.PropTypes.bool,
-    collapsible: React.PropTypes.bool,
-    loading: React.PropTypes.bool,
-    onUpdate: React.PropTypes.func,
+    padding: PropTypes.bool,
+    collapsible: PropTypes.bool,
+    loading: PropTypes.bool,
+    onUpdate: PropTypes.func,
   },
 
   /*
