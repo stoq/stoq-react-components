@@ -16,7 +16,7 @@ let Tabs = React.createClass({
   },
 
   _getTab: function(ids, tab, index) {
-    if (tab.type !== Tabs.Tab)
+    if (!tab || tab.type !== Tabs.Tab)
       return;
     return <div key={index} id={ids[index]}
                 className={ "tab-pane " + (tab.props.className || '') }>
@@ -38,6 +38,9 @@ let Tabs = React.createClass({
     return <div className={this.props.customHeader ? 'nav-tabs-custom' : ''}>
   <ul className="nav nav-tabs">
     {this.props.children.map(function(tab, index) {
+      if (!tab) {
+        return null;
+      }
       if (tab.type == Tabs.Config) {
         return <li key={index} className='pull-right dropdown'>
           <a className='dropdown-toggle' data-toggle='dropdown' href='#'>
