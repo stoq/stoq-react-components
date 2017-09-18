@@ -234,6 +234,9 @@ module.exports = SearchBar = React.createClass({
              </button>
              <ul className="dropdown-menu">
                {table.props.children.map(function(column, index) {
+                 if (!column.props.visible) {
+                   return null;
+                 }
                  var iconClass = '';
                  if (table.props.hiddenColumns.indexOf(column.props.getAttr()) === -1)
                    iconClass = 'fa fa-fw fa-check-square-o';

@@ -283,7 +283,8 @@ module.exports = Table = React.createClass({
     var hidden_columns = this.props.hiddenColumns;
     var rows = [<tr key={`${row_index}-${depth}`} className={isNew ? 'new' : ''}>
         {React.Children.map(this.props.children, function(column, col_index) {
-          if (hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) {
+          if ((hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
+              !column.props.visible) {
             return null;
           }
           var raw_value = object[column.props.getAttr()];
@@ -508,7 +509,8 @@ module.exports = Table = React.createClass({
          <thead>
            <tr ref='tableHeader'>
             {this.state.headers.map(function(settings, index) {
-              if (this.props.hiddenColumns && this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) {
+              if ((this.props.hiddenColumns && this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) ||
+                  !settings.visible) {
                 return null;
               }
               return <th
@@ -553,14 +555,20 @@ Table.Column = React.createClass({
 
       /* Optional classes to be added */
       className: '',
+
       sortable: true,
       /* To be used when sorting, instead of props.attr */
       sortAttr: undefined,
 
       /* Formats a field that will be inserted in the <td> tag content */
       formatter: undefined,
+
       /* Indicates if the column should be queried on HTSQL or not */
       query: true,
+
+      /* This option is for the case the column shouldn't be visible, but it
+       * must appear in the search filters */
+      visible: true,
 
       getAttr: function() {
         return this.attr || Utils.encode(this.htsql);
