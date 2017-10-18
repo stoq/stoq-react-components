@@ -158,7 +158,7 @@ module.exports.DateFilter = React.createClass({
       orientation: 'bottom',
       language: 'pt-BR',
     }).off('changeDate', this.onDateChange);
-    this.button.datepicker('remove');
+    this.button.datepicker('destroy');
 
     // Initialize a new datepicker
     this.button.datepicker({
@@ -197,7 +197,6 @@ module.exports.DateFilter = React.createClass({
    */
   setDateText: function(date, group=this.props.group, trigger=true) {
     date = moment(date);
-
     let format = this.props.getFormat || this.format;
     this.setState({text: format(date, group)}, () => {
       trigger && this.props.onChange && this.props.onChange(date);
@@ -225,7 +224,12 @@ module.exports.DateFilter = React.createClass({
    * @returns Current selected date
    */
   getDate: function() {
-    return moment(this.button.datepicker('getDate'));
+    let date = moment(this.button.datepicker('getDate'));
+    // This avoid wrong date due to summer time events.
+    if (date.hour() !== 0) {
+      date = date.add(1, 'hour');
+    }
+    return date;
   },
 
   /*
