@@ -2,7 +2,7 @@ import React from 'react';
 import Utils from 'utils';
 import equals from './utils/equals';
 import moment from 'moment';
-import Chart from 'chart.js';
+import Chart from './node_modules/chart.js';
 
 Chart.controllers.DateLine = Chart.controllers.line.extend({
 
