@@ -1,5 +1,5 @@
 import BaseComponent from 'components/base';
-import equals from 'components/utils/equals';
+import equals from 'base-components/utils/equals';
 import AnimatedNumber from 'react-animated-number';
 import Utils from 'utils';
 

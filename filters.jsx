@@ -305,11 +305,11 @@ module.exports.DaterangeFilter = React.createClass({
   period_change: function(interval) {
     var group = this.refs.group.value;
     var macro_period = this.macro_period[group];
+    var period = this.state.period;
 
-    this.state.period[0].add(interval, macro_period).startOf(macro_period);
-    this.state.period[1].add(interval, macro_period).endOf(macro_period);
-    this.state.group = group;
-    this.setState(this.state);
+    period[0].add(interval, macro_period).startOf(macro_period);
+    period[1].add(interval, macro_period).endOf(macro_period);
+    this.setState({period, group});
     //this._trigger_period();
   },
 
@@ -325,8 +325,9 @@ module.exports.DaterangeFilter = React.createClass({
    */
 
   set_date: function(index, event) {
-    this.state.period[index] = moment(event.date);
-    this.setState(this.state);
+    var period = this.state.period;
+    period[index] = moment(event.date);
+    this.setState({period});
   },
 
   getQuery: function() {
@@ -398,7 +399,9 @@ module.exports.DaterangeFilter = React.createClass({
   },
 
   group_changed: function() {
-    this.state.period[1] = moment(this.state.period[0]);
+    var period = this.state.period;
+    period[1] = moment(period[0]);
+    this.setState({period});
     this.period_change(0);
   },
 
