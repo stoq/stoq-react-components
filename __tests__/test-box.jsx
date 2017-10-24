@@ -22,7 +22,7 @@ describe('Box', () => {
 
   it('renders the title correctly', () => {
     let titleDiv = TestUtils.findRenderedDOMComponentWithClass(boxComponent, 'box-title');
-    expect(titleDiv.textContent).toBe('test');
+    expect(titleDiv.textContent).toBe('test ');
   });
 
   it('updates when update button is clicked', () => {

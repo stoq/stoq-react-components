@@ -54,7 +54,7 @@ let Box = React.createClass({
     }
     return <div>
       {this._getIcon()}
-      <h3 className="box-title">{ this.props.title }</h3>
+      <h3 className="box-title">{ this.props.title } <small>{ this.props.subtitle }</small></h3>
       <div className="pull-right">{this.props.customTitle}</div>
     </div>;
   },
