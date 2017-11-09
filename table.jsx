@@ -177,20 +177,37 @@ module.exports = Table = React.createClass({
     return final_class;
   },
 
+  _get_formatter: function(column, specified_formatter){
+    var default_formatter = Utils.formatters[column.props['data-type']];
+    var formatter = default_formatter;
+    if (specified_formatter !== undefined) {
+      if (typeof specified_formatter === 'string') {
+        formatter = Utils.formatters[specified_formatter];
+      } else if (typeof specified_formatter === 'function') {
+        formatter = specified_formatter;
+      }
+    }
+    return formatter;
+  },
+
   /* Returns the formatted value for the column cell. This will use the
    * formatter provided by the column or a default formatter if none was
    * provided.
    */
   _format_value: function(column, value, object, row_index) {
     var default_formatter = Utils.formatters[column.props['data-type']];
-    var formatter = default_formatter;
-    if (column.props.formatter !== undefined) {
-      if (typeof column.props.formatter === 'string') {
-        formatter = Utils.formatters[column.props.formatter];
-      } else if (typeof column.props.formatter === 'function') {
-        formatter = column.props.formatter;
-      }
-    }
+    var formatter = this._get_formatter(column, column.props.formatter);
+
+    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
+  },
+
+  /* Returns the formatted value for the summary row cells. This will use the
+   * formatter provided by the column or a default formatter if none was
+   * provided.
+   */
+  _format_summary_value: function(column, value, object, row_index) {
+    var default_formatter = Utils.formatters[column.props['data-type']];
+    var formatter = this._get_formatter(column, column.props.summaryFormatter);
 
     return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
   },
@@ -528,12 +545,12 @@ module.exports = Table = React.createClass({
          </thead>
          <tbody>
              {this.state.data.map(this._get_rows)}
-             {this.props.summaryData && <tr>
+             {this.props.summaryData && <tr className="table-summary">
                {React.Children.map(this.props.children, function(column) {
                  let columnIndex = this.state.data.length;
                  var columnValue = this.props.summaryData[column.props.getAttr()];
                  return <td className={this._get_column_class(column)}>
-                            <b>{this._format_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
+                            <b>{this._format_summary_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
                          </td>;
                }.bind(this))}
              </tr>}
