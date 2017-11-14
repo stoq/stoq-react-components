@@ -188,7 +188,7 @@ module.exports = SearchBar = React.createClass({
     return filters;
   },
 
-  _export: function(format) {
+  _export: function() {
     // Extract the colum definitions to be sent to the server
     var col_defs = this.props.table.props.children.map(function(column) {
       return {
@@ -198,8 +198,8 @@ module.exports = SearchBar = React.createClass({
     });
     var query = {
       col_defs: JSON.stringify(col_defs),
-      filename: this.props.exportFileName + '.' + format,
-      file_format: format,
+      filename: this.props.exportFileName + '.xls',
+      file_format: 'xls',
     };
     this.props.onExport(query);
   },
@@ -212,15 +212,13 @@ module.exports = SearchBar = React.createClass({
     if (!this.props.onExport) {
       return null;
     }
+
     return <div className="input-group-btn">
-             <button name="export-file" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Export to file">
-                 <i className="fa fa-file-excel-o"/>
-             </button>
-             <ul className="dropdown-menu pull-right">
-               <li><a onClick={this._export.bind(this, 'csv')}>CSV</a></li>
-               <li><a onClick={this._export.bind(this, 'xls')}>XLS</a></li>
-             </ul>
-           </div>;
+      <button name="export-file" className="btn btn-default"
+              title="Exportar relatório" onClick={this._export}>
+          <i className="fa fa-file-excel-o"/>
+      </button>
+    </div>;
   },
 
   _getColumnsButton: function() {
