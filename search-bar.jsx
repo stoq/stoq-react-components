@@ -378,12 +378,12 @@ module.exports = SearchBar = React.createClass({
                    </span>
                    )
                  }
-                 <input type="search" className="form-control" placeholder="Search..."
+                 <input type="search" className="form-control" placeholder="Buscar..."
                         value={this.state.search} onChange={this.searchChanged}
                         onKeyUp={this.searchKeyUp}/>
                  <span className="input-group-btn">
                    <button type="search" className="btn btn-primary" ref='searchButton' onClick={this.searchClicked} style={this.searchBtnStyle()}>
-                     {_('Search')}
+                     {_('Buscar')}
                    </button>
                  </span>
                { this._getExportButton() }

@@ -32,7 +32,7 @@ let PagedTable = React.createClass({
       <input ref="filter" className="input-sm form-control"/>
       <span className="input-group-btn">
         <button type="submit" className="btn btn-primary btn-sm">
-          Search
+          Buscar
         </button>
       </span>
     </div>
