@@ -137,6 +137,13 @@ let Utils = {
       return value;
     },
 
+    cep: function(string) {
+      if (string.length <= 5) {
+        return string;
+      }
+      return string.substring(0, 5) + '-' + string.substring(5);
+    },
+
     percentage: function(value) {
       return Utils.formatters.numeric(value) + ' %';
     },
