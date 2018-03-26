@@ -29,13 +29,18 @@ export default class DescriptionBlock extends BaseComponent {
   _getComparison() {
     let current = this.props.value;
     let last = this.props.last;
-    if (last === current || last === undefined) {
+    if (last == undefined) {
+      return null;
+    }
+
+    if (last === current) {
       return (
         <span className="description-percentage text-yellow">
           <i className="fa fa-caret-left"></i>
           &nbsp;{Utils.formatters.percentage(0)}
         </span>);
     }
+
     let variation = Math.abs((current - last) / last);
     let color = current > last ? 'text-green' : 'text-red';
     let icon = current > last ? 'up' : 'down';
