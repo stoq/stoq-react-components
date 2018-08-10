@@ -206,6 +206,9 @@ module.exports = Table = React.createClass({
    * provided.
    */
   _format_summary_value: function(column, value, object, row_index) {
+    if (value == undefined) {
+      return null;
+    }
     var default_formatter = Utils.formatters[column.props['data-type']];
     var formatter = this._get_formatter(column, column.props.summaryFormatter);
 
