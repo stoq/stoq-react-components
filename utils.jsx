@@ -47,33 +47,18 @@ let Utils = {
     },
 
     numeric: function(value) {
-      value = parseFloat(value) || 0.0;
-      let sign = value < 0 ? '-' : '';
+      const numValue = Number(value) || 0;
+      return numValue.toLocaleString('pt-BR');
+    },
 
-      value = Math.abs(value);
-      if (value % 1 !== 0) {
-        // If the number is not an Integer, put two decimal digits
-        value = value.toFixed(2);
-      } else {
-        value = value.toString();
-      }
-
-      let split = value.split('.');
-      let integer = split[0];
-      split[0] = [];
-      for (let i = integer.length; i > 0; i -= 3) {
-        split[0].unshift(integer.slice(Math.max(i - 3, 0), i));
-      }
-      split[0] = split[0].join('.');
-
-      return sign + split.join(',');
+    fixedNumeric: function(value) {
+      const numValue = Number(value) || 0;
+      return numValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
     },
 
     currency: function(value) {
-      value = parseFloat(value) || 0.0;
-      let sign = value < 0 ? '-' : '';
-      let currency = 'R$';
-      return `${sign}${currency} ${Utils.formatters.numeric(Math.abs(value))}`;
+      const numValue = Number(value) || 0;
+      return (numValue.toLocaleString('pt-BR', {currency: 'BRL', style: 'currency', minimumFractionDigits: 2}));
     },
 
     datetime: function(value) {
