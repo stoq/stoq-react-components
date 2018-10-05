@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import md5 from 'md5';
 import $ from 'jquery';
-import _ from 'gettext';
+import {gettext as _} from 'ttag';
 
 let Utils = {
 

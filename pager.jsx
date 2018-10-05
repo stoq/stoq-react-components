@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {gettext as _} from 'ttag';
 
 import Utils from 'utils';
-
-var _ = require('gettext');
 
 /* A paginated Table pager
  *

@@ -1,11 +1,11 @@
 import React from 'react';
+import {gettext as _} from 'ttag';
 
 import isIn from './utils/in';
 
 import {Filter} from 'htsql';
 import Utils from 'utils';
 import Mixins from './mixins';
-import _ from 'gettext';
 
 let  SORT_FUNC = {
   alpha: function(a, b) {

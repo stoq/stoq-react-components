@@ -4,7 +4,7 @@ import equals from './utils/equals';
 import Box from './box';
 import Row from './row';
 import Utils from 'utils';
-import _ from 'gettext';
+import {gettext as _} from 'ttag';
 
 // Create an array of tooltips
 // We can't use the chart tooltip because there is only one tooltip per chart

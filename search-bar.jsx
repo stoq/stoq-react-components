@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import $ from 'jquery';
-import _ from 'gettext';
+import {gettext as _} from 'ttag';
 require('bootstrap-datepicker');
 
 import Utils from 'utils';

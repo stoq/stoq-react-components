@@ -3,8 +3,8 @@ import Box from './box';
 import Brazil from './maps/brazil';
 import d3 from 'd3';
 import $ from 'jquery';
-import _ from 'gettext';
 import Mixins from './mixins';
+import {gettext as _} from 'ttag';
 
 let topojson = require('topojson');
 

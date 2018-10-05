@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import _ from 'gettext';
+import {gettext as _} from 'ttag';
 import Utils from 'utils';
 import $ from 'jquery';
 

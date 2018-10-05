@@ -1,5 +1,5 @@
-var React = require('react'),
-    _ = require('gettext');
+var React = require('react');
+import {gettext as _} from 'ttag';
 
 var EditableInput = React.createClass({
   addClass: function(attr, klass, container, falsy) {

@@ -1,9 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
+import {gettext as _} from 'ttag';
 
 import ComponentUtils from '../utils';
-
-import _ from 'gettext';
 
 var Utils = {
   subscriptionStatuses: [
