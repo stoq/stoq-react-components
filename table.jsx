@@ -301,7 +301,9 @@ module.exports = Table = React.createClass({
     // isNew sets if its a new modification AND will receive an animation
     var isNew = object._isNew && this.props.blinkable;
     var hidden_columns = this.props.hiddenColumns;
-    var rows = [<tr key={`${row_index}-${depth}`} className={isNew ? 'new' : ''}>
+    const rowClass = (this.props.rowClass && this.props.rowClass(object)) || '';
+    const className = `${(isNew ? 'new' : '')} ${rowClass}`;
+    var rows = [<tr key={`${row_index}-${depth}`} className={className}>
         {React.Children.map(this.props.children, function(column, col_index) {
           if ((hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
               !column.props.visible) {
