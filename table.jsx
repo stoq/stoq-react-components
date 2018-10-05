@@ -548,6 +548,14 @@ module.exports = Table = React.createClass({
          </thead>
          <tbody>
              {this.state.data.map(this._get_rows)}
+             {this.props.cardsSummary && <tr className="">
+               {React.Children.map(this.props.children, function(column, columnIndex) {
+                 var columnValue = this.props.cardsSummary[column.props.getAttr()];
+                 return <td className={this._get_column_class(column)}>
+                            <b>{this._format_summary_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
+                         </td>;
+               }.bind(this))}
+             </tr>}
              {this.props.summaryData && <tr className="table-summary">
                {React.Children.map(this.props.children, function(column) {
                  let columnIndex = this.state.data.length;
