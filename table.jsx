@@ -215,6 +215,16 @@ module.exports = Table = React.createClass({
     return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
   },
 
+  _format_cards_value: function(column, value, object, row_index) {
+    if (value == undefined) {
+      return null;
+    }
+    var default_formatter = Utils.formatters[column.props['data-type']];
+    var formatter = this._get_formatter(column, column.props.cardFormatter);
+
+    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
+  },
+
   _getColumnSettings: function(column, props) {
     // direction should be undefined when sorting is disabled
     var direction = props.sortable && '';
@@ -554,7 +564,7 @@ module.exports = Table = React.createClass({
                {React.Children.map(this.props.children, function(column, columnIndex) {
                  var columnValue = this.props.cardsSummary[column.props.getAttr()];
                  return <td className={this._get_column_class(column)}>
-                            <b>{this._format_summary_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
+                            <b>{this._format_cards_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
                          </td>;
                }.bind(this))}
              </tr>}
