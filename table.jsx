@@ -313,7 +313,8 @@ module.exports = Table = React.createClass({
     var hidden_columns = this.props.hiddenColumns;
     const rowClass = (this.props.rowClass && this.props.rowClass(object)) || '';
     const className = `${(isNew ? 'new' : '')} ${rowClass}`;
-    var rows = [<tr key={`${row_index}-${depth}`} className={className}>
+    const rowClick = () => this.props.rowClick && this.props.rowClick(object);
+    var rows = [<tr onClick={rowClick} key={`${row_index}-${depth}`} className={className}>
         {React.Children.map(this.props.children, function(column, col_index) {
           if ((hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
               !column.props.visible) {
