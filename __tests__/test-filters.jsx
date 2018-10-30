@@ -9,10 +9,10 @@ React;
 var Filters = require('../filters.jsx');
 
 var branches = [
-  {acronym: 'B1', fancy_name: 'Branch 1', id: '1', name: 'Company branch 1'},
-  {acronym: 'B2', fancy_name: 'Branch 2', id: '2', name: 'Company branch 2'},
-  {acronym: 'B3', fancy_name: 'Branch 3', id: '3', name: 'Company branch 3'},
-  {acronym: 'B4', fancy_name: 'Branch 4', id: '4', name: 'Company branch 4'},
+  {acronym: 'B1', fancy_name: 'Branch 1', id: '1', branch_name: 'Company branch 1'},
+  {acronym: 'B2', fancy_name: 'Branch 2', id: '2', branch_name: 'Company branch 2'},
+  {acronym: 'B3', fancy_name: 'Branch 3', id: '3', branch_name: 'Company branch 3'},
+  {acronym: 'B4', fancy_name: 'Branch 4', id: '4', branch_name: 'Company branch 4'},
 ];
 
 var branchFilter = TestUtils.renderIntoDocument(
@@ -30,15 +30,16 @@ describe('Branch Filter', () => {
     // children count should be the branch list's length plus one.
     expect(selectOptions.length).toBe(5);
 
+    var branchLabel = branch => `${branch.acronym} ${branch.branch_name || branch.fancy_name}`;
     var allSelectOptionsCorrect = branches.every((branch, index) => {
-      return selectOptions[index+1].textContent === branch.fancy_name && selectOptions[index+1].value === branch.id;
+      return selectOptions[index+1].textContent === branchLabel(branch) && selectOptions[index+1].value === branch.id;
     });
     expect(allSelectOptionsCorrect).toBeTruthy();
   });
 
   it('builds query object and htquery string using selected branch', () => {
     branchFilter.refs.branch.refs.select.value = '2';
-    expect(branchFilter.getBranchName()).toBe('Branch 2');
+    expect(branchFilter.getBranchName()).toBe("B2 Company branch 2");
     expect(branchFilter.getQuery()).toEqual({branch: '2'});
     expect(branchFilter.getHTQuery()).toBe("branch_id == '2'");
   });

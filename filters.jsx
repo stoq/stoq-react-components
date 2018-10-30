@@ -438,7 +438,10 @@ module.exports.BranchFilter = React.createClass({
     var options = [];
     this.props.allBranches && options.push({label: _("All branches"), value: ''});
     $.map(this.props.branches || {}, function(branch) {
-      options.push({label: branch.fancy_name, value: branch.id});
+      options.push({
+        label: `${branch.acronym} ${branch.branch_name || branch.fancy_name}`,
+        value: branch.id,
+      });
     });
     return options;
   },
