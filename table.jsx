@@ -540,6 +540,18 @@ module.exports = Table = React.createClass({
     });
   },
 
+  _emptyLines: function(rows, columns) {
+    let emptyRows = [];
+    for (let r = 0; r < rows; r++){
+      let emptyColumns = [];
+      for (let c = 0; c < columns; c++){
+        emptyColumns.push(<td key={`empty-${r}-${c}`}>&nbsp;</td>);
+      }
+      emptyRows.push(<tr key={`empty-${r}`}>{emptyColumns}</tr>);
+    }
+    return emptyRows;
+  },
+
   render: function(){
     var hasContent = this.state.data && this.state.data.length;
     return <div className="table-responsive">
@@ -566,6 +578,8 @@ module.exports = Table = React.createClass({
          </thead>
          <tbody>
              {this.state.data.map(this._get_rows)}
+             {this.props.pageSize && this._emptyLines(
+               this.props.pageSize - this.state.data.length, this.props.children.length)}
              {this.props.cardsSummary && <tr className="">
                {React.Children.map(this.props.children, function(column, columnIndex) {
                  var columnValue = this.props.cardsSummary[column.props.getAttr()];
