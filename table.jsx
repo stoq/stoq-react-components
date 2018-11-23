@@ -436,6 +436,11 @@ module.exports = Table = React.createClass({
       var header = this.state.headers[index];
       var direction = (header && header.direction) || '';
       attributes.push(`${attr}:=${htsql}${direction}`);
+
+      //Warn the developer if there is a column with filter true and no attr
+      if (column.props.filter && !column.props.attr) {
+        console.warn(`The column '${column.props.label}' is set to filter but has no property 'attr'`);
+      }
     });
 
     return attributes.join(',');
