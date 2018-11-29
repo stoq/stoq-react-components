@@ -184,9 +184,11 @@ let DateLineChart = React.createClass({
    * React
    */
 
-  componentWillReceiveProps: function(next) {
-    if (!equals(this.props, next)) {
-      this._setupChart(next);
+  componentDidUpdate: function(previous) {
+    const isSame = this.props.start.startOf('day').isSame(previous.start.startOf('day'))
+                   && this.props.end.startOf('day').isSame(previous.end.startOf('day'));
+    if (!equals(this.props, previous) || !isSame) {
+      this._setupChart(this.props);
     }
   },
 
