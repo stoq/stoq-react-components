@@ -23,8 +23,7 @@ Chart.controllers.DateLine = Chart.controllers.line.extend({
     var yAxis = chart.scales['y-axis-0'];
 
     xAxis.tickMoments.forEach((tick, index) => {
-      // The week day of Sunday is 0 (zero)
-      if (!tick.day()) {
+      if (tick.day() === chart.options.weekStart) {
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(xAxis.getPixelForValue(tick, index), yAxis.top);
@@ -56,7 +55,7 @@ Chart.controllers.DateLine = Chart.controllers.line.extend({
 let DateLineChart = React.createClass({
   getDefaultProps: function() {
     // The MomentJS function to be used on the label
-    return {formatLabel: 'date'};
+    return {formatLabel: 'date', weekStart: 0};
   },
 
   _labelFormats: {
@@ -126,6 +125,9 @@ let DateLineChart = React.createClass({
       type: 'DateLine',
       data: data,
       options: {
+        //Add option to choose the day the week starts
+        weekStart: this.props.weekStart,
+        //chart.js options
         formatLabel: this._labelFormats[group],
         legend: false,
         maintainAspectRatio: false,
