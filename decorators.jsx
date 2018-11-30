@@ -13,7 +13,12 @@ import Pager from './pager';
 // ths old mixins
 
 export const withPagination = Table => {
-  return class PaginatedTable extends React.Component {
+  return class PaginatedTable extends Table {
+    constructor(props){
+      // we want to keep methods of the wrapped class (example: getHTSQL)
+      super(props);
+    }
+
     static propTypes = {
       itemsTotal: PropTypes.number.isRequired,
       pageSize: PropTypes.number,
