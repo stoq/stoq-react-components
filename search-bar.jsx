@@ -169,8 +169,8 @@ module.exports = SearchBar = React.createClass({
     var query = Utils.getParams();
     var filters = [];
     React.Children.map(table.props.children, function(column) {
-      // If the column does not require any filter, skip it.
-      if (!column.props.filter) {
+      // If the child is null or the column does not require any filter, skip it.
+      if (!column || !column.props.filter) {
         return;
       }
       // If a filter is required, create it
@@ -232,7 +232,7 @@ module.exports = SearchBar = React.createClass({
              </button>
              <ul className="dropdown-menu">
                {table.props.children.map(function(column, index) {
-                 if (!column.props.visible) {
+                 if (!column || !column.props.visible) {
                    return null;
                  }
                  var iconClass = '';

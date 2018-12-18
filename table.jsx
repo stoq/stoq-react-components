@@ -249,7 +249,7 @@ module.exports = Table = React.createClass({
 
   _getHeaderSettings: function(props) {
     var headers = [];
-    React.Children.map(props.children, function(column) {
+    this._getColumns().map(function(column){
       headers.push(this._getColumnSettings(column, props));
     }.bind(this));
     return headers;
@@ -293,6 +293,11 @@ module.exports = Table = React.createClass({
     return paddings;
   },
 
+  _getColumns: function() {
+    // ignore falsy children
+    return this.props.children.filter(child => Boolean(child));
+  },
+
   /*  Returns a list of rows that a object contain
    *
    *  On normal tables, it simply maps the object's attributes into the
@@ -314,8 +319,9 @@ module.exports = Table = React.createClass({
     const rowClass = (this.props.rowClass && this.props.rowClass(object)) || '';
     const className = `${(isNew ? 'new' : '')} ${rowClass}`;
     const onRowClick = () => this.props.onRowClick && this.props.onRowClick(object);
+    const columns = this._getColumns();
     var rows = [<tr onClick={onRowClick} key={`${row_index}-${depth}`} className={className}>
-        {React.Children.map(this.props.children, function(column, col_index) {
+        {columns.map(function(column, col_index) {
           if ((hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
               !column.props.visible) {
             return null;
@@ -427,7 +433,8 @@ module.exports = Table = React.createClass({
 
     // For each column, collect the attributes that should be feched
     // from the database.
-    React.Children.forEach(this.props.children, (column, index) => {
+    const columns = this._getColumns();
+    columns.forEach((column, index) => {
       if (!column.props.query) {
         return;
       }
@@ -554,6 +561,7 @@ module.exports = Table = React.createClass({
 
   render: function(){
     var hasContent = this.state.data && this.state.data.length;
+    const columns = this._getColumns();
     return <div className="table-responsive">
        <table className="table table-striped table-hover">
          <thead>
@@ -581,7 +589,7 @@ module.exports = Table = React.createClass({
              {this.props.pageSize && this._emptyLines(
                this.props.pageSize - this.state.data.length, this.props.children.length)}
              {this.props.cardsSummary && <tr className="">
-               {React.Children.map(this.props.children, function(column, columnIndex) {
+               {columns.map(function(column, columnIndex) {
                  var columnValue = this.props.cardsSummary[column.props.getAttr()];
                  return <td className={this._get_column_class(column)}>
                             <b>{this._format_cards_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
@@ -589,7 +597,7 @@ module.exports = Table = React.createClass({
                }.bind(this))}
              </tr>}
              {this.props.summaryData && <tr className="table-summary">
-               {React.Children.map(this.props.children, function(column, columnIndex) {
+               {columns.map(function(column, columnIndex) {
                  var columnValue = this.props.summaryData[column.props.getAttr()];
                  return <td className={this._get_column_class(column)}>
                             <b>{this._format_summary_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
