@@ -595,7 +595,7 @@ module.exports = Table = React.createClass({
                     typeof columnConfig === 'function'
                     ? columnConfig(this.state.data, column.props.getAttr())
                     : columnConfig;
-                 return <td className={this._get_column_class(column)}>
+                 return <td key={columnIndex} className={this._get_column_class(column)}>
                             <b>{this._format_cards_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
                          </td>;
                }.bind(this))}
@@ -607,7 +607,7 @@ module.exports = Table = React.createClass({
                     typeof columnConfig === 'function'
                     ? columnConfig(this.state.data, column.props.getAttr())
                     : columnConfig;
-                 return <td className={this._get_column_class(column)}>
+                 return <td key={columnIndex} className={this._get_column_class(column)}>
                             <b>{this._format_summary_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
                          </td>;
                }.bind(this))}
