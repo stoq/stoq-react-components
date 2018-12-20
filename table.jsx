@@ -590,15 +590,23 @@ module.exports = Table = React.createClass({
                this.props.pageSize - this.state.data.length, this.props.children.length)}
              {this.props.cardsSummary && <tr className="">
                {columns.map(function(column, columnIndex) {
-                 var columnValue = this.props.cardsSummary[column.props.getAttr()];
+                  var columnConfig = this.props.cardsSummary[column.props.getAttr()];
+                  var columnValue =
+                    typeof columnConfig === 'function'
+                    ? columnConfig(this.state.data, column.props.getAttr())
+                    : columnConfig;
                  return <td className={this._get_column_class(column)}>
                             <b>{this._format_cards_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
                          </td>;
                }.bind(this))}
              </tr>}
              {this.props.summaryData && <tr className="table-summary">
-               {columns.map(function(column, columnIndex) {
-                 var columnValue = this.props.summaryData[column.props.getAttr()];
+                {columns.map(function(column, columnIndex) {
+                  var columnConfig = this.props.summaryData[column.props.getAttr()];
+                  var columnValue =
+                    typeof columnConfig === 'function'
+                    ? columnConfig(this.state.data, column.props.getAttr())
+                    : columnConfig;
                  return <td className={this._get_column_class(column)}>
                             <b>{this._format_summary_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
                          </td>;
@@ -610,6 +618,26 @@ module.exports = Table = React.createClass({
     </div>;
   },
 });
+
+let sumColumn = function(data, columnName) {
+  return data.reduce((acc, cur) => acc + (Number(cur[columnName]) || 0), 0);
+};
+
+let diffColumns = function(firstColumn, secondColumn) {
+  return function(data) {
+    return data.reduce((acc, cur) => acc + (cur[firstColumn] - cur[secondColumn]), 0);
+  };
+};
+
+let filteredColumns = function(rule) {
+  return function(data, columnName) {
+    return data.filter(rule).reduce((acc, cur) => acc + (Number(cur[columnName]) || 0), 0);
+  };
+};
+
+module.exports.sumColumn = sumColumn;
+module.exports.diffColumns = diffColumns;
+module.exports.filteredColumns = filteredColumns;
 
 Table.Column = React.createClass({
   getDefaultProps: function() {
