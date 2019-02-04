@@ -625,7 +625,9 @@ let sumColumn = function(data, columnName) {
 
 let diffColumns = function(firstColumn, secondColumn) {
   return function(data) {
-    return data.reduce((acc, cur) => acc + (cur[firstColumn] - cur[secondColumn]), 0);
+    return data.reduce((acc, cur) => {
+      return acc + ((cur[firstColumn] || 0) - (cur[secondColumn] || 0));
+    }, 0);
   };
 };
 
