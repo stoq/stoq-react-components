@@ -213,12 +213,16 @@ module.exports = SearchBar = React.createClass({
       return null;
     }
 
-    return <div className="input-group-btn">
-      <button name="export-file" className="btn btn-default"
-              title="Exportar relatório" onClick={this._export}>
-          <i className="fa fa-file-excel-o"/>
-      </button>
-    </div>;
+    const iconClasses = this.props.exportLoading ? 'fa fa-refresh fa-spin' : 'fa fa-file-excel-o';
+    const btnClicked = this.props.exportLoading ? null : this._export;
+    return (
+      <div className="input-group-btn">
+        <button name="export-file" className="btn btn-default"
+                title="Exportar relatório" onClick={btnClicked}>
+            <i className={iconClasses}/>
+        </button>
+      </div>
+    );
   },
 
   _getColumnsButton: function() {
