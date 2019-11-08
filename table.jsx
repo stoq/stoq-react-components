@@ -295,7 +295,16 @@ module.exports = Table = React.createClass({
 
   _getColumns: function() {
     // ignore falsy children
-    return this.props.children.filter(child => Boolean(child));
+    const nonFalsyChildren = this.props.children.filter(child => Boolean(child));
+    let children = [];
+    nonFalsyChildren.forEach((child) => {
+      if (Array.isArray(child)) {
+        children.push(...child);
+      } else {
+        children.push(child);
+      }
+    });
+    return children;
   },
 
   /*  Returns a list of rows that a object contain
