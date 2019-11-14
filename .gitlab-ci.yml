@@ -1,0 +1,11 @@
+image: stoqdev/stoq-dockerfile:mobile-pos-test
+
+stages:
+  - test
+
+test:
+  script:
+    - npm --version
+    - node --version
+    - npm ci
+    - npm test
