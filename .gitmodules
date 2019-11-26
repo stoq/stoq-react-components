@@ -1,0 +1,3 @@
+[submodule "stoq-utils"]
+	path = stoq-utils
+	url = https://github.com/stoq/stoq-utils.git
