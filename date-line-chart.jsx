@@ -1,33 +1,32 @@
-import React from 'react';
-import Utils from 'utils';
-import equals from './utils/equals';
-import moment from 'moment';
-import Chart from './node_modules/chart.js';
+import React from "react";
+import Utils from "utils";
+import equals from "./utils/equals";
+import moment from "moment";
+import Chart from "./node_modules/chart.js";
 
 Chart.controllers.DateLine = Chart.controllers.line.extend({
-
-  name: 'DateLine',
+  name: "DateLine",
 
   draw: function() {
     Chart.controllers.line.prototype.draw.apply(this, arguments);
     // XXX Workaround to avoid sundays being highlighted when grouping
     // is not done by day.
-    if (this.chart.options.formatLabel != 'date') {
+    if (this.chart.options.formatLabel != "date") {
       return;
     }
 
     var chart = this.chart;
     var ctx = chart.chart.ctx;
 
-    var xAxis = chart.scales['x-axis-0'];
-    var yAxis = chart.scales['y-axis-0'];
+    var xAxis = chart.scales["x-axis-0"];
+    var yAxis = chart.scales["y-axis-0"];
 
     xAxis.tickMoments.forEach((tick, index) => {
       if (tick.day() === chart.options.weekStart) {
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(xAxis.getPixelForValue(tick, index), yAxis.top);
-        ctx.strokeStyle = 'rgba(77,83,96,0.3)';
+        ctx.strokeStyle = "rgba(77,83,96,0.3)";
         ctx.lineTo(xAxis.getPixelForValue(tick, index), yAxis.bottom);
         ctx.stroke();
         ctx.restore();
@@ -55,13 +54,13 @@ Chart.controllers.DateLine = Chart.controllers.line.extend({
 let DateLineChart = React.createClass({
   getDefaultProps: function() {
     // The MomentJS function to be used on the label
-    return {formatLabel: 'date', weekStart: 0};
+    return { formatLabel: "date", weekStart: 0 };
   },
 
   _labelFormats: {
-    hour: 'hour',
-    day: 'date',
-    month: 'month',
+    hour: "hour",
+    day: "date",
+    month: "month",
   },
 
   _setupChart: function(props) {
@@ -74,28 +73,30 @@ let DateLineChart = React.createClass({
     // The chart boundaries
     // Default value for group is 'month', to avoid next-to infinite loops
     // errors when no default group is provided.
-    let {start, end, group} = {
+    let { start, end, group } = {
       // The time scale positions the values according to it's unix timestamp,
       // we want to show these data right above the labels.
-      start: props.group === 'month' ? props.start.startOf('month') : props.start.startOf('day'),
-      end: props.group === 'month' ? props.end.endOf('month') : props.end.endOf('day'),
-      group: props.group || 'month',
+      start: props.group === "month" ? props.start.startOf("month") : props.start.startOf("day"),
+      end: props.group === "month" ? props.end.endOf("month") : props.end.endOf("day"),
+      group: props.group || "month",
     };
 
     // ChartJS API formatted data
     let data = {
       labels: [],
-      datasets: [{
-        borderColor: "rgba(77,83,96,0.8)",
-        borderWidth: 2,
-        backgroundColor: "rgba(77,83,96,0.1)",
-        strokeColor: "rgba(77,83,96,0.8)",
-        pointBorderColor: "white",
-        pointBackgroundColor: "rgba(77,83,96,0.8)",
-        pointRadius: 4,
-        pointHoverRadius: 5,
-        data: [],
-      }],
+      datasets: [
+        {
+          borderColor: "rgba(77,83,96,0.8)",
+          borderWidth: 2,
+          backgroundColor: "rgba(77,83,96,0.1)",
+          strokeColor: "rgba(77,83,96,0.8)",
+          pointBorderColor: "white",
+          pointBackgroundColor: "rgba(77,83,96,0.8)",
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          data: [],
+        },
+      ],
     };
 
     // Fill empty spaces on incoming data by merging a generated date series
@@ -120,9 +121,9 @@ let DateLineChart = React.createClass({
     });
 
     // Finally, build the chart
-    let ctx = this.refs.canvas.getContext('2d');
+    let ctx = this.refs.canvas.getContext("2d");
     this.chart = new Chart(ctx, {
-      type: 'DateLine',
+      type: "DateLine",
       data: data,
       options: {
         //Add option to choose the day the week starts
@@ -132,40 +133,46 @@ let DateLineChart = React.createClass({
         legend: false,
         maintainAspectRatio: false,
         scales: {
-          xAxes: [{
-            type: 'time',
-            position: 'bottom',
-            time: {
-              unit: group,
-              displayFormats: {
-                day: 'D',
-                month: 'M',
-                hour: 'H',
+          xAxes: [
+            {
+              type: "time",
+              position: "bottom",
+              time: {
+                unit: group,
+                displayFormats: {
+                  day: "D",
+                  month: "M",
+                  hour: "H",
+                },
               },
             },
-          }],
-          yAxes: [{
-            position: 'left',
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 10,
+          ],
+          yAxes: [
+            {
+              position: "left",
+              ticks: {
+                suggestedMin: 0,
+                suggestedMax: 10,
+              },
             },
-          }],
+          ],
         },
         tooltips: {
           callbacks: {
             // Use the formatter given from props
             label: function(tooltipItems) {
-              var formatter = typeof props.yFormatter === 'function' ?
-                              props.yFormatter : Utils.formatters[props.yFormatter || 'numeric'];
+              var formatter =
+                typeof props.yFormatter === "function"
+                  ? props.yFormatter
+                  : Utils.formatters[props.yFormatter || "numeric"];
               return formatter(tooltipItems.yLabel);
             },
             // The xlabel will be hidden, showing only it's value
             title: function() {
-              return '';
+              return "";
             },
           },
-          mode: 'x-axis',
+          mode: "x-axis",
           bodyFontSize: 15,
         },
       },
@@ -178,7 +185,7 @@ let DateLineChart = React.createClass({
 
   getHTSQL: function() {
     var htsql = this.props.htsql;
-    htsql = typeof htsql === 'function' ? htsql() : htsql;
+    htsql = typeof htsql === "function" ? htsql() : htsql;
     return htsql;
   },
 
@@ -187,8 +194,9 @@ let DateLineChart = React.createClass({
    */
 
   componentDidUpdate: function(previous) {
-    const isSame = this.props.start.startOf('day').isSame(previous.start.startOf('day'))
-                   && this.props.end.startOf('day').isSame(previous.end.startOf('day'));
+    const isSame =
+      this.props.start.startOf("day").isSame(previous.start.startOf("day")) &&
+      this.props.end.startOf("day").isSame(previous.end.startOf("day"));
     if (!equals(this.props, previous) || !isSame) {
       this._setupChart(this.props);
     }

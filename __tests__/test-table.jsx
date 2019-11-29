@@ -1,39 +1,38 @@
-jest.dontMock('../table.jsx');
+jest.dontMock("../table.jsx");
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
-window.$ = window.jQuery = require('jquery');
-require('bootstrap');
+import React from "react";
+import ReactDOM from "react-dom";
+import TestUtils from "react-addons-test-utils";
+window.$ = window.jQuery = require("jquery");
+require("bootstrap");
 
-var Table = require('../table.jsx');
+var Table = require("../table.jsx");
 React;
 
 const dataArray = [
-    {name: 'Albert', number: 6},
-    {name: 'Bob', number: 5},
-    {name: 'Carmen', number: 4},
-    {name: 'Garfield', number: 3},
-    {name: 'Naj', number: 2},
-    {name: 'Ray', number: 1},
+  { name: "Albert", number: 6 },
+  { name: "Bob", number: 5 },
+  { name: "Carmen", number: 4 },
+  { name: "Garfield", number: 3 },
+  { name: "Naj", number: 2 },
+  { name: "Ray", number: 1 },
 ];
 
 const basicTable = (
-  <Table data={dataArray.slice()} htsql='/table' defaultOrderBy='-number' sortable={true}>
-    <Table.Column label='Name' htsql='name' attr='name' data-type='alpha'/>
-    <Table.Column label='Number' htsql='number' attr='number' data-type='numeric'/>
+  <Table data={dataArray.slice()} htsql="/table" defaultOrderBy="-number" sortable={true}>
+    <Table.Column label="Name" htsql="name" attr="name" data-type="alpha" />
+    <Table.Column label="Number" htsql="number" attr="number" data-type="numeric" />
   </Table>
 );
 
 var tableComponent;
 
-describe('Table', () => {
-
+describe("Table", () => {
   it("displays 'no data' when there is no data", () => {
     tableComponent = TestUtils.renderIntoDocument(
       <Table data={[]}>
-        <Table.Column label='Test Label 1'/>
-        <Table.Column label='Test Label 2'/>
+        <Table.Column label="Test Label 1" />
+        <Table.Column label="Test Label 2" />
       </Table>
     );
     expect(tableComponent.refs.noDataDiv).not.toBeUndefined();
@@ -46,7 +45,10 @@ describe('Table', () => {
     var rows = tableComponent.state.data.map(tableComponent._get_rows);
     var isEqual = rows.every(function(row, index) {
       let columns = row[0].props.children;
-      return columns[0].props['data-value'] == dataArray[index].name && columns[1].props['data-value'] == dataArray[index].number;
+      return (
+        columns[0].props["data-value"] == dataArray[index].name &&
+        columns[1].props["data-value"] == dataArray[index].number
+      );
     });
     expect(isEqual).toBeTruthy();
   });
@@ -63,7 +65,10 @@ describe('Table', () => {
     var rows = tableComponent.state.data.map(tableComponent._get_rows);
     var isEqual = rows.every(function(row, index) {
       let columns = row[0].props.children;
-      return columns[0].props['data-value'] == reversedDataArray[index].name && columns[1].props['data-value'] == reversedDataArray[index].number;
+      return (
+        columns[0].props["data-value"] == reversedDataArray[index].name &&
+        columns[1].props["data-value"] == reversedDataArray[index].number
+      );
     });
     expect(isEqual).toBeTruthy();
   });
@@ -71,22 +76,22 @@ describe('Table', () => {
   it("builds htsql query correctly", () => {
     tableComponent = TestUtils.renderIntoDocument(basicTable);
 
-    var filter = 'number > 3';
-    expect(tableComponent.getBaseHTSQL(filter)).toBe('/table.filter(number > 3)');
-    expect(tableComponent.getHTSQLAttributes()).toBe('name:=name,number:=number-');
+    var filter = "number > 3";
+    expect(tableComponent.getBaseHTSQL(filter)).toBe("/table.filter(number > 3)");
+    expect(tableComponent.getHTSQLAttributes()).toBe("name:=name,number:=number-");
   });
 
   it("doesn't render hidden columns", () => {
     tableComponent = TestUtils.renderIntoDocument(
-      <Table data={[]} hiddenColumns={['number', 'gender']}>
-        <Table.Column label='Name' attr='name'/>
-        <Table.Column label='Number' attr='number'/>
-        <Table.Column label='Gender' attr='gender'/>
-      </Table>);
+      <Table data={[]} hiddenColumns={["number", "gender"]}>
+        <Table.Column label="Name" attr="name" />
+        <Table.Column label="Number" attr="number" />
+        <Table.Column label="Gender" attr="gender" />
+      </Table>
+    );
 
     var header = ReactDOM.findDOMNode(tableComponent.refs.tableHeader);
     expect(header.children.length).toBe(1);
-    expect(header.children[0].textContent).toBe('Name');
+    expect(header.children[0].textContent).toBe("Name");
   });
-
 });

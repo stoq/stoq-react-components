@@ -1,25 +1,30 @@
-import React from 'react';
-import Chart from 'chart.js';
-import equals from './utils/equals';
-import Box from './box';
-import Row from './row';
-import Utils from 'utils';
-import {gettext as _} from 'ttag';
+import React from "react";
+import Chart from "chart.js";
+import equals from "./utils/equals";
+import Box from "./box";
+import Row from "./row";
+import Utils from "utils";
+import { gettext as _ } from "ttag";
 
 // Create an array of tooltips
 // We can't use the chart tooltip because there is only one tooltip per chart
 Chart.pluginService.register({
-  beforeRender: function (chart) {
+  beforeRender: function(chart) {
     chart.pluginTooltips = [];
-    chart.config.data.datasets.forEach(function (dataset, i) {
-      chart.getDatasetMeta(i).data.forEach(function (sector) {
-        chart.pluginTooltips.push(new Chart.Tooltip({
-          _chart: chart.chart,
-          _chartInstance: chart,
-          _data: chart.data,
-          _options: chart.options.tooltips,
-          _active: [sector],
-        }, chart));
+    chart.config.data.datasets.forEach(function(dataset, i) {
+      chart.getDatasetMeta(i).data.forEach(function(sector) {
+        chart.pluginTooltips.push(
+          new Chart.Tooltip(
+            {
+              _chart: chart.chart,
+              _chartInstance: chart,
+              _data: chart.data,
+              _options: chart.options.tooltips,
+              _active: [sector],
+            },
+            chart
+          )
+        );
       });
     });
   },
@@ -40,8 +45,8 @@ let Pie = React.createClass({
   getInitialState: function() {
     return {
       chartData: [], // Formatted data, has only label and value indexes
-      chart: null,   // The ChartJS Pie object
-      data: [],      // The raw data used on the Pie
+      chart: null, // The ChartJS Pie object
+      data: [], // The raw data used on the Pie
     };
   },
 
@@ -59,7 +64,9 @@ let Pie = React.createClass({
     let data = props.data;
     var chartData = [];
     // Remove data whose values are falsy (0, undefined, null...)
-    data = data.filter((object) => {return object[valueAttr];});
+    data = data.filter(object => {
+      return object[valueAttr];
+    });
     // Descending sort
     data.sort((a, b) => {
       return b[valueAttr] - a[valueAttr];
@@ -77,7 +84,7 @@ let Pie = React.createClass({
         chartData.push({
           label: object[labelAttr],
           value: object[valueAttr],
-          percentValue: object[valueAttr] / total * 100,
+          percentValue: (object[valueAttr] / total) * 100,
           color: Utils.getColor(index),
           highlight: Utils.getColor(index, true),
         });
@@ -85,9 +92,9 @@ let Pie = React.createClass({
       }
       // Accumulate other element in a bundled element
       var last = chartData.length - 1;
-      chartData[last].label = _('Others');
+      chartData[last].label = _("Others");
       chartData[last].value += object[valueAttr];
-      chartData[last].percentValue = chartData[last].value / total * 100;
+      chartData[last].percentValue = (chartData[last].value / total) * 100;
     });
 
     let labels = [];
@@ -105,16 +112,18 @@ let Pie = React.createClass({
 
     var formatter = Utils.formatters[this.props.dataType];
     // Build the chart
-    var context = this.refs.canvas.getContext('2d');
+    var context = this.refs.canvas.getContext("2d");
     var chart = new Chart(context, {
-      type: 'pie',
+      type: "pie",
       data: {
         labels: labels,
-        datasets: [{
-          data: values,
-          backgroundColor: colors,
-          hoverBackgroundColor: highlights,
-        }],
+        datasets: [
+          {
+            data: values,
+            backgroundColor: colors,
+            hoverBackgroundColor: highlights,
+          },
+        ],
       },
       options: {
         legend: false,
@@ -133,7 +142,7 @@ let Pie = React.createClass({
       },
     });
 
-    this.setState({chartData, chart, data});
+    this.setState({ chartData, chart, data });
   },
 
   /*
@@ -161,7 +170,7 @@ let Pie = React.createClass({
 
   getHTSQL: function() {
     var htsql = this.props.htsql;
-    htsql = typeof htsql === 'function' ? htsql() : htsql;
+    htsql = typeof htsql === "function" ? htsql() : htsql;
     return htsql;
   },
 
@@ -170,12 +179,17 @@ let Pie = React.createClass({
    */
   /* Displays the chart legend */
   _getLegend: function(object, index) {
-    var style = {backgroundColor: object.color};
-    return <div key={index} onMouseOver={this._showTooltip.bind(this, index)}
-                onMouseOut={this._hideTooltip.bind(this, index)}>
-             <span className="color" style={style}></span>
-             { object.label }
-           </div>;
+    var style = { backgroundColor: object.color };
+    return (
+      <div
+        key={index}
+        onMouseOver={this._showTooltip.bind(this, index)}
+        onMouseOut={this._hideTooltip.bind(this, index)}
+      >
+        <span className="color" style={style}></span>
+        {object.label}
+      </div>
+    );
   },
 
   /*
@@ -197,16 +211,21 @@ let Pie = React.createClass({
   },
 
   render: function() {
-    return <Box padding={true} title={this.props.title} icon={this.props.icon} loading={this.props.loading}>
+    return (
+      <Box
+        padding={true}
+        title={this.props.title}
+        icon={this.props.icon}
+        loading={this.props.loading}
+      >
         <Row lg={[7, 5]}>
-          <div style={{height: '300px'}}>
+          <div style={{ height: "300px" }}>
             <canvas ref="canvas" width="300" height="300"></canvas>
           </div>
-          <div className="legend">
-            { this.state.chartData.map(this._getLegend, this) }
-          </div>
+          <div className="legend">{this.state.chartData.map(this._getLegend, this)}</div>
         </Row>
-    </Box>;
+      </Box>
+    );
   },
 });
 

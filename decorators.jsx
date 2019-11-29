@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from "prop-types";
+import React from "react";
 
-import Utils from 'utils';
+import Utils from "utils";
 
-import Pager from './pager';
+import Pager from "./pager";
 
 // React 16 dont suppoort mixins
 // this lib is a partial port of mixins.jsx
@@ -14,7 +14,7 @@ import Pager from './pager';
 
 export const withPagination = Table => {
   return class PaginatedTable extends Table {
-    constructor(props){
+    constructor(props) {
       // we want to keep methods of the wrapped class (example: getHTSQL)
       super(props);
     }
@@ -45,7 +45,7 @@ export const withPagination = Table => {
     };
 
     render = () => {
-      const {itemsTotal, onPageChange, pageSize, ...tableProps} = this.props;
+      const { itemsTotal, onPageChange, pageSize, ...tableProps } = this.props;
       const paginationData = {
         page_count: Math.ceil(itemsTotal / pageSize),
         page: this.state.currentPage,
@@ -53,7 +53,7 @@ export const withPagination = Table => {
         total: itemsTotal,
       };
       const _onPageChange = page => {
-        this.setState({currentPage: page}, onPageChange && onPageChange(page));
+        this.setState({ currentPage: page }, onPageChange && onPageChange(page));
       };
       return (
         <div>

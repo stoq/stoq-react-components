@@ -1,6 +1,6 @@
-import React from 'react';
-import Row from './row';
-import Utils from 'utils';
+import React from "react";
+import Row from "./row";
+import Utils from "utils";
 
 let Summary;
 /* Generates Summaries out of HTSQL queries
@@ -21,35 +21,37 @@ let Summary;
  *  sublabel {String} Like label, but small capped
  */
 module.exports = Summary = React.createClass({
-
   getDefaultProps: function() {
-    return {data: {}};
+    return { data: {} };
   },
 
   getHTSQL: function() {
     var attributes = [];
     this.props.children.forEach(item => {
-      if (item.type !== Summary.Item)
-        return;
-      var value = item.props.getAttr('');
+      if (item.type !== Summary.Item) return;
+      var value = item.props.getAttr("");
       attributes.push(`${value}:=${item.props.htsql}`);
       // Add the item's subhtsql if it has one
       if (item.props.subhtsql) {
-        value = item.props.getAttr('sub');
+        value = item.props.getAttr("sub");
         attributes.push(`${value}:=${item.props.subhtsql}`);
       }
     });
-    return attributes.join(',');
+    return attributes.join(",");
   },
 
   getItem: function(item, prefix) {
     // Try to get the value from the directly set value on the item
-    var value = item.props[prefix + 'value'];
+    var value = item.props[prefix + "value"];
     // Then try to get it from the indirect attr property
     value = value || this.props.data[item.props.getAttr(prefix)];
     // Finally, format the value if a formatter is provided
-    var formatter = item.props[prefix + 'formatter'] || function(value) {return value;};
-    if (typeof formatter === 'string') {
+    var formatter =
+      item.props[prefix + "formatter"] ||
+      function(value) {
+        return value;
+      };
+    if (typeof formatter === "string") {
       // If the provided formatter was a String, resolve it to the
       // corresponding Utils.formatters function
       formatter = Utils.formatters[formatter];
@@ -57,40 +59,53 @@ module.exports = Summary = React.createClass({
     value = formatter(value);
 
     // Reduce the text size for subvalues
-    var textStyle = prefix ? {fontSize: '10px'} : {};
-    var numberStyle = prefix ? {fontSize: '14px'} : {};
-    return <div>
-      <span className="info-box-text" style={textStyle}>{item.props[prefix + 'label']}</span>
-      <span className="info-box-number" style={numberStyle}>{value}</span>
-    </div>;
+    var textStyle = prefix ? { fontSize: "10px" } : {};
+    var numberStyle = prefix ? { fontSize: "14px" } : {};
+    return (
+      <div>
+        <span className="info-box-text" style={textStyle}>
+          {item.props[prefix + "label"]}
+        </span>
+        <span className="info-box-number" style={numberStyle}>
+          {value}
+        </span>
+      </div>
+    );
   },
 
   getSummary: function(item) {
-    if (item.type !== Summary.Item)
-      return item;
+    if (item.type !== Summary.Item) return item;
 
     var subItem = null;
     if (item.props.subValue || item.props.sublabel) {
-      subItem = this.getItem(item, 'sub');
+      subItem = this.getItem(item, "sub");
     }
 
-    return <div className="info-box">
-      <span className={"info-box-icon " + item.props.color}>
-        <i className={item.props.icon}/>
-      </span>
-      <div className="info-box-content">
-        {this.getItem(item, '')}
-        {subItem}
+    return (
+      <div className="info-box">
+        <span className={"info-box-icon " + item.props.color}>
+          <i className={item.props.icon} />
+        </span>
+        <div className="info-box-content">
+          {this.getItem(item, "")}
+          {subItem}
+        </div>
       </div>
-    </div>;
+    );
   },
 
   render: function() {
-    return <Row className="dashboard" {...this.props}>
-      {React.Children.map(this.props.children, function(item) {
-        return this.getSummary(item);
-      }, this)}
-    </Row>;
+    return (
+      <Row className="dashboard" {...this.props}>
+        {React.Children.map(
+          this.props.children,
+          function(item) {
+            return this.getSummary(item);
+          },
+          this
+        )}
+      </Row>
+    );
   },
 });
 

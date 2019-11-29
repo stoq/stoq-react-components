@@ -1,16 +1,16 @@
-import React from 'react';
-import {gettext as _} from 'ttag';
+import React from "react";
+import { gettext as _ } from "ttag";
 
-import isIn from './utils/in';
+import isIn from "./utils/in";
 
-import {Filter} from 'htsql';
-import Utils from 'utils';
-import Mixins from './mixins';
+import { Filter } from "htsql";
+import Utils from "utils";
+import Mixins from "./mixins";
 
-let  SORT_FUNC = {
+let SORT_FUNC = {
   alpha: function(a, b) {
-    a = a || '';
-    b = b || '';
+    a = a || "";
+    b = b || "";
     return a.localeCompare(b);
   },
   numeric: function(a, b) {
@@ -43,9 +43,9 @@ SORT_FUNC.link = SORT_FUNC.alpha;
 SORT_FUNC.percentage = SORT_FUNC.numeric;
 
 let SORT_OPOSITE = {
-  '+': '-',
-  '-': '+',
-  '': '-',
+  "+": "-",
+  "-": "+",
+  "": "-",
 };
 
 /* HTSQL Queried Bootstrap Striped Tabled
@@ -123,12 +123,11 @@ module.exports = Table = React.createClass({
     }, this);
   },
 
-  _getCurrentOrder: function(props=this.props) {
-    if (props.sortable && props.onSearch &&
-            (props.orderBy || Utils.getParams().order_by)) {
-      return props.orderBy || Utils.getParams().order_by || '';
+  _getCurrentOrder: function(props = this.props) {
+    if (props.sortable && props.onSearch && (props.orderBy || Utils.getParams().order_by)) {
+      return props.orderBy || Utils.getParams().order_by || "";
     }
-    return props.defaultOrderBy || '';
+    return props.defaultOrderBy || "";
   },
 
   /*  Sort the 'data' list
@@ -147,21 +146,24 @@ module.exports = Table = React.createClass({
 
   _sortLocally: function(direction, column) {
     var data = this.state.data;
-    var sort_func = SORT_FUNC[column.formatter] || SORT_FUNC[column['data-type']];
+    var sort_func = SORT_FUNC[column.formatter] || SORT_FUNC[column["data-type"]];
     sort_func = sort_func || SORT_FUNC.alpha;
 
-    data = this._sort(data, function(a, b) {
-      var a_attr = a[column.getAttr()];
-      var b_attr = b[column.getAttr()];
-      if (direction === '+') {
-        // Try the attributes first, but fall back to the object
-        return sort_func(a_attr, b_attr);
-      }
-      return sort_func(b_attr, a_attr);
-    }.bind(this));
+    data = this._sort(
+      data,
+      function(a, b) {
+        var a_attr = a[column.getAttr()];
+        var b_attr = b[column.getAttr()];
+        if (direction === "+") {
+          // Try the attributes first, but fall back to the object
+          return sort_func(a_attr, b_attr);
+        }
+        return sort_func(b_attr, a_attr);
+      }.bind(this)
+    );
 
     // Then update the current state
-    this.setState({data});
+    this.setState({ data });
   },
 
   /* This may add extra classes to the current props.className of the
@@ -170,20 +172,20 @@ module.exports = Table = React.createClass({
    */
   _get_column_class: function(column) {
     var final_class = column.props.className,
-        dataType = column.props['data-type'];
-    if (['currency', 'phone', 'numeric'].indexOf(dataType) !== -1) {
-      final_class += ' text-right';
+      dataType = column.props["data-type"];
+    if (["currency", "phone", "numeric"].indexOf(dataType) !== -1) {
+      final_class += " text-right";
     }
     return final_class;
   },
 
-  _get_formatter: function(column, specified_formatter){
-    var default_formatter = Utils.formatters[column.props['data-type']];
+  _get_formatter: function(column, specified_formatter) {
+    var default_formatter = Utils.formatters[column.props["data-type"]];
     var formatter = default_formatter;
     if (specified_formatter !== undefined) {
-      if (typeof specified_formatter === 'string') {
+      if (typeof specified_formatter === "string") {
         formatter = Utils.formatters[specified_formatter];
-      } else if (typeof specified_formatter === 'function') {
+      } else if (typeof specified_formatter === "function") {
         formatter = specified_formatter;
       }
     }
@@ -195,10 +197,10 @@ module.exports = Table = React.createClass({
    * provided.
    */
   _format_value: function(column, value, object, row_index) {
-    var default_formatter = Utils.formatters[column.props['data-type']];
+    var default_formatter = Utils.formatters[column.props["data-type"]];
     var formatter = this._get_formatter(column, column.props.formatter);
 
-    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
+    return formatter(value, object, default_formatter, row_index, column.props["formatter-config"]);
   },
 
   /* Returns the formatted value for the summary row cells. This will use the
@@ -209,25 +211,25 @@ module.exports = Table = React.createClass({
     if (value == undefined) {
       return null;
     }
-    var default_formatter = Utils.formatters[column.props['data-type']];
+    var default_formatter = Utils.formatters[column.props["data-type"]];
     var formatter = this._get_formatter(column, column.props.summaryFormatter);
 
-    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
+    return formatter(value, object, default_formatter, row_index, column.props["formatter-config"]);
   },
 
   _format_cards_value: function(column, value, object, row_index) {
     if (value == undefined) {
       return null;
     }
-    var default_formatter = Utils.formatters[column.props['data-type']];
+    var default_formatter = Utils.formatters[column.props["data-type"]];
     var formatter = this._get_formatter(column, column.props.cardFormatter);
 
-    return formatter(value, object, default_formatter, row_index, column.props['formatter-config']);
+    return formatter(value, object, default_formatter, row_index, column.props["formatter-config"]);
   },
 
   _getColumnSettings: function(column, props) {
     // direction should be undefined when sorting is disabled
-    var direction = props.sortable && '';
+    var direction = props.sortable && "";
     var currentOrder = this._getCurrentOrder(props);
     var sortAttr = column.props.sortAttr || column.props.getAttr();
 
@@ -249,9 +251,11 @@ module.exports = Table = React.createClass({
 
   _getHeaderSettings: function(props) {
     var headers = [];
-    this._getColumns().map(function(column){
-      headers.push(this._getColumnSettings(column, props));
-    }.bind(this));
+    this._getColumns().map(
+      function(column) {
+        headers.push(this._getColumnSettings(column, props));
+      }.bind(this)
+    );
     return headers;
   },
 
@@ -278,18 +282,22 @@ module.exports = Table = React.createClass({
     var paddings = [];
     // Add paddings according to the depth of the object
     for (var i = 0; i < depth; i++) {
-      paddings.push(<span key={`${i}-${object.id}`} className="treegrid-indent"/>);
+      paddings.push(<span key={`${i}-${object.id}`} className="treegrid-indent" />);
     }
-    var expanded = '';
+    var expanded = "";
     if (object.children.length) {
-      expanded = (object.expanded ? 'treegrid-expander-expanded' :
-                                    'treegrid-expander-collapsed');
+      expanded = object.expanded ? "treegrid-expander-expanded" : "treegrid-expander-collapsed";
     }
 
     // The last indent is always a expander, however only expanders that
     // contain one of the classes above will become interactive
-    paddings.push(<span key={`${i}-${object.id}`} className={`treegrid-expander ${expanded}`}
-                        onClick={this._toggleRow.bind(this, object)}/>);
+    paddings.push(
+      <span
+        key={`${i}-${object.id}`}
+        className={`treegrid-expander ${expanded}`}
+        onClick={this._toggleRow.bind(this, object)}
+      />
+    );
     return paddings;
   },
 
@@ -297,7 +305,7 @@ module.exports = Table = React.createClass({
     // ignore falsy children
     const nonFalsyChildren = this.props.children.filter(child => Boolean(child));
     let children = [];
-    nonFalsyChildren.forEach((child) => {
+    nonFalsyChildren.forEach(child => {
       if (Array.isArray(child)) {
         children.push(...child);
       } else {
@@ -325,25 +333,35 @@ module.exports = Table = React.createClass({
     // isNew sets if its a new modification AND will receive an animation
     var isNew = object._isNew && this.props.blinkable;
     var hidden_columns = this.props.hiddenColumns;
-    const rowClass = (this.props.rowClass && this.props.rowClass(object)) || '';
-    const className = `${(isNew ? 'new' : '')} ${rowClass}`;
+    const rowClass = (this.props.rowClass && this.props.rowClass(object)) || "";
+    const className = `${isNew ? "new" : ""} ${rowClass}`;
     const onRowClick = () => this.props.onRowClick && this.props.onRowClick(object);
     const columns = this._getColumns();
-    var rows = [<tr onClick={onRowClick} key={`${row_index}-${depth}`} className={className}>
-        {columns.map(function(column, col_index) {
-          if ((hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
-              !column.props.visible) {
-            return null;
-          }
-          var raw_value = object[column.props.getAttr()];
-          return <td className={this._get_column_class(column)}
-                     key={`${row_index}-${col_index}-${depth}`}
-                     data-value={raw_value}>
-                      {this._get_padding(depth, col_index, object)}
-                      {this._format_value(column, raw_value, object, row_index)}
-                 </td>;
-        }.bind(this))}
-       </tr>];
+    var rows = [
+      <tr onClick={onRowClick} key={`${row_index}-${depth}`} className={className}>
+        {columns.map(
+          function(column, col_index) {
+            if (
+              (hidden_columns && hidden_columns.indexOf(column.props.getAttr()) != -1) ||
+              !column.props.visible
+            ) {
+              return null;
+            }
+            var raw_value = object[column.props.getAttr()];
+            return (
+              <td
+                className={this._get_column_class(column)}
+                key={`${row_index}-${col_index}-${depth}`}
+                data-value={raw_value}
+              >
+                {this._get_padding(depth, col_index, object)}
+                {this._format_value(column, raw_value, object, row_index)}
+              </td>
+            );
+          }.bind(this)
+        )}
+      </tr>,
+    ];
     if (this.props.tree && object.expanded) {
       object.children.forEach((child, index, children) => {
         rows.push(this._get_rows(child, index, children, depth + 1));
@@ -359,7 +377,7 @@ module.exports = Table = React.createClass({
   /* Collapse or expand a tree row*/
   _toggleRow: function(object) {
     object.expanded = !object.expanded;
-    this.setState({data: this.state.data});
+    this.setState({ data: this.state.data });
   },
 
   /* Sort the table
@@ -380,10 +398,9 @@ module.exports = Table = React.createClass({
 
     // If onSearch is provided, it means the sorting should be done remotely
     if (this.props.onSearch) {
-      this.query = {order_by: direction + column.sortAttr};
+      this.query = { order_by: direction + column.sortAttr };
       // Execute remote query
-      this.props.onSearch(event, key, this.query,
-                          this.state.headers.indexOf(column));
+      this.props.onSearch(event, key, this.query, this.state.headers.indexOf(column));
       return;
     }
 
@@ -401,7 +418,7 @@ module.exports = Table = React.createClass({
    * the UI.
    */
   forceOrderBy: function(column, direction, callback) {
-    if (typeof column === 'number') {
+    if (typeof column === "number") {
       column = this.state.headers[column];
     }
 
@@ -410,10 +427,10 @@ module.exports = Table = React.createClass({
       if (!object.sortable) {
         return;
       }
-      object.direction = '';
+      object.direction = "";
     });
     column.direction = direction;
-    this.setState({headers: this.state.headers}, callback);
+    this.setState({ headers: this.state.headers }, callback);
   },
 
   getQuery: function() {
@@ -436,8 +453,8 @@ module.exports = Table = React.createClass({
     // This are 'hidden' columns that the callsite might need (for
     // formatting or linking), but that should not be displayed as
     // columns in the table.
-    if (this.props['htsql-extra-columns'] && extraColumns) {
-      attributes.push(this.props['htsql-extra-columns']);
+    if (this.props["htsql-extra-columns"] && extraColumns) {
+      attributes.push(this.props["htsql-extra-columns"]);
     }
 
     // For each column, collect the attributes that should be feched
@@ -450,22 +467,24 @@ module.exports = Table = React.createClass({
       var htsql = column.props.htsql || column.props.attr;
       var attr = column.props.getAttr();
       var header = this.state.headers[index];
-      var direction = (header && header.direction) || '';
+      var direction = (header && header.direction) || "";
       attributes.push(`${attr}:=${htsql}${direction}`);
 
       //Warn the developer if there is a column with filter true and no attr
       if (column.props.filter && !column.props.attr) {
-        console.warn(`The column '${column.props.label}' is set to filter but has no property 'attr'`);
+        console.warn(
+          `The column '${column.props.label}' is set to filter but has no property 'attr'`
+        );
       }
     });
 
-    return attributes.join(',');
+    return attributes.join(",");
   },
 
   /* Returns the HTSQL query containing only the table and the filter fields */
   getBaseHTSQL: function(filter) {
-    let htsql = (typeof this.props.htsql) == 'function' ? this.props.htsql() : this.props.htsql;
-    return `${htsql}${!this.props.filteredHTSQL ? Filter(filter) : ''}`;
+    let htsql = typeof this.props.htsql == "function" ? this.props.htsql() : this.props.htsql;
+    return `${htsql}${!this.props.filteredHTSQL ? Filter(filter) : ""}`;
   },
 
   /* Returns the table generated HTSQL
@@ -479,12 +498,12 @@ module.exports = Table = React.createClass({
     var limit = this.props.limit;
     var values = this.getHTSQLAttributes(extraColumns);
     var htsql = this.props.htsql;
-    htsql = typeof htsql === 'function' ? htsql() : htsql;
+    htsql = typeof htsql === "function" ? htsql() : htsql;
     htsql = `${htsql}{${values}}`;
     if (filter) {
       htsql = `${htsql}.filter(${filter})`;
     }
-    return (limit ? htsql + `.limit(${limit})` : htsql);
+    return limit ? htsql + `.limit(${limit})` : htsql;
   },
 
   /*
@@ -517,25 +536,29 @@ module.exports = Table = React.createClass({
    * 800ms delay (using setTimeout function).
    */
   componentWillReceiveProps: function(props) {
-    this.setState({headers: this._getHeaderSettings(props)});
+    this.setState({ headers: this._getHeaderSettings(props) });
     props.tree && this._setupTree(props.data);
 
     let data = props.data || this.state.data || [];
     data = data.map(function(item) {
       item = $.extend({}, item);
-      return $.extend({
-        _isNew: !isIn(this.state.data || [], item),
-      }, item);
+      return $.extend(
+        {
+          _isNew: !isIn(this.state.data || [], item),
+        },
+        item
+      );
     }, this);
 
-    this.setState({data}, () => {
-      this.props.blinkable && this.blinkTimeout(() => {
-        let data = this.state.data.map(function(item) {
-          item._isNew = false;
-          return item;
-        });
-        this.setState({data});
-      }, 800);
+    this.setState({ data }, () => {
+      this.props.blinkable &&
+        this.blinkTimeout(() => {
+          let data = this.state.data.map(function(item) {
+            item._isNew = false;
+            return item;
+          });
+          this.setState({ data });
+        }, 800);
     });
   },
 
@@ -548,19 +571,22 @@ module.exports = Table = React.createClass({
 
   componentDidUpdate: function() {
     // Enable popver on table component
-    $('[data-toggle=popover]').popover({
+    $("[data-toggle=popover]").popover({
       html: true,
       content: function() {
-        return $(this).find('.popover-data').html().trim();
+        return $(this)
+          .find(".popover-data")
+          .html()
+          .trim();
       },
     });
   },
 
   _emptyLines: function(rows, columns) {
     let emptyRows = [];
-    for (let r = 0; r < rows; r++){
+    for (let r = 0; r < rows; r++) {
       let emptyColumns = [];
-      for (let c = 0; c < columns; c++){
+      for (let c = 0; c < columns; c++) {
         emptyColumns.push(<td key={`empty-${r}-${c}`}>&nbsp;</td>);
       }
       emptyRows.push(<tr key={`empty-${r}`}>{emptyColumns}</tr>);
@@ -568,63 +594,111 @@ module.exports = Table = React.createClass({
     return emptyRows;
   },
 
-  render: function(){
+  render: function() {
     var hasContent = this.state.data && this.state.data.length;
     const columns = this._getColumns();
-    return <div className="table-responsive">
-       <table className="table table-striped table-hover">
-         <thead>
-           <tr ref='tableHeader'>
-            {this.state.headers.map(function(settings, index) {
-              if ((this.props.hiddenColumns && this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) ||
-                  !settings.visible) {
-                return null;
-              }
-              return <th
-                ref={`${settings.label}Column`}
-                key={index}
-                // FIXME: There are 2 onClicks here
-                {...Utils.only(settings, ['style', 'onClick'])}
-                data-direction={settings.direction}
-                onClick={this._header_clicked.bind(this, settings)}
-              >
-                <span data-toggle='tooltip' title={settings.description} data-delay='{"show":"500", "hide":"100"}'>{settings.label}</span>
-              </th>;
-            }.bind(this))}
-           </tr>
-         </thead>
-         <tbody>
-             {this.state.data.map(this._get_rows)}
-             {this.props.pageSize && this._emptyLines(
-               this.props.pageSize - this.state.data.length, this.props.children.length)}
-             {this.props.cardsSummary && <tr className="">
-               {columns.map(function(column, columnIndex) {
-                  var columnConfig = this.props.cardsSummary[column.props.getAttr()];
-                  var columnValue =
-                    typeof columnConfig === 'function'
-                    ? columnConfig(this.state.data, column.props.getAttr())
-                    : columnConfig;
-                 return <td key={columnIndex} className={this._get_column_class(column)}>
-                            <b>{this._format_cards_value(column, columnValue, this.props.cardsSummary, columnIndex)}</b>
-                         </td>;
-               }.bind(this))}
-             </tr>}
-             {this.props.summaryData && <tr className="table-summary">
-                {columns.map(function(column, columnIndex) {
-                  var columnConfig = this.props.summaryData[column.props.getAttr()];
-                  var columnValue =
-                    typeof columnConfig === 'function'
-                    ? columnConfig(this.state.data, column.props.getAttr())
-                    : columnConfig;
-                 return <td key={columnIndex} className={this._get_column_class(column)}>
-                            <b>{this._format_summary_value(column, columnValue, this.props.summaryData, columnIndex)}</b>
-                         </td>;
-               }.bind(this))}
-             </tr>}
-         </tbody>
-       </table>
-      {(hasContent && ' ') || <div ref="noDataDiv" className="text-center"><b>{ _('Sem dados')}</b></div>}
-    </div>;
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr ref="tableHeader">
+              {this.state.headers.map(
+                function(settings, index) {
+                  if (
+                    (this.props.hiddenColumns &&
+                      this.props.hiddenColumns.indexOf(settings.getAttr()) != -1) ||
+                    !settings.visible
+                  ) {
+                    return null;
+                  }
+                  return (
+                    <th
+                      ref={`${settings.label}Column`}
+                      key={index}
+                      // FIXME: There are 2 onClicks here
+                      {...Utils.only(settings, ["style", "onClick"])}
+                      data-direction={settings.direction}
+                      onClick={this._header_clicked.bind(this, settings)}
+                    >
+                      <span
+                        data-toggle="tooltip"
+                        title={settings.description}
+                        data-delay='{"show":"500", "hide":"100"}'
+                      >
+                        {settings.label}
+                      </span>
+                    </th>
+                  );
+                }.bind(this)
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.data.map(this._get_rows)}
+            {this.props.pageSize &&
+              this._emptyLines(
+                this.props.pageSize - this.state.data.length,
+                this.props.children.length
+              )}
+            {this.props.cardsSummary && (
+              <tr className="">
+                {columns.map(
+                  function(column, columnIndex) {
+                    var columnConfig = this.props.cardsSummary[column.props.getAttr()];
+                    var columnValue =
+                      typeof columnConfig === "function"
+                        ? columnConfig(this.state.data, column.props.getAttr())
+                        : columnConfig;
+                    return (
+                      <td key={columnIndex} className={this._get_column_class(column)}>
+                        <b>
+                          {this._format_cards_value(
+                            column,
+                            columnValue,
+                            this.props.cardsSummary,
+                            columnIndex
+                          )}
+                        </b>
+                      </td>
+                    );
+                  }.bind(this)
+                )}
+              </tr>
+            )}
+            {this.props.summaryData && (
+              <tr className="table-summary">
+                {columns.map(
+                  function(column, columnIndex) {
+                    var columnConfig = this.props.summaryData[column.props.getAttr()];
+                    var columnValue =
+                      typeof columnConfig === "function"
+                        ? columnConfig(this.state.data, column.props.getAttr())
+                        : columnConfig;
+                    return (
+                      <td key={columnIndex} className={this._get_column_class(column)}>
+                        <b>
+                          {this._format_summary_value(
+                            column,
+                            columnValue,
+                            this.props.summaryData,
+                            columnIndex
+                          )}
+                        </b>
+                      </td>
+                    );
+                  }.bind(this)
+                )}
+              </tr>
+            )}
+          </tbody>
+        </table>
+        {(hasContent && " ") || (
+          <div ref="noDataDiv" className="text-center">
+            <b>{_("Sem dados")}</b>
+          </div>
+        )}
+      </div>
+    );
   },
 });
 
@@ -654,13 +728,13 @@ Table.Column = React.createClass({
   getDefaultProps: function() {
     return {
       /* Data type to be considered when sorting the table */
-      'data-type': 'alpha',
+      "data-type": "alpha",
 
       /* Optional inline styles */
       style: {},
 
       /* Optional classes to be added */
-      className: '',
+      className: "",
 
       sortable: true,
       /* To be used when sorting, instead of props.attr */

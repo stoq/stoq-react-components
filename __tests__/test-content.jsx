@@ -1,41 +1,39 @@
-jest.dontMock('../content.jsx');
+jest.dontMock("../content.jsx");
 
-import React from 'react';
-import TestUtils from 'react-addons-test-utils';
+import React from "react";
+import TestUtils from "react-addons-test-utils";
 React;
 
-var Content = require('../content.jsx');
+var Content = require("../content.jsx");
 
 var contentHeaderComponent, contentComponent;
 
-describe('Content', () => {
-
+describe("Content", () => {
   beforeEach(function() {
     document.title = "Page Title";
     contentHeaderComponent = TestUtils.renderIntoDocument(
-      <Content.Header title="test" subtitle="subtest"/>
+      <Content.Header title="test" subtitle="subtest" />
     );
     contentComponent = TestUtils.renderIntoDocument(
       <Content>
-        <div/>
-        <div/>
+        <div />
+        <div />
       </Content>
     );
   });
 
-  it('renders the title correctly', () => {
-    let titleDiv = TestUtils.findRenderedDOMComponentWithTag(contentHeaderComponent, 'div');
+  it("renders the title correctly", () => {
+    let titleDiv = TestUtils.findRenderedDOMComponentWithTag(contentHeaderComponent, "div");
     // FIXME: Using weird space character because &nbsp; gets converted into it
-    expect(titleDiv.textContent).toBe('test subtest');
+    expect(titleDiv.textContent).toBe("test subtest");
   });
 
-  it('set the page title with the content header titles', () => {
-    expect(document.title).toBe('Page Title - test subtest');
+  it("set the page title with the content header titles", () => {
+    expect(document.title).toBe("Page Title - test subtest");
   });
 
-  it('renders the children properly', () => {
-    let section = TestUtils.findRenderedDOMComponentWithClass(contentComponent, 'content');
+  it("renders the children properly", () => {
+    let section = TestUtils.findRenderedDOMComponentWithClass(contentComponent, "content");
     expect(section.children.length).toEqual(contentComponent.props.children.length);
   });
-
 });

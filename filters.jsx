@@ -1,22 +1,24 @@
-import React from 'react';
-import moment from 'moment';
-import {gettext as _} from 'ttag';
-import Utils from 'utils';
-import $ from 'jquery';
+import React from "react";
+import moment from "moment";
+import { gettext as _ } from "ttag";
+import Utils from "utils";
+import $ from "jquery";
 
 // Expose jQuery to the global scope so that bootstrap datepicker's locale
 // can find it
 window.jQuery = $;
-require('bootstrap-datepicker');
-require('bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR');
+require("bootstrap-datepicker");
+require("bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR");
 
 /* <select><options/></select> in ReactJS */
 var Select = React.createClass({
   _getOptions: function() {
     return this.props.options.map(function(option, index) {
-      return <option key={index} value={option[this.props.valueAttr]}>
-        {option[this.props.labelAttr]}
-      </option>;
+      return (
+        <option key={index} value={option[this.props.valueAttr]}>
+          {option[this.props.labelAttr]}
+        </option>
+      );
     }, this);
   },
 
@@ -35,13 +37,24 @@ var Select = React.createClass({
 
   render: function() {
     if (!this.props.options.length) {
-      return <select ref='select' className="btn btn-default"><option>{ this.props.defaultLabel }</option></select>;
+      return (
+        <select ref="select" className="btn btn-default">
+          <option>{this.props.defaultLabel}</option>
+        </select>
+      );
     }
 
-    return <select className={this.props.className || "btn btn-default"} ref="select" onChange={this.onChange}
-                   defaultValue={this.props.default} style={this.props.style}>
-      {this._getOptions()}
-    </select>;
+    return (
+      <select
+        className={this.props.className || "btn btn-default"}
+        ref="select"
+        onChange={this.onChange}
+        defaultValue={this.props.default}
+        style={this.props.style}
+      >
+        {this._getOptions()}
+      </select>
+    );
   },
 });
 
@@ -56,13 +69,13 @@ module.exports.Select = Select;
 module.exports.DayFilter = React.createClass({
   getQuery: function() {
     var query = {};
-    query[this.props.attr] = this.state.date.format('YYYY-MM-DD');
+    query[this.props.attr] = this.state.date.format("YYYY-MM-DD");
     return query;
   },
 
   updatePicker: function() {
     var date = this.state.date;
-    this.datepicker.datepicker('update', date.toDate());
+    this.datepicker.datepicker("update", date.toDate());
   },
 
   /*
@@ -71,13 +84,13 @@ module.exports.DayFilter = React.createClass({
 
   onDateIncrement: function(increment) {
     return () => {
-      var date = this.state.date.add(increment, 'days');
-      this.setState({date: moment(date)}, this.updatePicker);
+      var date = this.state.date.add(increment, "days");
+      this.setState({ date: moment(date) }, this.updatePicker);
     };
   },
 
   onDateChange: function(event) {
-    this.setState({date: moment(event.date)}, this.updatePicker);
+    this.setState({ date: moment(event.date) }, this.updatePicker);
   },
 
   /*
@@ -87,30 +100,32 @@ module.exports.DayFilter = React.createClass({
   componentDidMount: function() {
     this.datepicker = $(this.refs.datepicker);
     this.datepicker.datepicker({
-      orientation: 'bottom',
+      orientation: "bottom",
       autoclose: true,
-      language: 'pt-BR',
+      language: "pt-BR",
     });
-    this.datepicker.on('changeDate', this.onDateChange);
+    this.datepicker.on("changeDate", this.onDateChange);
     this.updatePicker();
   },
 
   getInitialState: function() {
-    return {date: moment()};
+    return { date: moment() };
   },
 
   render: function() {
-    return <div className="btn-group" style={this.props.style}>
-      <button className="btn btn-default" onClick={this.onDateIncrement(-1)}>
-        <i className="fa fa-chevron-left"></i>
-      </button>
-      <button ref="datepicker" className="btn btn-default" style={{'minWidth': '15em'}}>
-        {this.state.date.format('LL')}
-      </button>
-      <button className="btn btn-default" onClick={this.onDateIncrement(1)}>
-        <i className="fa fa-chevron-right"></i>
-      </button>
-    </div>;
+    return (
+      <div className="btn-group" style={this.props.style}>
+        <button className="btn btn-default" onClick={this.onDateIncrement(-1)}>
+          <i className="fa fa-chevron-left"></i>
+        </button>
+        <button ref="datepicker" className="btn btn-default" style={{ minWidth: "15em" }}>
+          {this.state.date.format("LL")}
+        </button>
+        <button className="btn btn-default" onClick={this.onDateIncrement(1)}>
+          <i className="fa fa-chevron-right"></i>
+        </button>
+      </div>
+    );
   },
 });
 
@@ -132,9 +147,9 @@ module.exports.DateFilter = React.createClass({
   },
 
   formats: {
-    day: 'DD MMMM YYYY',
-    month: 'MMMM YYYY',
-    year: 'YYYY',
+    day: "DD MMMM YYYY",
+    month: "MMMM YYYY",
+    year: "YYYY",
   },
 
   /* Called when the user has manually changed the datepicker date
@@ -152,17 +167,19 @@ module.exports.DateFilter = React.createClass({
    * @param {Date=now} date Which should be the default date displayed on
    *                        the datepicker
    */
-  reset: function(group=this.props.group, date=new Date()) {
+  reset: function(group = this.props.group, date = new Date()) {
     // Detach previously added event handlers and remove the previous datepicker
-    this.button.datepicker({
-      orientation: 'bottom',
-      language: 'pt-BR',
-    }).off('changeDate', this.onDateChange);
-    this.button.datepicker('destroy');
+    this.button
+      .datepicker({
+        orientation: "bottom",
+        language: "pt-BR",
+      })
+      .off("changeDate", this.onDateChange);
+    this.button.datepicker("destroy");
 
     // Initialize a new datepicker
     this.button.datepicker({
-      orientation: 'bottom',
+      orientation: "bottom",
       language: navigator.language,
       autoclose: true,
       minViewMode: this.viewModes[group],
@@ -172,7 +189,7 @@ module.exports.DateFilter = React.createClass({
     this.setDate(date, group);
 
     // Setup onChange callback
-    this.button.datepicker().on('changeDate', this.onDateChange);
+    this.button.datepicker().on("changeDate", this.onDateChange);
   },
 
   /* Default label formatter to the text exhibited on the button
@@ -195,10 +212,10 @@ module.exports.DateFilter = React.createClass({
    * @param {Boolean} trigger Should this date change be triggered on upper
    *                          level components?
    */
-  setDateText: function(date, group=this.props.group, trigger=true) {
+  setDateText: function(date, group = this.props.group, trigger = true) {
     date = moment(date);
     let format = this.props.getFormat || this.format;
-    this.setState({text: format(date, group)}, () => {
+    this.setState({ text: format(date, group) }, () => {
       trigger && this.props.onChange && this.props.onChange(date);
     });
   },
@@ -209,10 +226,10 @@ module.exports.DateFilter = React.createClass({
    * @param {String} group - The group (day, month, year) in which the
    *                         displayed text should be formatted.
    */
-  setDate: function(date, group=this.props.group) {
+  setDate: function(date, group = this.props.group) {
     // During this date change, prevent any kind of `onChange` trigger
     this.trigger = false;
-    this.button.datepicker('setDate', date);
+    this.button.datepicker("setDate", date);
     this.trigger = true;
 
     // Change the button appearance to show selected date text
@@ -224,10 +241,10 @@ module.exports.DateFilter = React.createClass({
    * @returns Current selected date
    */
   getDate: function() {
-    let date = moment(this.button.datepicker('getDate'));
+    let date = moment(this.button.datepicker("getDate"));
     // This avoid wrong date due to summer time events.
     if (date.hour() !== 0) {
-      date = date.add(1, 'hour');
+      date = date.add(1, "hour");
     }
     return date;
   },
@@ -253,7 +270,7 @@ module.exports.DateFilter = React.createClass({
 
     // Also make sure to update the current date if it differs from the one
     // provided via props
-    let currentDate = this.button.datepicker('getDate');
+    let currentDate = this.button.datepicker("getDate");
     if (next.date && !next.date.isSame(currentDate, next.group)) {
       this.setDateText(next.date, next.group, false);
     }
@@ -265,23 +282,25 @@ module.exports.DateFilter = React.createClass({
 
   getDefaultProps: function() {
     return {
-      group: 'day',
+      group: "day",
     };
   },
 
   render: function() {
-    return <button ref="datepicker" className="btn btn-primary">
-      { this.state.text }
-    </button>;
+    return (
+      <button ref="datepicker" className="btn btn-primary">
+        {this.state.text}
+      </button>
+    );
   },
 });
 
 /* Daterange query with start, end and grouping options */
 module.exports.DaterangeFilter = React.createClass({
   macro_period: {
-    'hour': 'day',
-    'day': 'month',
-    'month': 'year',
+    hour: "day",
+    day: "month",
+    month: "year",
   },
 
   /** Sets the Bootstrap Datepicker's internal dates and display their value
@@ -291,8 +310,8 @@ module.exports.DaterangeFilter = React.createClass({
    * range between the selected start and end dates.
    */
   _update_picker: function() {
-    $(this.refs.start).datepicker('update', this.state.period[0].format('L'));
-    $(this.refs.end).datepicker('update', this.state.period[1].format('L'));
+    $(this.refs.start).datepicker("update", this.state.period[0].format("L"));
+    $(this.refs.end).datepicker("update", this.state.period[1].format("L"));
   },
 
   /** Adds the given group period to start and end dates
@@ -309,7 +328,7 @@ module.exports.DaterangeFilter = React.createClass({
 
     period[0].add(interval, macro_period).startOf(macro_period);
     period[1].add(interval, macro_period).endOf(macro_period);
-    this.setState({period, group});
+    this.setState({ period, group });
     //this._trigger_period();
   },
 
@@ -327,20 +346,20 @@ module.exports.DaterangeFilter = React.createClass({
   set_date: function(index, event) {
     var period = this.state.period;
     period[index] = moment(event.date);
-    this.setState({period});
+    this.setState({ period });
   },
 
   getQuery: function() {
     return {
-      start: this.state.period[0].format('YYYY-MM-DD'),
-      end: this.state.period[1].format('YYYY-MM-DD'),
+      start: this.state.period[0].format("YYYY-MM-DD"),
+      end: this.state.period[1].format("YYYY-MM-DD"),
       group: this.state.group,
     };
   },
 
-  getHTQuery: function(dateAttr=this.props.attr) {
-    var start = this.state.period[0].format('YYYY-MM-DD');
-    var end = this.state.period[1].format('YYYY-MM-DD');
+  getHTQuery: function(dateAttr = this.props.attr) {
+    var start = this.state.period[0].format("YYYY-MM-DD");
+    var end = this.state.period[1].format("YYYY-MM-DD");
     localStorage.filterStart = start;
     localStorage.filterEnd = end;
     localStorage.filterGroup = this.state.group;
@@ -354,12 +373,11 @@ module.exports.DaterangeFilter = React.createClass({
 
   getInitialState: function() {
     var queryParams = Utils.getParams();
-    var group = queryParams.group || localStorage.filterGroup || 'day';
+    var group = queryParams.group || localStorage.filterGroup || "day";
     var macro_group = this.macro_period[group];
 
     var period = [];
-    if (queryParams.start)
-      period = [moment(queryParams.start), moment(queryParams.end)];
+    if (queryParams.start) period = [moment(queryParams.start), moment(queryParams.end)];
     else if (localStorage.filterStart) {
       period = [moment(localStorage.filterStart), moment(localStorage.filterEnd)];
       period = period.map(function(date) {
@@ -370,8 +388,7 @@ module.exports.DaterangeFilter = React.createClass({
         }
         return date;
       });
-    } else
-      period = [moment().startOf(macro_group), moment().endOf(macro_group)];
+    } else period = [moment().startOf(macro_group), moment().endOf(macro_group)];
 
     return {
       period: period,
@@ -382,15 +399,18 @@ module.exports.DaterangeFilter = React.createClass({
   componentDidMount: function() {
     var node = $(this.refs.datepicker);
     node.datepicker({
-      orientation: 'bottom',
+      orientation: "bottom",
       autoclose: true,
-      format: moment().localeData().longDateFormat('L').toLowerCase(),
-      language: 'pt-BR',
+      format: moment()
+        .localeData()
+        .longDateFormat("L")
+        .toLowerCase(),
+      language: "pt-BR",
     });
 
     // Bootstrap datepicker uses jquery events.
-    $(this.refs.start).on('changeDate', this.set_date.bind(this, 0));
-    $(this.refs.end).on('changeDate', this.set_date.bind(this, 1));
+    $(this.refs.start).on("changeDate", this.set_date.bind(this, 0));
+    $(this.refs.end).on("changeDate", this.set_date.bind(this, 1));
     this._update_picker();
   },
 
@@ -401,42 +421,57 @@ module.exports.DaterangeFilter = React.createClass({
   group_changed: function() {
     var period = this.state.period;
     period[1] = moment(period[0]);
-    this.setState({period});
+    this.setState({ period });
     this.period_change(0);
   },
 
   render: function() {
-    return <div ref="datepicker" className="input-group input-daterange custom-datepicker"
-                style={{display: "inline-table", ...this.props.style}}>
-      <span className="input-group-btn">
-        <button onClick={this.period_change.bind(this, -1)} className="btn btn-default">
-          <i className="fa fa-chevron-left"></i>
-        </button>
-      </span>
-      <span className="input-group-btn">
-          <select ref="group" className="btn btn-default" filter-name="group"
-                  defaultValue={this.state.group} onChange={this.group_changed}>
-          <option value="hour">{_("Day")}</option>
-          <option value="day">{_("Month")}</option>
-          <option value="month">{_("Year")}</option>
-        </select>
-      </span>
-      <input type="text" className="input-default form-control" ref="start" style={{borderLeft: "0"}} />
-      <span className="input-group-addon"> - </span>
-      <input type="text" className="input-default form-control" ref="end" />
-      <span className="input-group-btn">
-        <button onClick={this.period_change.bind(this, 1)} className="btn btn-default">
-          <i className="fa fa-chevron-right"></i>
-        </button>
-      </span>
-    </div>;
+    return (
+      <div
+        ref="datepicker"
+        className="input-group input-daterange custom-datepicker"
+        style={{ display: "inline-table", ...this.props.style }}
+      >
+        <span className="input-group-btn">
+          <button onClick={this.period_change.bind(this, -1)} className="btn btn-default">
+            <i className="fa fa-chevron-left"></i>
+          </button>
+        </span>
+        <span className="input-group-btn">
+          <select
+            ref="group"
+            className="btn btn-default"
+            filter-name="group"
+            defaultValue={this.state.group}
+            onChange={this.group_changed}
+          >
+            <option value="hour">{_("Day")}</option>
+            <option value="day">{_("Month")}</option>
+            <option value="month">{_("Year")}</option>
+          </select>
+        </span>
+        <input
+          type="text"
+          className="input-default form-control"
+          ref="start"
+          style={{ borderLeft: "0" }}
+        />
+        <span className="input-group-addon"> - </span>
+        <input type="text" className="input-default form-control" ref="end" />
+        <span className="input-group-btn">
+          <button onClick={this.period_change.bind(this, 1)} className="btn btn-default">
+            <i className="fa fa-chevron-right"></i>
+          </button>
+        </span>
+      </div>
+    );
   },
 });
 
 module.exports.BranchFilter = React.createClass({
   _getBranchOptions: function() {
     var options = [];
-    this.props.allBranches && options.push({label: _("All branches"), value: ''});
+    this.props.allBranches && options.push({ label: _("All branches"), value: "" });
     $.map(this.props.branches || {}, function(branch) {
       options.push({
         label: `${branch.acronym} ${branch.branch_name || branch.fancy_name}`,
@@ -448,26 +483,27 @@ module.exports.BranchFilter = React.createClass({
 
   getBranchName: function() {
     var node = this.refs.branch.refs.select;
-    return $(node).find(':selected').text();
+    return $(node)
+      .find(":selected")
+      .text();
   },
 
   getQuery: function() {
-    return {'branch': this.refs.branch.refs.select.value};
+    return { branch: this.refs.branch.refs.select.value };
   },
 
   getDefaultProps: function() {
-    return {allBranches: true};
+    return { allBranches: true };
   },
 
   getInitialState: function() {
     var queryParams = Utils.getParams();
-    return {branch: queryParams.branch || localStorage.filterBranch || ''};
+    return { branch: queryParams.branch || localStorage.filterBranch || "" };
   },
 
-  getHTQuery: function(branchAttr=this.props.attr) {
+  getHTQuery: function(branchAttr = this.props.attr) {
     var value = this.refs.branch.refs.select.value;
-    if (localStorage.filterBranch)
-      value = localStorage.filterBranch;
+    if (localStorage.filterBranch) value = localStorage.filterBranch;
     return value && `${branchAttr} == '${value}'`;
   },
 
@@ -486,8 +522,16 @@ module.exports.BranchFilter = React.createClass({
    */
 
   render: function() {
-    return <Select options={this._getBranchOptions()} valueAttr='value' labelAttr='label'
-                   default={this.state.branch} ref='branch' style={this.props.style}
-                   onChange={this.onChange}/>;
+    return (
+      <Select
+        options={this._getBranchOptions()}
+        valueAttr="value"
+        labelAttr="label"
+        default={this.state.branch}
+        ref="branch"
+        style={this.props.style}
+        onChange={this.onChange}
+      />
+    );
   },
 });

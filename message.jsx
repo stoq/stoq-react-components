@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const propTypes = {
   title: React.PropTypes.string.isRequired,
@@ -24,28 +24,22 @@ class Message extends React.Component {
   // Initial State
   constructor(props) {
     super(props);
-    this.state = {hidden: false};
+    this.state = { hidden: false };
   }
 
   onClose() {
-    this.setState({hidden: true});
+    this.setState({ hidden: true });
   }
 
   render() {
     let isHidden = this.state.hidden ? " hidden" : "";
     return (
-      <div
-        className={"alert alert-" + this.props.type + isHidden}
-        style={{'marginTop': '15px'}}
-      >
-        {this.props.dismissable &&
-          <i className="close pull-right fa fa-times"
-             onClick={this.onClose}
-          />}
+      <div className={"alert alert-" + this.props.type + isHidden} style={{ marginTop: "15px" }}>
+        {this.props.dismissable && (
+          <i className="close pull-right fa fa-times" onClick={this.onClose} />
+        )}
         <h4>{this.props.title}</h4>
-        <div>
-          {this.props.children}
-        </div>
+        <div>{this.props.children}</div>
       </div>
     );
   }

@@ -1,19 +1,19 @@
-import React from 'react';
-import moment from 'moment';
-import $ from 'jquery';
-import {gettext as _} from 'ttag';
-require('bootstrap-datepicker');
+import React from "react";
+import moment from "moment";
+import $ from "jquery";
+import { gettext as _ } from "ttag";
+require("bootstrap-datepicker");
 
-import Utils from 'utils';
-import {Select} from './filters';
+import Utils from "utils";
+import { Select } from "./filters";
 
 /* Query operations for numeric data type */
 var NUMERIC_QUERY_OPERATIONS = {
-  '>': (attr, value) => `${attr} > ${value}`,
-  '<': (attr, value) => `${attr} < ${value}`,
-  '=': (attr, value) => `${attr} == ${value}`,
-  '~': (attr, value) => {
-    var values = value.split('and');
+  ">": (attr, value) => `${attr} > ${value}`,
+  "<": (attr, value) => `${attr} < ${value}`,
+  "=": (attr, value) => `${attr} == ${value}`,
+  "~": (attr, value) => {
+    var values = value.split("and");
     return `between(${attr}, ${values[0]}, ${values[1]})`;
   },
 };
@@ -22,14 +22,13 @@ var NUMERIC_QUERY_OPERATIONS = {
 var QUERY_OPERATION = {
   alpha: (attr, value) => `${attr}~'${value}'`,
   select: (attr, value) => {
-    if (value === '__null__')
-      return `${attr}==null`;
+    if (value === "__null__") return `${attr}==null`;
 
     return `${attr}=='${value}'`;
   },
   invoice: (attr, value) => `str(${attr})~'${value}'`,
   date: (attr, value) => {
-    var dates = value.split('to');
+    var dates = value.split("to");
     return `between(date(${attr}), '${dates[0]}', '${dates[1]}')`;
   },
   numeric: (attr, value) => {
@@ -47,20 +46,30 @@ QUERY_OPERATION.link = QUERY_OPERATION.alpha;
 /* Returns a getter for the input filter of a given type */
 var getInputFilter = function(type) {
   return function(settings, index) {
-    return <div className="input-group">
-           <label htmlFor={'filter-' + index} className="input-group-addon">
-             {settings.label}
-           </label>
-           <input id={'filter-' + index} type={type} className="input-sm form-control"
-               onChange={this.setValue.bind(this, index)} value={settings.value}
-               onKeyUp={this.searchKeyUp}/>
-           <span className="input-group-btn">
-             <button className="btn btn-sm remove-filter" ref={`${settings.getAttr()}FilterRemoveButton`}
-                     onClick={this.setVisible.bind(this, index, false)}>
-               <i className="fa fa-remove"></i>
-             </button>
-           </span>
-    </div>;
+    return (
+      <div className="input-group">
+        <label htmlFor={"filter-" + index} className="input-group-addon">
+          {settings.label}
+        </label>
+        <input
+          id={"filter-" + index}
+          type={type}
+          className="input-sm form-control"
+          onChange={this.setValue.bind(this, index)}
+          value={settings.value}
+          onKeyUp={this.searchKeyUp}
+        />
+        <span className="input-group-btn">
+          <button
+            className="btn btn-sm remove-filter"
+            ref={`${settings.getAttr()}FilterRemoveButton`}
+            onClick={this.setVisible.bind(this, index, false)}
+          >
+            <i className="fa fa-remove"></i>
+          </button>
+        </span>
+      </div>
+    );
   };
 };
 
@@ -78,11 +87,10 @@ var getInputFilter = function(type) {
  */
 let SearchBar;
 module.exports = SearchBar = React.createClass({
-
   getInitialState: function() {
     return {
       filters: [],
-      search: '',
+      search: "",
     };
   },
 
@@ -98,10 +106,13 @@ module.exports = SearchBar = React.createClass({
    */
   setupFilters: function(table, callback) {
     // Build the filter list based on table this search bar is related to
-    this.setState({
-      filters: this._get_filters(table),
-      search: Utils.getParams().q,
-    }, callback);
+    this.setState(
+      {
+        filters: this._get_filters(table),
+        search: Utils.getParams().q,
+      },
+      callback
+    );
   },
 
   /* Update the filters visibility according to the URL parameters
@@ -114,13 +125,12 @@ module.exports = SearchBar = React.createClass({
       filter.visible = query.hasOwnProperty(filter.attr);
       return filter;
     });
-    this.setState({filters: filters});
+    this.setState({ filters: filters });
   },
 
   getDefaultFilterHTQuery: function() {
     var search = Utils.escape(this.state.search);
-    if (search)
-      return this.props.defaultHTSQLFilter(search);
+    if (search) return this.props.defaultHTSQLFilter(search);
   },
 
   getAttributesFiltersHTQuery: function() {
@@ -146,11 +156,11 @@ module.exports = SearchBar = React.createClass({
     // Add attributes filters query
     queries = queries.concat(this.getAttributesFiltersHTQuery());
 
-    return queries.join('&');
+    return queries.join("&");
   },
 
   getQuery: function() {
-    var search = {q: this.state.search};
+    var search = { q: this.state.search };
     this.state.filters.forEach(function(filter) {
       // Don't search filters that are not visible
       if (!filter.visible) {
@@ -174,9 +184,13 @@ module.exports = SearchBar = React.createClass({
         return;
       }
       // If a filter is required, create it
-      var filter = $.extend({
-        type: column.props['filter-settings'] ? 'select' : column.props['data-type'],
-      }, column.props, column.props['filter-settings']);
+      var filter = $.extend(
+        {
+          type: column.props["filter-settings"] ? "select" : column.props["data-type"],
+        },
+        column.props,
+        column.props["filter-settings"]
+      );
       // Only after getting the properties from the column and the
       // settings, we may set composite properties
       filter.attr = filter.getAttr();
@@ -198,8 +212,8 @@ module.exports = SearchBar = React.createClass({
     });
     var query = {
       col_defs: JSON.stringify(col_defs),
-      filename: this.props.exportFileName + '.xls',
-      file_format: 'xls',
+      filename: this.props.exportFileName + ".xls",
+      file_format: "xls",
     };
     this.props.onExport(query);
   },
@@ -213,13 +227,17 @@ module.exports = SearchBar = React.createClass({
       return null;
     }
 
-    const iconClasses = this.props.exportLoading ? 'fa fa-refresh fa-spin' : 'fa fa-file-excel-o';
+    const iconClasses = this.props.exportLoading ? "fa fa-refresh fa-spin" : "fa fa-file-excel-o";
     const btnClicked = this.props.exportLoading ? null : this._export;
     return (
       <div className="input-group-btn">
-        <button name="export-file" className="btn btn-default"
-                title="Exportar relatório" onClick={btnClicked}>
-            <i className={iconClasses}/>
+        <button
+          name="export-file"
+          className="btn btn-default"
+          title="Exportar relatório"
+          onClick={btnClicked}
+        >
+          <i className={iconClasses} />
         </button>
       </div>
     );
@@ -230,27 +248,43 @@ module.exports = SearchBar = React.createClass({
     if (table === undefined) {
       return;
     }
-    return <div className="input-group-btn">
-             <button name="toggle-columns" className="btn btn-default dropdown-toggle" data-toggle="dropdown" title={_("Show/Hide columns")}>
-                 <i className="fa fa-fw fa-columns"/>
-             </button>
-             <ul className="dropdown-menu">
-               {table.props.children.map(function(column, index) {
-                 if (!column || !column.props.visible) {
-                   return null;
-                 }
-                 var iconClass = '';
-                 if (table.props.hiddenColumns.indexOf(column.props.getAttr()) === -1)
-                   iconClass = 'fa fa-fw fa-check-square-o';
-                 else
-                   iconClass = 'fa fa-fw fa-square-o';
-                 return <li key={index}>
-                          <a data-column-type={column.props.label} ref={`${column.props.getAttr()}ColumnToggle`} onClick={this._changeColumnVisibility.bind(this, column)}>
-                              <i className={iconClass}/>{column.props.label}</a>
-                        </li>;
-               }.bind(this))}
-             </ul>
-           </div>;
+    return (
+      <div className="input-group-btn">
+        <button
+          name="toggle-columns"
+          className="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          title={_("Show/Hide columns")}
+        >
+          <i className="fa fa-fw fa-columns" />
+        </button>
+        <ul className="dropdown-menu">
+          {table.props.children.map(
+            function(column, index) {
+              if (!column || !column.props.visible) {
+                return null;
+              }
+              var iconClass = "";
+              if (table.props.hiddenColumns.indexOf(column.props.getAttr()) === -1)
+                iconClass = "fa fa-fw fa-check-square-o";
+              else iconClass = "fa fa-fw fa-square-o";
+              return (
+                <li key={index}>
+                  <a
+                    data-column-type={column.props.label}
+                    ref={`${column.props.getAttr()}ColumnToggle`}
+                    onClick={this._changeColumnVisibility.bind(this, column)}
+                  >
+                    <i className={iconClass} />
+                    {column.props.label}
+                  </a>
+                </li>
+              );
+            }.bind(this)
+          )}
+        </ul>
+      </div>
+    );
   },
 
   /*
@@ -260,21 +294,20 @@ module.exports = SearchBar = React.createClass({
   setVisible: function(index, visible) {
     var filters = this.state.filters;
     filters[index].visible = visible;
-    this.setState({filters: filters});
+    this.setState({ filters: filters });
     !visible && this.searchClicked();
   },
 
   setValue: function(index, event, value) {
     var filters = this.state.filters;
     filters[index].value = value || event.target.value;
-    this.setState({filters: filters});
+    this.setState({ filters: filters });
   },
 
   setDaterange: function(index, daterange) {
     var filters = this.state.filters;
-    filters[index].value = Utils.getDaterangeQuery(daterange.start,
-                                                     daterange.end);
-    this.setState({filters: filters});
+    filters[index].value = Utils.getDaterangeQuery(daterange.start, daterange.end);
+    this.setState({ filters: filters });
   },
 
   searchKeyUp: function(event) {
@@ -285,17 +318,16 @@ module.exports = SearchBar = React.createClass({
   },
 
   searchChanged: function(event) {
-    this.setState({search: event.target.value});
+    this.setState({ search: event.target.value });
   },
 
   searchClicked: function(event, key) {
     this.props.onSearch(event, key, this.getQuery());
   },
 
-  searchBtnStyle: function () {
-    if (!this.props.onExport)
-      return {borderRadius: '0px 3px 3px 0px'};
-    return {borderRadius: '0px 0px 0px 0px'};
+  searchBtnStyle: function() {
+    if (!this.props.onExport) return { borderRadius: "0px 3px 3px 0px" };
+    return { borderRadius: "0px 0px 0px 0px" };
   },
 
   /*
@@ -303,39 +335,58 @@ module.exports = SearchBar = React.createClass({
    */
 
   get_select__filter: function(settings, index) {
-    return <div className="input-group">
-             <label htmlFor={'filter-' + index} className="input-group-addon">
-               {settings.label}
-             </label>
-             <span className="input-group-btn">
-               <select id={'filter-' + index} className="btn btn-sm" onChange={this.setValue.bind(this, index)}
-                       value={settings.value}>
-                 {settings.options.map(function(option) {
-                   return <option key={option.value} value={option.value}>{option.label}</option>;
-                 })}
-               </select>
-             </span>
-             <span className="input-group-btn">
-               <button className="btn btn-sm remove-filter" ref={`${settings.getAttr()}FilterRemoveButton`}
-                       onClick={this.setVisible.bind(this, index, false)}>
-                 <i className="fa fa-remove"></i>
-               </button>
-             </span>
-           </div>;
+    return (
+      <div className="input-group">
+        <label htmlFor={"filter-" + index} className="input-group-addon">
+          {settings.label}
+        </label>
+        <span className="input-group-btn">
+          <select
+            id={"filter-" + index}
+            className="btn btn-sm"
+            onChange={this.setValue.bind(this, index)}
+            value={settings.value}
+          >
+            {settings.options.map(function(option) {
+              return (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              );
+            })}
+          </select>
+        </span>
+        <span className="input-group-btn">
+          <button
+            className="btn btn-sm remove-filter"
+            ref={`${settings.getAttr()}FilterRemoveButton`}
+            onClick={this.setVisible.bind(this, index, false)}
+          >
+            <i className="fa fa-remove"></i>
+          </button>
+        </span>
+      </div>
+    );
   },
 
-  get_link__filter: getInputFilter('text'),
+  get_link__filter: getInputFilter("text"),
 
-  get_invoice__filter: getInputFilter('text'),
+  get_invoice__filter: getInputFilter("text"),
 
-  get_alpha__filter: getInputFilter('text'),
+  get_alpha__filter: getInputFilter("text"),
 
-  get_uuid__filter: getInputFilter('text'),
+  get_uuid__filter: getInputFilter("text"),
 
   get_date__filter: function(settings, index) {
     var daterange = Utils.parseDaterange(settings.value);
-    return <SearchBar.DateFilter label={settings.label} onChangeDate={this.setDaterange.bind(this, index)}
-                                 defaultDaterange={daterange} onRemoveClicked={this.setVisible.bind(this, index, false)}/>;
+    return (
+      <SearchBar.DateFilter
+        label={settings.label}
+        onChangeDate={this.setDaterange.bind(this, index)}
+        defaultDaterange={daterange}
+        onRemoveClicked={this.setVisible.bind(this, index, false)}
+      />
+    );
   },
 
   get_datetime__filter: function() {
@@ -343,8 +394,16 @@ module.exports = SearchBar = React.createClass({
   },
 
   get_numeric__filter: function(settings, index) {
-    return <SearchBar.NumericFilter label={settings.label} onRemoveClicked={this.setVisible.bind(this, index, false)} onKeyUp={this.searchKeyUp}
-                                    filterIndex={index} filter={this.state.filters[index]} setValue={this.setValue}/>;
+    return (
+      <SearchBar.NumericFilter
+        label={settings.label}
+        onRemoveClicked={this.setVisible.bind(this, index, false)}
+        onKeyUp={this.searchKeyUp}
+        filterIndex={index}
+        filter={this.state.filters[index]}
+        setValue={this.setValue}
+      />
+    );
   },
 
   get_currency__filter: function() {
@@ -360,58 +419,92 @@ module.exports = SearchBar = React.createClass({
    */
 
   render: function() {
-    return <div>
-               <div className="input-group">
-                 { this._getColumnsButton() }
-                 { this.state.filters.length > 0 && (
-                   <span className="input-group-btn">
-                     <button name="filters" className="btn btn-default btn-search-filters dropdown-toggle" data-toggle="dropdown" title={_("Filters")}
-                             style={{borderRadius: '0', borderRight: '0'}}>
-                       <i className="fa fa-fw fa-filter"></i>
-                     </button>
-                     <ul className="dropdown-menu">
-                       {this.state.filters.map(function(filter, index) {
-                         return <li key={index}>
-                                   <a data-filter-type={filter.type} onClick={this.setVisible.bind(this, index, true)}
-                                      ref={`${filter.getAttr()}FilterToggleButton`}>
-                                     {filter.label}
-                                   </a>
-                                 </li>;
-                       }.bind(this))}
-                     </ul>
-                   </span>
-                   )
-                 }
-                 <input type="search" className="form-control" placeholder="Buscar..."
-                        value={this.state.search} onChange={this.searchChanged}
-                        onKeyUp={this.searchKeyUp}/>
-                 <span className="input-group-btn">
-                   <button type="search" className="btn btn-primary" ref='searchButton' onClick={this.searchClicked} style={this.searchBtnStyle()}>
-                     {_('Buscar')}
-                   </button>
-                 </span>
-               { this._getExportButton() }
-               </div>
-             {this.state.filters.map(function(filter, index) {
-               // Render the filter based on the specified type
-               var component_func = this['get_' + filter.type + '__filter'];
-               return <div className={"filter-item " + (filter.visible ? '' : 'hidden')} key={index}
-                           ref={`${filter.getAttr()}Filter`} data-attr={filter.getAttr()}>
-                          { component_func.call(this, filter, index) }
-                      </div>;
-             }.bind(this))}
-           </div>;
+    return (
+      <div>
+        <div className="input-group">
+          {this._getColumnsButton()}
+          {this.state.filters.length > 0 && (
+            <span className="input-group-btn">
+              <button
+                name="filters"
+                className="btn btn-default btn-search-filters dropdown-toggle"
+                data-toggle="dropdown"
+                title={_("Filters")}
+                style={{ borderRadius: "0", borderRight: "0" }}
+              >
+                <i className="fa fa-fw fa-filter"></i>
+              </button>
+              <ul className="dropdown-menu">
+                {this.state.filters.map(
+                  function(filter, index) {
+                    return (
+                      <li key={index}>
+                        <a
+                          data-filter-type={filter.type}
+                          onClick={this.setVisible.bind(this, index, true)}
+                          ref={`${filter.getAttr()}FilterToggleButton`}
+                        >
+                          {filter.label}
+                        </a>
+                      </li>
+                    );
+                  }.bind(this)
+                )}
+              </ul>
+            </span>
+          )}
+          <input
+            type="search"
+            className="form-control"
+            placeholder="Buscar..."
+            value={this.state.search}
+            onChange={this.searchChanged}
+            onKeyUp={this.searchKeyUp}
+          />
+          <span className="input-group-btn">
+            <button
+              type="search"
+              className="btn btn-primary"
+              ref="searchButton"
+              onClick={this.searchClicked}
+              style={this.searchBtnStyle()}
+            >
+              {_("Buscar")}
+            </button>
+          </span>
+          {this._getExportButton()}
+        </div>
+        {this.state.filters.map(
+          function(filter, index) {
+            // Render the filter based on the specified type
+            var component_func = this["get_" + filter.type + "__filter"];
+            return (
+              <div
+                className={"filter-item " + (filter.visible ? "" : "hidden")}
+                key={index}
+                ref={`${filter.getAttr()}Filter`}
+                data-attr={filter.getAttr()}
+              >
+                {component_func.call(this, filter, index)}
+              </div>
+            );
+          }.bind(this)
+        )}
+      </div>
+    );
   },
 });
 
 SearchBar.DateFilter = React.createClass({
-
   changeDate: function(key, event) {
     var stateChange = {};
     stateChange[key] = moment(event.date || event.originalEvent.date);
-    this.setState(stateChange, function() {
-      this.props.onChangeDate(this.state);
-    }.bind(this));
+    this.setState(
+      stateChange,
+      function() {
+        this.props.onChangeDate(this.state);
+      }.bind(this)
+    );
   },
 
   /*
@@ -422,103 +515,129 @@ SearchBar.DateFilter = React.createClass({
   componentDidMount: function() {
     $(this.refs.datepicker).datepicker({
       autoclose: true,
-      format: moment().localeData().longDateFormat('L').toLowerCase(),
+      format: moment()
+        .localeData()
+        .longDateFormat("L")
+        .toLowerCase(),
       language: navigator.language,
-      orientation: 'bottom',
+      orientation: "bottom",
     });
     // Setup event handling
-    $(this.refs.start).on('changeDate', this.changeDate.bind(this, 'start'));
-    $(this.refs.end).on('changeDate', this.changeDate.bind(this, 'end'));
+    $(this.refs.start).on("changeDate", this.changeDate.bind(this, "start"));
+    $(this.refs.end).on("changeDate", this.changeDate.bind(this, "end"));
     // Update the interface with the state
-    $(this.refs.start).datepicker('update', this.state.start.format('L'));
-    $(this.refs.end).datepicker('update', this.state.end.format('L'));
+    $(this.refs.start).datepicker("update", this.state.start.format("L"));
+    $(this.refs.end).datepicker("update", this.state.end.format("L"));
     // The top level picker must be updated so that its inferface
     // remains consistent with the start and end pickers.
-    $(this.refs.datepicker).datepicker('updateDates');
+    $(this.refs.datepicker).datepicker("updateDates");
     // Trigger it for the first time so that search bar know's the default
     // value
     this.props.onChangeDate(this.state);
   },
 
   getInitialState: function() {
-    return this.props.defaultDaterange || {start: moment(), end: moment()};
+    return this.props.defaultDaterange || { start: moment(), end: moment() };
   },
 
   render: function() {
-    return <div ref="datepicker" className="input-daterange input-group">
-             <label className="input-group-addon">
-               { this.props.label }
-             </label>
-             <input ref="start" type="text" className="input-sm form-control" name="start"/>
-             <span className="input-group-addon"> - </span>
-             <input ref="end" type="text" className="input-sm form-control" name="end"/>
-             <span className="input-group-btn">
-               <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
-                 <i className="fa fa-remove"></i>
-               </button>
-             </span>
-           </div>;
+    return (
+      <div ref="datepicker" className="input-daterange input-group">
+        <label className="input-group-addon">{this.props.label}</label>
+        <input ref="start" type="text" className="input-sm form-control" name="start" />
+        <span className="input-group-addon"> - </span>
+        <input ref="end" type="text" className="input-sm form-control" name="end" />
+        <span className="input-group-btn">
+          <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
+            <i className="fa fa-remove"></i>
+          </button>
+        </span>
+      </div>
+    );
   },
 });
 
 SearchBar.NumericFilter = React.createClass({
-
   componentDidMount: function() {
     let value = this.props.filter.value;
-    if (!value)
-      return;
+    if (!value) return;
     var operation = value[0];
-    if (operation == '~') {
-      let values = value.substring(1).split('and');
+    if (operation == "~") {
+      let values = value.substring(1).split("and");
       this.refs.first.value = values[0];
       this.refs.second.value = values[1];
-    }
-    else
-      this.refs.first.value = value.substring(1);
+    } else this.refs.first.value = value.substring(1);
   },
 
   getInitialState: function() {
-    let operation = this.props.filter.value ? this.props.filter.value[0] : '=';
-    return {operation};
+    let operation = this.props.filter.value ? this.props.filter.value[0] : "=";
+    return { operation };
   },
 
   _setOperation: function(operation) {
-    this.setState({operation}, this._setValue);
+    this.setState({ operation }, this._setValue);
   },
 
   _setValue: function() {
     this.props.setValue(
-      this.props.filterIndex, null,
-      this.state.operation + this.refs.first.value + (this.state.operation == '~' ? `and${this.refs.second.value}` : ''));
+      this.props.filterIndex,
+      null,
+      this.state.operation +
+        this.refs.first.value +
+        (this.state.operation == "~" ? `and${this.refs.second.value}` : "")
+    );
   },
 
   render: function() {
     let options = [
-      {label: _('Equals to'), value: '='},
-      {label: _('Greater than'), value: '>'},
-      {label: _('Lower Than'), value: '<'},
-      {label: _('Between'), value: '~'},
+      { label: _("Equals to"), value: "=" },
+      { label: _("Greater than"), value: ">" },
+      { label: _("Lower Than"), value: "<" },
+      { label: _("Between"), value: "~" },
     ];
-    return <div ref="numeric-filter" className="input-daterange input-group">
-      <label className="input-group-addon">
-        { this.props.label }
-      </label>
-      <span className='input-group-btn'>
-        <Select className='btn btn-sm' options={options} valueAttr='value' labelAttr='label'
-                onChange={this._setOperation} default={this.state.operation}/>
-      </span>
-      <input ref="first" type="number" defaultValue={0} className="input-sm form-control" name="first" onChange={this._setValue}
-             onKeyUp={this.props.onKeyUp}/>
-      {this.state.operation == '~' && [
-        <span key={0} className="input-group-addon">{_('And')}</span>,
-        <input key={1} ref="second" type="number" defaultValue={0} className="input-sm form-control" name="second" onChange={this._setValue}
-               onKeyUp={this.props.onKeyUp}/>,
-      ]}
-      <span className="input-group-btn">
-        <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
-          <i className="fa fa-remove"></i>
-        </button>
-      </span>
-    </div>;
+    return (
+      <div ref="numeric-filter" className="input-daterange input-group">
+        <label className="input-group-addon">{this.props.label}</label>
+        <span className="input-group-btn">
+          <Select
+            className="btn btn-sm"
+            options={options}
+            valueAttr="value"
+            labelAttr="label"
+            onChange={this._setOperation}
+            default={this.state.operation}
+          />
+        </span>
+        <input
+          ref="first"
+          type="number"
+          defaultValue={0}
+          className="input-sm form-control"
+          name="first"
+          onChange={this._setValue}
+          onKeyUp={this.props.onKeyUp}
+        />
+        {this.state.operation == "~" && [
+          <span key={0} className="input-group-addon">
+            {_("And")}
+          </span>,
+          <input
+            key={1}
+            ref="second"
+            type="number"
+            defaultValue={0}
+            className="input-sm form-control"
+            name="second"
+            onChange={this._setValue}
+            onKeyUp={this.props.onKeyUp}
+          />,
+        ]}
+        <span className="input-group-btn">
+          <button className="btn btn-sm remove-filter" onClick={this.props.onRemoveClicked}>
+            <i className="fa fa-remove"></i>
+          </button>
+        </span>
+      </div>
+    );
   },
 });

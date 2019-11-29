@@ -6,10 +6,10 @@
  */
 function typeOf(duck) {
   if (Array.isArray(duck)) {
-    return 'array';
+    return "array";
   }
   if (duck === null) {
-    return 'null';
+    return "null";
   }
   return typeof duck;
 }
@@ -21,7 +21,7 @@ function typeOf(duck) {
  */
 function objectIncludes(a, b) {
   return Object.keys(b).every(function(key) {
-    if (key[0] === '_') {
+    if (key[0] === "_") {
       return true;
     }
     return equals(a[key], b[key]);
@@ -50,9 +50,9 @@ function equals(a, b) {
   }
   // Compare if both are arrays and if they are equals
   // If dont, compare if both are objects and if they are equals
-  else if (typeOf(a) === 'array') {
+  else if (typeOf(a) === "array") {
     return arrayEquals(a, b);
-  } else if (typeOf(a) === 'object') {
+  } else if (typeOf(a) === "object") {
     return objectEquals(a, b);
   }
   // Return true if attr are equals and false if they are not

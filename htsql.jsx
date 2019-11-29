@@ -1,5 +1,5 @@
-import React from 'react';
-import Utils from 'utils';
+import React from "react";
+import Utils from "utils";
 
 /* Auto Querying htsql object
  *
@@ -24,7 +24,7 @@ module.exports = class HTSQLItem extends React.Component {
   };
 
   resolveItem(item) {
-    if (typeof item === 'object') {
+    if (typeof item === "object") {
       return this.resolve(item);
     }
     return item;
@@ -62,10 +62,10 @@ module.exports = class HTSQLItem extends React.Component {
 
   render() {
     let value = this.props.data[this.getAttr()];
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       value = this.resolve(value);
     }
     value = this.props.formatter ? this.props.formatter(value) : value;
-    return <span style={{display: 'inherit'}}>{value}</span>;
+    return <span style={{ display: "inherit" }}>{value}</span>;
   }
 };

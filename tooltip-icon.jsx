@@ -1,4 +1,4 @@
-var React = require('react');
+var React = require("react");
 
 var TooltipIcon = React.createClass({
   getDefaultProps: function() {
@@ -10,10 +10,18 @@ var TooltipIcon = React.createClass({
   },
 
   render: function() {
-    return <a className={`pointer ${this.props.className}`} data-toggle="tooltip" title={this.props.tip} data-placement={this.props.tipPosition}
-              style={{color: this.props.color, fontSize: this.props.size, ...this.props.style}} data-animation={true}>
-             <i className="fa fa-info-circle"/>
-           </a>;
+    return (
+      <a
+        className={`pointer ${this.props.className}`}
+        data-toggle="tooltip"
+        title={this.props.tip}
+        data-placement={this.props.tipPosition}
+        style={{ color: this.props.color, fontSize: this.props.size, ...this.props.style }}
+        data-animation={true}
+      >
+        <i className="fa fa-info-circle" />
+      </a>
+    );
   },
 });
 

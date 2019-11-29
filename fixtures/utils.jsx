@@ -1,27 +1,27 @@
-import React from 'react';
-import $ from 'jquery';
-import {gettext as _} from 'ttag';
+import React from "react";
+import $ from "jquery";
+import { gettext as _ } from "ttag";
 
-import ComponentUtils from '../utils';
+import ComponentUtils from "../utils";
 
 var Utils = {
   subscriptionStatuses: [
-      {label: 'bg-primary', text: _('Trialing')},
-      {label: 'label-success', text: _('Paid')},
-      {label: 'label-warning', text: _('Waiting Payment')},
-      {label: 'label-danger', text: _('Unpaid')},
-      {label: 'bg-purple', text: _('Canceled')},
-      {label: 'bg-purple', text: _('Ended')},
+    { label: "bg-primary", text: _("Trialing") },
+    { label: "label-success", text: _("Paid") },
+    { label: "label-warning", text: _("Waiting Payment") },
+    { label: "label-danger", text: _("Unpaid") },
+    { label: "bg-purple", text: _("Canceled") },
+    { label: "bg-purple", text: _("Ended") },
   ],
 
   paymentTypes: {
-    'out': {
-      className: 'label-danger',
-      label: _('Out'),
+    out: {
+      className: "label-danger",
+      label: _("Out"),
     },
-    'in': {
-      className: 'label-success',
-      label: _('In'),
+    in: {
+      className: "label-success",
+      label: _("In"),
     },
   },
 
@@ -30,23 +30,21 @@ var Utils = {
       if (string.length <= 5) {
         return string;
       }
-      return string.substring(0, 5) + '-' + string.substring(5);
+      return string.substring(0, 5) + "-" + string.substring(5);
     },
 
     subscriptionStatus: function(index) {
       var status = this.subscriptionStatuses[index];
       return React.createElement(
-        'span',
-        { className: 'label ' + status.label, style: { display: 'inline' } },
+        "span",
+        { className: "label " + status.label, style: { display: "inline" } },
         status.text
       );
     },
 
     paymentType: function(type) {
       var settings = this.paymentTypes[type];
-      return <span className={'label ' + settings.className}>
-        { settings.label }
-      </span>;
+      return <span className={"label " + settings.className}>{settings.label}</span>;
     },
 
     ...ComponentUtils.formatters,
@@ -56,10 +54,10 @@ var Utils = {
   categoryMerge: function(receivedCategories, sellableCategories) {
     var nullCategory = receivedCategories.filter(function(category) {
       // Find the null representative id
-      return category.id == '00000000-0000-0000-0000-000000000000';
+      return category.id == "00000000-0000-0000-0000-000000000000";
     });
     // Rename the null representative id
-    nullCategory[0].id = '__null__';
+    nullCategory[0].id = "__null__";
 
     // Merge the categories from config with the incoming ones
     var mergedCategories = sellableCategories.map(function(sc) {
@@ -79,20 +77,20 @@ var Utils = {
   },
 
   /** Given a category_list regroup it to build a tree structure
-  *
-  * @param category_list: The list of categories. Each object should contain
-  *     a 'parent_id' attribute that points to it's corresponding parent.
-  *     Objects with parent_id set to 'null' represent a root category.
-  *
-  * @param summary_func: Optional summary function. If it is defined, it
-  *     will be called for each root category, giving the oportunity to
-  *     attach a summary to each category.
-  *
-  * @returns A list of root_categories, with a 'children' attribute,
-  *     that represents their children.
-  *
-  * @see www/stoq/views/products/stock_by_category.js for an example
-  */
+   *
+   * @param category_list: The list of categories. Each object should contain
+   *     a 'parent_id' attribute that points to it's corresponding parent.
+   *     Objects with parent_id set to 'null' represent a root category.
+   *
+   * @param summary_func: Optional summary function. If it is defined, it
+   *     will be called for each root category, giving the oportunity to
+   *     attach a summary to each category.
+   *
+   * @returns A list of root_categories, with a 'children' attribute,
+   *     that represents their children.
+   *
+   * @see www/stoq/views/products/stock_by_category.js for an example
+   */
   categoryTree: function(category_list, summary_func) {
     // Separate root categories from the other ones
     var root_categories = category_list.filter(function(category) {
@@ -134,7 +132,9 @@ var Utils = {
     // function return false
     var matched_categories = [];
     remaining_categories = remaining_categories.filter(object => {
-      var parent = root_categories.find(object => {return object.id == object.parent_id;});
+      var parent = root_categories.find(object => {
+        return object.id == object.parent_id;
+      });
       if (parent) {
         parent.children.push(object);
         matched_categories.push(object);
@@ -147,8 +147,7 @@ var Utils = {
     // function to do the same for the newly formed child categories.
     root_categories.forEach(category => {
       if (category.children.length > 0) {
-        remaining_categories = this._tree(category.children,
-                                          remaining_categories)[1];
+        remaining_categories = this._tree(category.children, remaining_categories)[1];
       }
     });
     return [root_categories, remaining_categories];
@@ -163,13 +162,13 @@ var Utils = {
    */
   forEachNumber: function(object, func) {
     for (var key in object) {
-      if (object.hasOwnProperty(key) && typeof object[key] === 'number') {
+      if (object.hasOwnProperty(key) && typeof object[key] === "number") {
         func(key, object[key]);
       }
     }
   },
 
-  ajax: function(options, view=null) {
+  ajax: function(options, view = null) {
     options.crossDomain = true;
     options.xhrFields = {
       withCredentials: true,
@@ -177,7 +176,7 @@ var Utils = {
 
     if (options.instance) {
       options.url = options.instance.premium_url + options.url;
-      options.data = {auth_key: options.instance.premium_key, ...options.data};
+      options.data = { auth_key: options.instance.premium_key, ...options.data };
     } else {
       options.url = Environment.ADMIN_REMOTE_URL + options.url;
     }
@@ -192,22 +191,26 @@ var Utils = {
     // call
     var wrap = function(type) {
       let onCallback = options[type] || function() {};
-      options[type] = (...args) => view.setState({
-        loading: false,
-      }, () => onCallback(...args));
+      options[type] = (...args) =>
+        view.setState(
+          {
+            loading: false,
+          },
+          () => onCallback(...args)
+        );
     };
 
-    wrap('success');
-    wrap('error');
-    view.setState({loading: true}, () => $.ajax(options));
+    wrap("success");
+    wrap("error");
+    view.setState({ loading: true }, () => $.ajax(options));
   },
 };
 
 /* Bind the formatters with their parent for getting access to it's properties */
 Object.keys(Utils.formatters).forEach(function(key) {
-  if (typeof Utils.formatters[key] === 'function') {
+  if (typeof Utils.formatters[key] === "function") {
     Utils.formatters[key] = Utils.formatters[key].bind(Utils);
   }
 });
 
-module.exports = {...ComponentUtils, ...Utils};
+module.exports = { ...ComponentUtils, ...Utils };

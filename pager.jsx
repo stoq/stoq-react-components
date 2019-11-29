@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {gettext as _} from 'ttag';
+import React from "react";
+import ReactDOM from "react-dom";
+import { gettext as _ } from "ttag";
 
-import Utils from 'utils';
+import Utils from "utils";
 
 /* A paginated Table pager
  *
@@ -21,7 +21,6 @@ import Utils from 'utils';
  *                         width accondingly.
  */
 let Pager = React.createClass({
-
   /*
    *
    */
@@ -34,7 +33,7 @@ let Pager = React.createClass({
   },
 
   getDefaultProps: function() {
-    return {onPageChange: undefined};
+    return { onPageChange: undefined };
   },
 
   /*
@@ -42,23 +41,32 @@ let Pager = React.createClass({
    */
 
   _addPage: function(label, index, alternate_label) {
-    var query = $.param($.extend({}, Utils.getParams(), {page: index}));
+    var query = $.param($.extend({}, Utils.getParams(), { page: index }));
     var page;
     alternate_label = alternate_label || label;
     if (index !== null) {
-      page = <li key={label} ><a className="page_navigation"
-               href={location.hash.split('?')[0] + '?' + query}
-               onClick={this._pageClicked.bind(this, index)}
-               ref={this._pages.length}>
-        <span className="hidden-xs">{ label }</span>
-        <span className="visible-xs">{ alternate_label }</span>
-      </a></li>;
-    }
-    else {
-      page = <li key={label}><span className="disabled" ref={this._pages.length}>
-        <span className="hidden-xs">{ label }</span>
-        <span className="visible-xs">{ alternate_label }</span>
-      </span></li>;
+      page = (
+        <li key={label}>
+          <a
+            className="page_navigation"
+            href={location.hash.split("?")[0] + "?" + query}
+            onClick={this._pageClicked.bind(this, index)}
+            ref={this._pages.length}
+          >
+            <span className="hidden-xs">{label}</span>
+            <span className="visible-xs">{alternate_label}</span>
+          </a>
+        </li>
+      );
+    } else {
+      page = (
+        <li key={label}>
+          <span className="disabled" ref={this._pages.length}>
+            <span className="hidden-xs">{label}</span>
+            <span className="visible-xs">{alternate_label}</span>
+          </span>
+        </li>
+      );
     }
     this._pages.push(page);
   },
@@ -76,12 +84,15 @@ let Pager = React.createClass({
 
     // Update the table size
     var table = this.props.table;
-    this.setState({
-      width: (table && $(ReactDOM.findDOMNode(table)).width()) || 0,
-    }, function() {
-      // Then update the pager dimensions
-      this.updateDimensions();
-    });
+    this.setState(
+      {
+        width: (table && $(ReactDOM.findDOMNode(table)).width()) || 0,
+      },
+      function() {
+        // Then update the pager dimensions
+        this.updateDimensions();
+      }
+    );
   },
 
   /*
@@ -144,10 +155,13 @@ let Pager = React.createClass({
     // an infinite recursion.
     this.updating = true;
 
-    this.setState({
-      headWidth,
-      pageWidth: pageWidth || this.state.pageWidth,
-    }, callback);
+    this.setState(
+      {
+        headWidth,
+        pageWidth: pageWidth || this.state.pageWidth,
+      },
+      callback
+    );
   },
 
   componentWillUnmount: function() {
@@ -161,48 +175,49 @@ let Pager = React.createClass({
 
     let meta = this.props.meta;
     let pagination_width = this.state.width,
-        page_width = this.state.pageWidth,
-        head_width = this.state.headWidth,
-        pagination_size = (((pagination_width - head_width) / page_width) - 1),
-        _before = Math.floor(pagination_size / 2),
-        _after = _before,
-        _to_show = _before + _after;
+      page_width = this.state.pageWidth,
+      head_width = this.state.headWidth,
+      pagination_size = (pagination_width - head_width) / page_width - 1,
+      _before = Math.floor(pagination_size / 2),
+      _after = _before,
+      _to_show = _before + _after;
 
-  // Tha var 'page' is updated by -1, this certifies that the URL was passed
-  // with the correct number page AND the offset will be started in 0 for
-  // page 1, 10 for page 2, etc (when 'page' multplies 'getPageSize')
+    // Tha var 'page' is updated by -1, this certifies that the URL was passed
+    // with the correct number page AND the offset will be started in 0 for
+    // page 1, 10 for page 2, etc (when 'page' multplies 'getPageSize')
 
     if (meta.page - _before <= 0) {
       _before = meta.page - 1;
       _after = _to_show - _before;
-    }
-    else if (meta.page + _after >= meta.page_count) {
+    } else if (meta.page + _after >= meta.page_count) {
       _after = meta.page_count - meta.page;
       _before = _to_show - _after;
     }
 
     this._pages = [];
-    this._addPage(_('Primeira'), 1, '<<');
-    this._addPage(_('Anterior'), (meta.page > 1) ? meta.page - 1 : null, '<');
+    this._addPage(_("Primeira"), 1, "<<");
+    this._addPage(_("Anterior"), meta.page > 1 ? meta.page - 1 : null, "<");
 
     for (let i = _before; i > 0; i--)
-      if (meta.page - i > 0)
-        this._addPage(meta.page - i, meta.page - i);
+      if (meta.page - i > 0) this._addPage(meta.page - i, meta.page - i);
 
-    this._pages.push(<li key={meta.page} className="active">
-      <span ref={this._pages.length}>{ meta.page }</span>
-    </li>);
+    this._pages.push(
+      <li key={meta.page} className="active">
+        <span ref={this._pages.length}>{meta.page}</span>
+      </li>
+    );
 
     for (let i = 1; i <= _after; i++)
-      if (meta.page + i <= meta.page_count)
-        this._addPage(meta.page + i, meta.page + i);
+      if (meta.page + i <= meta.page_count) this._addPage(meta.page + i, meta.page + i);
 
-    this._addPage(_('Próxima'), (meta.page < meta.page_count) ? meta.page + 1 : null, '>');
-    this._addPage(_('Última'), meta.page_count ? meta.page_count : 1, '>>');
+    this._addPage(_("Próxima"), meta.page < meta.page_count ? meta.page + 1 : null, ">");
+    this._addPage(_("Última"), meta.page_count ? meta.page_count : 1, ">>");
 
-    return <div className="list_pager clearfix">
-      <ul className="pagination no-margin">{ this._pages }</ul>
-    </div>;
+    return (
+      <div className="list_pager clearfix">
+        <ul className="pagination no-margin">{this._pages}</ul>
+      </div>
+    );
   },
 });
 

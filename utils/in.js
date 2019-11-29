@@ -1,4 +1,4 @@
-var equals = require('./equals');
+var equals = require("./equals");
 
 /* Verifies if the row is in the array
  *
@@ -9,7 +9,7 @@ var equals = require('./equals');
  *
  */
 
-module.exports = function (array, row) {
+module.exports = function(array, row) {
   return array.some(function(object) {
     return equals(row, object);
   });

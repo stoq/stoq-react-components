@@ -1,4 +1,4 @@
-var RTC = require('./rtc');
+var RTC = require("./rtc");
 
 function MultiRTC(options) {
   this.events = {};
@@ -22,12 +22,12 @@ function MultiRTC(options) {
  */
 MultiRTC.prototype.add = function(id, signal, metadata) {
   if (!this.peers[id]) {
-    this.peers[id] = new RTC({dataChannel: true, offerer: !signal, wrtc: this.wrtc});
+    this.peers[id] = new RTC({ dataChannel: true, offerer: !signal, wrtc: this.wrtc });
     this.peers[id].metadata = metadata;
-    this.peers[id].on('signal', this.onSignal.bind(this, id));
-    this.peers[id].on('channel-open', this.onOpen.bind(this, id));
-    this.peers[id].on('channel-message', this.onMessage.bind(this, id));
-    this.peers[id].on('channel-close', this.onClose.bind(this, id));
+    this.peers[id].on("signal", this.onSignal.bind(this, id));
+    this.peers[id].on("channel-open", this.onOpen.bind(this, id));
+    this.peers[id].on("channel-message", this.onMessage.bind(this, id));
+    this.peers[id].on("channel-close", this.onClose.bind(this, id));
   }
 
   if (signal) {
@@ -51,7 +51,9 @@ MultiRTC.prototype.send = function(data, id, onResponse) {
   // If the data is more than the limit (6144 bytes), send chunks
   // of data.
   if (data.length > this.DATA_LIMIT) {
-    var dataId = Math.random().toString(32).split('.')[1];
+    var dataId = Math.random()
+      .toString(32)
+      .split(".")[1];
     this.data[dataId] = data;
     data = JSON.stringify({
       __id__: dataId,
@@ -63,7 +65,7 @@ MultiRTC.prototype.send = function(data, id, onResponse) {
   ids.forEach(function(key) {
     // If the peer channel is open and available, send the message right away
     var channel = this.peers[key] && this.peers[key].channel;
-    if (channel && channel.readyState === 'open') {
+    if (channel && channel.readyState === "open") {
       return channel.send(data);
     }
 
@@ -90,7 +92,7 @@ MultiRTC.prototype.cancel = function(responseId) {
  * @param {RTCSessionDescription|RTCIceCandidate} signal The signalling data
  */
 MultiRTC.prototype.onSignal = function(id, signal) {
-  this.signaller.emit('signal', {
+  this.signaller.emit("signal", {
     dest: id,
     signal: signal,
     metadata: this.metadata,
@@ -104,13 +106,14 @@ MultiRTC.prototype.onSignal = function(id, signal) {
 MultiRTC.prototype.onOpen = function(id) {
   // Flush any pending messages to the given peer
   var pending = this.pending[id];
-  pending && pending.forEach(function(data) {
-    this.peers[id].channel.send(data);
-  }, this);
+  pending &&
+    pending.forEach(function(data) {
+      this.peers[id].channel.send(data);
+    }, this);
   delete this.pending[id];
 
   // The alert the application that the a peer has been connected
-  this.trigger('connect', [id]);
+  this.trigger("connect", [id]);
 };
 
 /* Data has been received from a peer
@@ -121,7 +124,7 @@ MultiRTC.prototype.onOpen = function(id) {
 MultiRTC.prototype.onMessage = function(id, event) {
   var data = JSON.parse(event.data);
 
-  if (data.__type__ === 'destroy') {
+  if (data.__type__ === "destroy") {
     delete this.data[data.__id__];
     return;
   }
@@ -130,27 +133,33 @@ MultiRTC.prototype.onMessage = function(id, event) {
   if (data.__offset__) {
     var dataId = data.__id__;
     var offset = data.__offset__;
-    return this.send({
-      __id__: dataId,
-      chunk: this.data[dataId].slice(offset, offset + this.CHUNK_SIZE),
-    }, id);
+    return this.send(
+      {
+        __id__: dataId,
+        chunk: this.data[dataId].slice(offset, offset + this.CHUNK_SIZE),
+      },
+      id
+    );
   }
 
   // Receive a chunk of data
   if (data.__id__) {
     var chunk = this.chunks[data.__id__] || {
       length: data.__length__,
-      content: '',
+      content: "",
     };
     this.chunks[data.__id__] = chunk;
     chunk.content += data.chunk;
 
     // Requesting more chunks of data
     if (chunk.content.length < chunk.length) {
-      return this.send({
-        __id__: data.__id__,
-        __offset__: chunk.content.length,
-      }, id);
+      return this.send(
+        {
+          __id__: data.__id__,
+          __offset__: chunk.content.length,
+        },
+        id
+      );
     }
 
     // Gathering the data and destroying the requests
@@ -158,7 +167,7 @@ MultiRTC.prototype.onMessage = function(id, event) {
     delete this.chunks[data.__id__];
     this.send({
       __id__: id,
-      __type__: 'destroy',
+      __type__: "destroy",
     });
   }
 
@@ -170,7 +179,7 @@ MultiRTC.prototype.onMessage = function(id, event) {
     return onResponse && onResponse(data);
   }
 
-  this.trigger('data', [id, data]);
+  this.trigger("data", [id, data]);
 };
 
 /* A WebRTC connection has been closed
@@ -179,7 +188,7 @@ MultiRTC.prototype.onMessage = function(id, event) {
  */
 MultiRTC.prototype.onClose = function(id) {
   delete this.peers[id];
-  this.trigger('disconnect', [id]);
+  this.trigger("disconnect", [id]);
 };
 
 /*
@@ -194,9 +203,9 @@ MultiRTC.prototype.on = function(action, callback) {
 MultiRTC.prototype.off = function(action, callback) {
   this.events[action] = this.events[action] || [];
 
-  if(callback) {
+  if (callback) {
     var index = this.events[action].indexOf(callback);
-    (index !== -1) && this.events[action].splice(index, 1);
+    index !== -1 && this.events[action].splice(index, 1);
     return index !== -1;
   }
 

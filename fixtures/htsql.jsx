@@ -1,19 +1,19 @@
 var HTSQL = {};
 
 HTSQL.And = function(a, b) {
-  return a + ' & ' + b;
+  return a + " & " + b;
 };
 
 HTSQL.GE = function(a, b) {
-  return a + '>=' + b;
+  return a + ">=" + b;
 };
 
 HTSQL.LE = function(a, b) {
-  return a + '<=' + b;
+  return a + "<=" + b;
 };
 
 HTSQL.Between = function(attr, start, end) {
-  return HTSQL.GE(attr, start) + ' & ' + HTSQL.LE(attr, end);
+  return HTSQL.GE(attr, start) + " & " + HTSQL.LE(attr, end);
 };
 
 HTSQL.Quoted = function(string) {
@@ -22,7 +22,7 @@ HTSQL.Quoted = function(string) {
 
 HTSQL.Filter = function(filters) {
   if (!filters) {
-    return '';
+    return "";
   }
   return `.filter(${filters})`;
 };
@@ -33,7 +33,7 @@ HTSQL.SafeDivision = function(dividend, divisor) {
 
 HTSQL.Sort = function(attr) {
   if (!attr) {
-    return '';
+    return "";
   }
   return `.sort(${attr})`;
 };

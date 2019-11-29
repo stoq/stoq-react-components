@@ -1,28 +1,25 @@
 var getRTC = function() {
   return {
-   // Ensure all vendor prefixes are capture
-    RTCPeerConnection: (
+    // Ensure all vendor prefixes are capture
+    RTCPeerConnection:
       window.RTCPeerConnection ||
       window.msRTCPeerConnection ||
       window.mozRTCPeerConnection ||
-      window.webkitRTCPeerConnection
-    ),
+      window.webkitRTCPeerConnection,
     // Signal that contains the Ice Candidate. This signal stores an ID for
     // the connection that was created between peers (while the connection
     // persists).
-    RTCIceCandidate: (
+    RTCIceCandidate:
       window.RTCIceCandidate ||
       window.msRTCIceCandidate ||
       window.mozRTCIceCandidate ||
-      window.webkitRTCIceCandidate
-    ),
+      window.webkitRTCIceCandidate,
     // Signal that contains the description from the session
-    RTCSessionDescription: (
+    RTCSessionDescription:
       window.RTCSessionDescription ||
       window.msRTCSessionDescription ||
       window.mozRTCSessionDescription ||
-      window.webkitRTCSessionDescription
-    ),
+      window.webkitRTCSessionDescription,
   };
 };
 
@@ -40,19 +37,22 @@ function RTC(options) {
 
   // Ice Servers are required to establish connections when you are running
   // WebRTC through public ip network.
-  options.options = options.options || {iceServers: [
-    {
-      url: 'stun:23.21.150.121', // Old WebRTC API (url)
-      urls: [                    // New WebRTC API (urls)
-        'stun:23.21.150.121',
-        'stun:stun.l.google.com:19302',
-        'stun:stun.services.mozilla.com',
-      ],
-    },
-  ]};
+  options.options = options.options || {
+    iceServers: [
+      {
+        url: "stun:23.21.150.121", // Old WebRTC API (url)
+        urls: [
+          // New WebRTC API (urls)
+          "stun:23.21.150.121",
+          "stun:stun.l.google.com:19302",
+          "stun:stun.services.mozilla.com",
+        ],
+      },
+    ],
+  };
 
   // Normalize dataChannel option into a object
-  if (options.dataChannel && typeof options.dataChannel === 'boolean') {
+  if (options.dataChannel && typeof options.dataChannel === "boolean") {
     options.dataChannel = {};
   }
 
@@ -64,14 +64,14 @@ function RTC(options) {
   };
 
   // Stream Events
-  this.events['add-stream'] = [];
+  this.events["add-stream"] = [];
 
   // DataChannel Events
-  this.events['channel-open'] = [];
-  this.events['channel-message'] = [];
-  this.events['channel-close'] = [];
-  this.events['channel-error'] = [];
-  this.events['channel-buffered-amount-low'] = [];
+  this.events["channel-open"] = [];
+  this.events["channel-message"] = [];
+  this.events["channel-close"] = [];
+  this.events["channel-error"] = [];
+  this.events["channel-buffered-amount-low"] = [];
 
   // Holds signals if the user has not been hearing for the just yet
   this._signals = [];
@@ -98,7 +98,7 @@ function RTC(options) {
 
   this.peer.onaddstream = function(event) {
     this.stream = event.stream;
-    this.trigger('add-stream', [this.stream]);
+    this.trigger("add-stream", [this.stream]);
   }.bind(this);
 
   if (this.stream) {
@@ -111,20 +111,27 @@ function RTC(options) {
       this._bindChannel();
     }
 
-    this.peer.createOffer(function(description) {
-      this.peer.setLocalDescription(description, function() {
-        return this._onSignal(description);
-      }.bind(this), this.onError);
-    }.bind(this), this.onError);
+    this.peer.createOffer(
+      function(description) {
+        this.peer.setLocalDescription(
+          description,
+          function() {
+            return this._onSignal(description);
+          }.bind(this),
+          this.onError
+        );
+      }.bind(this),
+      this.onError
+    );
     return;
   }
 }
 
 /* Bind all events related to dataChannel */
 RTC.prototype._bindChannel = function() {
-  ['open', 'close', 'message', 'error', 'buffered-amount-low'].forEach(function(action) {
-    this.channel['on' + action.replace(/-/g, '')] = function() {
-      this.trigger('channel-' + action, Array.prototype.slice.call(arguments));
+  ["open", "close", "message", "error", "buffered-amount-low"].forEach(function(action) {
+    this.channel["on" + action.replace(/-/g, "")] = function() {
+      this.trigger("channel-" + action, Array.prototype.slice.call(arguments));
     }.bind(this);
   }, this);
 };
@@ -136,7 +143,7 @@ RTC.prototype._onSignal = function(signal) {
     return this._signals.push(signal);
   }
   // in case the user is already hearing for signal events fire it
-  this.trigger('signal', [signal]);
+  this.trigger("signal", [signal]);
 };
 
 /* Add a signal into the peer connection
@@ -145,19 +152,33 @@ RTC.prototype._onSignal = function(signal) {
  */
 
 RTC.prototype.addSignal = function(signal) {
-  if (signal.type === 'offer') {
-    return this.peer.setRemoteDescription(new this.wrtc.RTCSessionDescription(signal), function() {
-      this.peer.createAnswer(function(description) {
-        this.peer.setLocalDescription(description, function() {
-          this._onSignal(description);
-        }.bind(this), this.onError);
-      }.bind(this), this.onError);
-    }.bind(this), this.onError);
+  if (signal.type === "offer") {
+    return this.peer.setRemoteDescription(
+      new this.wrtc.RTCSessionDescription(signal),
+      function() {
+        this.peer.createAnswer(
+          function(description) {
+            this.peer.setLocalDescription(
+              description,
+              function() {
+                this._onSignal(description);
+              }.bind(this),
+              this.onError
+            );
+          }.bind(this),
+          this.onError
+        );
+      }.bind(this),
+      this.onError
+    );
   }
 
-  if (signal.type === 'answer') {
-    return this.peer.setRemoteDescription(new this.wrtc.RTCSessionDescription(signal), function() {
-    }, this.onError);
+  if (signal.type === "answer") {
+    return this.peer.setRemoteDescription(
+      new this.wrtc.RTCSessionDescription(signal),
+      function() {},
+      this.onError
+    );
   }
 
   this.peer.addIceCandidate(new this.wrtc.RTCIceCandidate(signal), function() {}, this.onError);
@@ -189,9 +210,9 @@ RTC.prototype.on = function(action, callback) {
   this.events[action].push(callback);
 
   // on Signal event is aded, check the '_signals' arrauy and flush it
-  if (action === 'signal') {
+  if (action === "signal") {
     this._signals.forEach(function(signal) {
-      this.trigger('signal', [signal]);
+      this.trigger("signal", [signal]);
     });
   }
 };
@@ -203,10 +224,10 @@ RTC.prototype.on = function(action, callback) {
  *                   provided all callbacks are detached
  */
 RTC.prototype.off = function(action, callback) {
-  if(callback) {
+  if (callback) {
     // If a callback has been specified delete it specifically
     var index = this.events[action].indexOf(callback);
-    (index !== -1) && this.events[action].splice(index, 1);
+    index !== -1 && this.events[action].splice(index, 1);
     return index !== -1;
   }
 
