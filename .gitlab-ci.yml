@@ -1,7 +1,18 @@
 image: stoqdev/stoq-dockerfile:mobile-pos-test
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
 stages:
+  - pre_commit
   - test
+
+# pre-commit stage
+include:
+  - remote: https://raw.githubusercontent.com/stoq/stoq-utils/master/gitlab_templates/precommit-template.yaml
+
+pre_commit:
+  extends: .pre_commit
 
 test:
   script:
