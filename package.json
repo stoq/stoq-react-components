@@ -20,7 +20,7 @@
     "bootstrap": "^3.3.6",
     "bootstrap-datepicker": "^1.5.0",
     "escope": "3.3.0",
-    "eslint": "^3.0.0",
+    "eslint": "^4.18.2",
     "eslint-plugin-no-console-log": "^2.0.0",
     "eslint-plugin-react": "^6.9.0",
     "jest": "^18.1.0",
