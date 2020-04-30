@@ -24,7 +24,7 @@
     "eslint-plugin-no-console-log": "^2.0.0",
     "eslint-plugin-react": "^6.9.0",
     "jest": "^18.1.0",
-    "jquery": "^2.1.4",
+    "jquery": "^3.5.0",
     "moment": "^2.11.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
