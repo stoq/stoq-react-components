@@ -57,6 +57,9 @@ module.exports = class Row extends React.Component {
         {React.Children.map(
           this.props.children,
           function(child, index) {
+            if (!child) {
+              return;
+            }
             return <div className={this._getClass(index)}>{child}</div>;
           }.bind(this)
         )}

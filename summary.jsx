@@ -100,6 +100,9 @@ module.exports = Summary = React.createClass({
         {React.Children.map(
           this.props.children,
           function(item) {
+            if (!item) {
+              return;
+            }
             return this.getSummary(item);
           },
           this
