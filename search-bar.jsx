@@ -204,7 +204,7 @@ module.exports = SearchBar = React.createClass({
 
   _export: function() {
     // Extract the colum definitions to be sent to the server
-    var col_defs = this.props.table.props.children.map(function(column) {
+    var col_defs = this.props.table._getColumns().map(function(column) {
       return {
         attr: column.props.sortAttr || column.props.attr,
         header: column.props.label,
